@@ -3,6 +3,9 @@
 window.RANGERS = {
   API_URL: '/api',
 
+  // Lien du service client (WhatsApp, Telegram...). Laisse vide tant que tu ne l'as pas : ex. 'https://wa.me/221XXXXXXXXX'
+  SUPPORT_URL: '',
+
   // Une image par page. Pour en changer une, remplace simplement son lien.
   IMAGES: {
     home:     'https://files.catbox.moe/i1pgs0.jpg', // accueil
