@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#05070F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<title>Historique – RANGERS</title>
+</head>
+<body data-page="history">
+<main class="wrap">
+  <div class="topbar">
+    <span class="brand">RANGERS</span>
+    <a class="link-btn" href="compte.html" style="text-decoration:none">← Compte</a>
+  </div>
+  <h1 class="page">Historique</h1>
+  <div class="chips" role="group" aria-label="Filtrer">
+    <button class="chip" type="button" data-f="all" aria-pressed="true">Tout</button>
+    <button class="chip" type="button" data-f="deposit" aria-pressed="false">Dépôts</button>
+    <button class="chip" type="button" data-f="withdrawal" aria-pressed="false">Retraits</button>
+    <button class="chip" type="button" data-f="checkin" aria-pressed="false">Pointage</button>
+    <button class="chip" type="button" data-f="wheel" aria-pressed="false">Roue</button>
+  </div>
+  <section class="card" style="padding:6px 18px">
+    <div id="list"></div>
+    <p id="empty" class="empty" hidden></p>
+  </section>
+</main>
+
+<nav class="tabbar" aria-label="Navigation principale">
+  <ul>
+    <li><a href="index.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>Accueil</a></li>
+    <li><a href="activites.html" data-soon>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M3 13h18"/></svg>Activités</a></li>
+    <li><a href="equipe.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0"/><path d="M16 4.6a3.5 3.5 0 010 6.8"/><path d="M18 14.2A6.5 6.5 0 0121.5 20"/></svg>Équipe</a></li>
+    <li><a href="compte.html" aria-current="page">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>Compte</a></li>
+  </ul>
+</nav>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
