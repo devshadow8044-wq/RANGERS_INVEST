@@ -181,8 +181,90 @@
     }
   }
 
+
+  async function copy(text, msg) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const t = document.createElement('textarea');
+      t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+      document.body.appendChild(t); t.select();
+      try { document.execCommand('copy'); } catch { /* ignoré */ }
+      t.remove();
+    }
+    toast(msg);
+  }
+
+  function guard() {
+    if (!mem.get('rg_token')) { location.replace('login.html'); return false; }
+    return true;
+  }
+  function onAuthError(err) {
+    if (err.status === 401) { mem.set('rg_token', null); location.replace('login.html'); return true; }
+    return false;
+  }
+
+  /* ---------- Équipe ---------- */
+  async function pageTeam() {
+    if (!guard()) return;
+    try {
+      const t = await api('/team');
+      const link = location.origin + '/register.html?ref=' + t.referral_code;
+      $('#code').textContent = t.referral_code;
+      $('#link').value = link;
+      $('#invited').textContent = t.invited;
+      $('#copy-code').addEventListener('click', () => copy(t.referral_code, 'Code copié'));
+      $('#copy-link').addEventListener('click', () => copy(link, 'Lien copié'));
+      $('#wa').href = 'https://wa.me/?text=' + encodeURIComponent('Rejoins-moi sur RANGERS : ' + link);
+    } catch (err) {
+      if (!onAuthError(err)) toast(err.message);
+    }
+  }
+
+  /* ---------- Compte ---------- */
+  async function pageAccount() {
+    if (!guard()) return;
+    bindPasswordToggles();
+    $('#logout').addEventListener('click', () => { mem.set('rg_token', null); location.href = 'login.html'; });
+    try {
+      const { user } = await api('/me');
+      $('#phone').textContent = user.phone;
+      const d = new Date(String(user.created_at).replace(' ', 'T') + 'Z');
+      $('#since').textContent = isNaN(d) ? '–' : d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch (err) {
+      if (!onAuthError(err)) toast(err.message);
+    }
+
+    $('#form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showError('');
+      const current = $('#current').value;
+      const password = $('#password').value;
+      const confirm = $('#confirm').value;
+      if (!current) return showError('Entre ton mot de passe actuel.');
+      const pe = validPassword(password);
+      if (pe) return showError(pe);
+      if (password !== confirm) return showError('Les mots de passe ne correspondent pas.');
+      const btn = $('#submit');
+      btn.disabled = true;
+      btn.textContent = 'Modification…';
+      try {
+        const data = await api('/change-password', { method: 'POST', body: { current, password, confirm } });
+        mem.set('rg_token', data.token);
+        $('#form').reset();
+        toast('Mot de passe modifié');
+      } catch (err) {
+        if (!onAuthError(err)) showError(err.message);
+      }
+      btn.disabled = false;
+      btn.textContent = 'Changer le mot de passe';
+    });
+  }
+
   const page = document.body.dataset.page;
   if (page === 'register') pageRegister();
   else if (page === 'login') pageLogin();
   else if (page === 'home') pageHome();
+  else if (page === 'team') pageTeam();
+  else if (page === 'account') pageAccount();
 })();
