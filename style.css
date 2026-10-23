@@ -74,3 +74,17 @@ h2.section{font-size:1.1rem;font-weight:700;margin:26px 0 10px}
 
 @media (prefers-reduced-motion:reduce){.stripe{animation:none}.toast{transition:none}}
 @media (min-width:720px){.wrap{padding-top:40px}}
+
+/* Équipe & Compte */
+.plate{display:flex;align-items:center;justify-content:center;margin:6px 0 14px;padding:16px 12px;border:2px solid var(--gold);border-radius:12px;background:#0C1511;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(1.7rem,9vw,2.2rem);letter-spacing:.14em;color:var(--gold)}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.btn-row .btn{height:50px;font-size:.95rem}
+.btn-wa{background:#25D366;color:#04140D}
+.stat{display:flex;align-items:baseline;justify-content:space-between}
+.stat b{font-family:'Bricolage Grotesque',sans-serif;font-size:2rem;color:var(--text)}
+.stat span{color:var(--mute)}
+.rows>div{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.rows>div:last-child{border-bottom:0}
+.rows dt{color:var(--mute)}
+.rows dd{font-weight:600;text-align:right;margin:0}
+h1.page{font-size:1.7rem;font-weight:800;margin:4px 0 16px}
