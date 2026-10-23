@@ -6,6 +6,12 @@ window.RANGERS = {
   // Lien du service client (WhatsApp, Telegram...). Laisse vide tant que tu ne l'as pas : ex. 'https://wa.me/221XXXXXXXXX'
   SUPPORT_URL: '',
 
+  // Logos des moyens de paiement
+  LOGOS: {
+    wave:   'https://files.catbox.moe/6zomif.jpg',
+    orange: 'https://files.catbox.moe/8ovn8v.jpg'
+  },
+
   // Une image par page. Pour en changer une, remplace simplement son lien.
   IMAGES: {
     home:     'https://files.catbox.moe/i1pgs0.jpg', // accueil
