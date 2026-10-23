@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A110E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<title>Connexion – RANGERS</title>
+</head>
+<body data-page="login">
+<main class="wrap auth">
+  <div class="stripe" aria-hidden="true"></div>
+  <header class="hero">
+    <a class="brand" href="login.html">RANGERS</a>
+    <h1 style="margin-top:22px">Content de te revoir</h1>
+    <p>Connecte-toi avec ton numéro et ton mot de passe.</p>
+  </header>
+
+  <form id="form" class="card stack" novalidate>
+    <div id="error" class="error" role="alert"></div>
+
+    <div>
+      <label for="country">Pays</label>
+      <select id="country" class="field" required><option value="">Chargement…</option></select>
+    </div>
+
+    <div>
+      <label for="phone">Numéro de téléphone</label>
+      <div class="phone">
+        <span id="prefix" class="prefix">+</span>
+        <input id="phone" class="field" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="77 123 45 67" required>
+      </div>
+    </div>
+
+    <div>
+      <label for="password">Mot de passe</label>
+      <div class="pw">
+        <input id="password" class="field" type="password" autocomplete="current-password" required>
+        <button class="toggle" type="button" aria-pressed="false">Afficher</button>
+      </div>
+    </div>
+
+    <button id="submit" class="btn" type="submit">Se connecter</button>
+  </form>
+
+  <p class="alt">Pas encore de compte ? <a href="register.html">Créer un compte</a></p>
+</main>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
