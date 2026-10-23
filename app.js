@@ -46,10 +46,10 @@
 
   // Pages à venir : le lien reste dans la barre, avec un message
   document.addEventListener('click', (e) => {
-    const a = e.target.closest('[data-soon]');
-    if (!a) return;
+    const el = e.target.closest('[data-soon]');
+    if (!el) return;
     e.preventDefault();
-    toast('Cette page arrive à une prochaine étape.');
+    toast(el.getAttribute('data-soon') || 'Cette page arrive à une prochaine étape.');
   });
 
   function bindPasswordToggles() {
