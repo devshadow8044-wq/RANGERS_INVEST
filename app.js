@@ -212,7 +212,7 @@
       const link = location.origin + '/register.html?ref=' + t.referral_code;
       $('#code').textContent = t.referral_code;
       $('#link').value = link;
-      $('#invited').textContent = t.invited;
+      (t.levels || [t.invited || 0, 0, 0]).forEach((n, i) => { const el = $('#lv' + (i + 1)); if (el) el.textContent = n; });
       $('#copy-code').addEventListener('click', () => copy(t.referral_code, 'Code copié'));
       $('#copy-link').addEventListener('click', () => copy(link, 'Lien copié'));
       $('#wa').href = 'https://wa.me/?text=' + encodeURIComponent('Rejoins-moi sur RANGERS : ' + link);
@@ -225,6 +225,9 @@
   async function pageAccount() {
     if (!guard()) return;
     bindPasswordToggles();
+    const sup = $('#support');
+    const supUrl = (window.RANGERS && window.RANGERS.SUPPORT_URL) || '';
+    if (sup && /^https:\/\//.test(supUrl)) { sup.href = supUrl; sup.target = '_blank'; sup.rel = 'noopener'; sup.removeAttribute('data-soon'); }
     $('#logout').addEventListener('click', () => { mem.set('rg_token', null); location.href = 'login.html'; });
     try {
       const { user } = await api('/me');
@@ -368,6 +371,120 @@
     if (key === 'inside') addSoundButton(v); // inscription et connexion : jamais de son
   }
 
+
+  /* ---------- Historique ---------- */
+  const TX_LABELS = { deposit: 'Dépôt', withdrawal: 'Retrait', fee: 'Frais', adjustment: 'Ajustement' };
+  function txLabel(t) {
+    if (t.type === 'reward') {
+      if ((t.ref || '').startsWith('checkin:')) return 'Pointage';
+      if ((t.ref || '').startsWith('wheel:')) return 'Roue de la chance';
+      return 'Récompense';
+    }
+    return TX_LABELS[t.type] || 'Opération';
+  }
+  const EMPTY_MSG = {
+    all: 'Aucune opération pour l’instant.',
+    deposit: 'Aucun dépôt pour l’instant.',
+    withdrawal: 'Aucun retrait pour l’instant.',
+    checkin: 'Aucun pointage reçu pour l’instant.',
+    wheel: 'Aucun gain de roue reçu pour l’instant.'
+  };
+
+  async function pageHistory() {
+    if (!guard()) return;
+    const list = $('#list');
+    const empty = $('#empty');
+    const chips = [...document.querySelectorAll('.chip')];
+
+    async function load(filter) {
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.f === filter)));
+      list.innerHTML = '';
+      empty.hidden = true;
+      try {
+        const { items } = await api('/history?filter=' + encodeURIComponent(filter));
+        if (!items.length) { empty.textContent = EMPTY_MSG[filter]; empty.hidden = false; return; }
+        items.forEach((t) => {
+          const row = document.createElement('div');
+          row.className = 'tx';
+          const left = document.createElement('div');
+          const title = document.createElement('div');
+          title.className = 't';
+          title.textContent = txLabel(t);
+          const date = document.createElement('div');
+          date.className = 'd';
+          const d = new Date(String(t.created_at).replace(' ', 'T') + 'Z');
+          date.textContent = isNaN(d) ? '' : d.toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+          left.append(title, date);
+          const amt = document.createElement('div');
+          amt.className = 'a ' + (t.amount > 0 ? 'pos' : 'neg');
+          amt.textContent = (t.amount > 0 ? '+ ' : '− ') + fcfa(Math.abs(t.amount));
+          row.append(left, amt);
+          list.appendChild(row);
+        });
+      } catch (err) {
+        if (!onAuthError(err)) toast(err.message);
+      }
+    }
+    chips.forEach((c) => c.addEventListener('click', () => load(c.dataset.f)));
+    load('all');
+  }
+
+  /* ---------- Avis ---------- */
+  async function pageReviews() {
+    if (!guard()) return;
+    let rating = 0;
+    const stars = [...document.querySelectorAll('.stars button')];
+    const paint = () => stars.forEach((b) => b.classList.toggle('on', Number(b.dataset.v) <= rating));
+    stars.forEach((b) => b.addEventListener('click', () => { rating = Number(b.dataset.v); paint(); }));
+
+    async function load() {
+      try {
+        const d = await api('/reviews');
+        $('#avg').textContent = d.count ? d.average.toFixed(1) + ' / 5' : '–';
+        $('#count').textContent = d.count ? d.count + (d.count > 1 ? ' avis de membres' : ' avis de membre') : 'Aucun avis pour l’instant';
+        if (d.mine && !$('#comment').value) { rating = d.mine.rating; $('#comment').value = d.mine.comment; paint(); }
+        const list = $('#list');
+        list.innerHTML = '';
+        $('#empty').hidden = d.reviews.length > 0;
+        d.reviews.forEach((r) => {
+          const box = document.createElement('div');
+          box.className = 'rev';
+          const s = document.createElement('div');
+          s.className = 'stars-s';
+          s.textContent = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+          const c = document.createElement('p');
+          c.textContent = r.comment;
+          const w = document.createElement('div');
+          w.className = 'who';
+          w.textContent = r.author;
+          box.append(s, c, w);
+          list.appendChild(box);
+        });
+      } catch (err) {
+        if (!onAuthError(err)) toast(err.message);
+      }
+    }
+
+    $('#form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showError('');
+      const comment = $('#comment').value.trim();
+      if (!rating) return showError('Choisis une note de 1 à 5 étoiles.');
+      if (comment.length < 5) return showError('Écris un commentaire de 5 caractères minimum.');
+      const btn = $('#submit');
+      btn.disabled = true;
+      try {
+        await api('/reviews', { method: 'POST', body: { rating, comment } });
+        toast('Merci pour ton avis !');
+        await load();
+      } catch (err) {
+        if (!onAuthError(err)) showError(err.message);
+      }
+      btn.disabled = false;
+    });
+    load();
+  }
+
   /* ---------- Images (bannières) ---------- */
   function addBanner() {
     const page = document.body.dataset.page;
@@ -380,7 +497,7 @@
     img.decoding = 'async';
     img.referrerPolicy = 'no-referrer';
     img.addEventListener('load', () => img.classList.add('on'));
-    img.addEventListener('error', () => fig.remove()); // lien cassé : on n'affiche rien
+    img.addEventListener('error', () => { img.remove(); fig.classList.add('fallback'); }); // lien cassé : fond décoratif
     img.src = src;
     fig.appendChild(img);
 
@@ -405,4 +522,6 @@
   else if (page === 'home') pageHome();
   else if (page === 'team') pageTeam();
   else if (page === 'account') pageAccount();
+  else if (page === 'history') pageHistory();
+  else if (page === 'reviews') pageReviews();
 })();
