@@ -333,7 +333,7 @@
     v.setAttribute('playsinline', '');
     v.setAttribute('muted', '');
     // On n'affiche la vidéo que si une vraie image est dessinée (sinon : fond dégradé, jamais d'écran noir)
-    const reveal = () => { if (v.videoWidth > 0) v.classList.add('on'); };
+    const reveal = () => { if (v.videoWidth > 0) { v.classList.add('on'); bg.classList.add('has-video'); } };
     if ('requestVideoFrameCallback' in v) v.requestVideoFrameCallback(reveal);
     else v.addEventListener('playing', () => setTimeout(reveal, 400));
     v.addEventListener('error', () => v.remove());
