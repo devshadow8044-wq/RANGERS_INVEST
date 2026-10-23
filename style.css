@@ -207,3 +207,66 @@ textarea.field.area{height:auto;min-height:112px;padding:12px 14px;resize:vertic
 /* ---------- Image indisponible : fond décoratif ---------- */
 .banner.fallback{background:linear-gradient(135deg,rgba(91,134,255,.3),rgba(242,207,126,.16))}
 .banner.fallback::before{content:'';position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:9px;transform:rotate(45deg);background:linear-gradient(135deg,var(--gold),var(--gold-d));opacity:.85}
+
+/* ---------- Dépôt ---------- */
+.has-bar{padding-bottom:150px}
+.balance.mini{padding:18px 20px}
+.balance.mini .amount{font-size:clamp(1.6rem,7vw,2rem)}
+.row-label{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:22px 0 10px}
+.row-label label{margin:0}
+.amount-box{display:flex;align-items:center;gap:12px;padding:0 18px;height:72px;border-radius:var(--r-card);background:var(--surface);border:1px solid var(--line-strong)}
+.amount-box:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px rgba(242,207,126,.16)}
+.amount-box span{color:var(--mute);font-family:'Unbounded',sans-serif;font-weight:600;font-size:1rem}
+.amount-box input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--text);font-family:'Unbounded',sans-serif;font-weight:600;font-size:1.7rem}
+.presets{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.preset{height:44px;border-radius:12px;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text);font:inherit;font-weight:700;font-size:.82rem;cursor:pointer}
+.preset.on{background:linear-gradient(135deg,#F8DD92,#DDAE45);color:#1B1303;border-color:transparent}
+.methods{display:grid;gap:10px}
+.method{display:flex;align-items:center;gap:14px;padding:14px;text-align:left;border-radius:16px;border:1px solid var(--line-strong);background:var(--surface);color:var(--text);font:inherit;cursor:pointer}
+.method .mtxt{flex:1;display:flex;flex-direction:column}
+.method .mtxt small{color:var(--mute);font-size:.78rem}
+.method .logo{width:44px;height:44px;border-radius:12px;flex:0 0 auto}
+.method .logo.wave{background:#1DC8FF}
+.method .logo.orange{background:#FF7900}
+.method .radio{width:22px;height:22px;border-radius:50%;border:2px solid var(--line-strong);flex:0 0 auto}
+.method[aria-checked="true"]{border-color:var(--gold);box-shadow:0 0 0 3px rgba(242,207,126,.14)}
+.method[aria-checked="true"] .radio{border-color:var(--gold);background:radial-gradient(circle,var(--gold) 45%,transparent 50%)}
+.notice{font-size:.88rem;color:var(--mute)}
+.notice strong{color:var(--gold);display:block;margin-bottom:4px}
+.notice p{margin:0}
+.notice b{color:var(--text)}
+.paybar{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 18px calc(12px + env(safe-area-inset-bottom));background:rgba(6,9,20,.94);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.paybar small{display:block;color:var(--mute);font-size:.68rem;letter-spacing:.1em}
+.paybar b{font-family:'Unbounded',sans-serif;font-size:1.15rem;color:var(--gold)}
+.paybar .btn{width:auto;min-width:150px;padding:0 24px}
+
+/* ---------- Paiement ---------- */
+.pay-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.status{font-size:.74rem;font-weight:700;padding:6px 10px;border-radius:99px;border:1px solid var(--line-strong);white-space:nowrap}
+.st-wait{color:var(--gold);border-color:rgba(242,207,126,.5)}
+.st-sent{color:#8FB0FF;border-color:rgba(143,176,255,.5)}
+.st-ok{color:var(--green);border-color:rgba(43,212,160,.5)}
+.st-bad{color:#FF9AA3;border-color:rgba(255,154,163,.5)}
+.steps{list-style:none;margin:0;padding:0}
+.steps>li{position:relative;padding:0 0 22px 56px}
+.steps>li::before{content:'';position:absolute;left:19px;top:44px;bottom:2px;border-left:2px dashed var(--line-strong)}
+.steps>li:last-child::before{display:none}
+.steps .n{position:absolute;left:0;top:0;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--line-strong);color:var(--gold);font-family:'Unbounded',sans-serif;font-weight:600;font-size:.9rem}
+.steps h2{font-size:1rem;margin:2px 0 2px}
+.kv{margin-bottom:14px}
+.kv>span{display:block;color:var(--mute);font-size:.8rem;margin-bottom:3px}
+.kv b{display:block}
+.kv .big{font-family:'Unbounded',sans-serif;font-weight:600;font-size:1.25rem;color:var(--gold);word-break:break-all}
+.copyrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.copy{flex:0 0 auto;height:38px;padding:0 14px;border-radius:99px;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text);font:inherit;font-size:.82rem;font-weight:600;cursor:pointer}
+.copy.primary{background:linear-gradient(135deg,#F8DD92,#DDAE45);color:#1B1303;border-color:transparent}
+.payer{font-family:'Unbounded',sans-serif;font-weight:500;margin:4px 0 0}
+[hidden]{display:none !important}
+
+/* ---------- Logos des moyens de paiement ---------- */
+.logo{display:block;overflow:hidden;flex:0 0 auto;border-radius:12px;background:var(--surface-2)}
+.logo.wave{background:#1DC8FF}
+.logo.orange{background:#FF7900}
+.logo img{display:block;width:100%;height:100%;object-fit:cover}
+.logo.sm{width:38px;height:38px;border-radius:10px}
+.h2row{display:flex;align-items:center;justify-content:space-between;gap:10px}
