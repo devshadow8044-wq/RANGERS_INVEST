@@ -261,6 +261,89 @@
     });
   }
 
+  // Fond vidéo : coupé si l'économie de données ou la réduction des animations est activée,
+  // ou si le fichier est absent (le fond sombre reste).
+  (function setupVideo() {
+    const v = document.querySelector('.bg video');
+    if (!v) return;
+    const saveData = navigator.connection && navigator.connection.saveData;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const drop = () => v.remove();
+    if (saveData || reduce) return drop();
+    v.addEventListener('error', drop, true);
+    v.querySelector('source').addEventListener('error', drop);
+    v.play && v.play().catch(() => {});
+  })();
+
+
+  /* ---------- Ambiance : vidéo en arrière-plan ---------- */
+  const ICON_ON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7"/><path d="M18.5 5.5a9 9 0 010 13"/></svg>';
+  const ICON_OFF = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M22 9l-6 6"/><path d="M16 9l6 6"/></svg>';
+
+  function addSoundButton(v) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'sound';
+    const render = () => {
+      btn.innerHTML = v.muted ? ICON_OFF : ICON_ON;
+      btn.setAttribute('aria-pressed', String(!v.muted));
+      btn.setAttribute('aria-label', v.muted ? 'Activer le son' : 'Couper le son');
+    };
+    // Si le membre avait activé le son, on le remet à son premier toucher (le navigateur l'exige)
+    const resume = (e) => {
+      if (e.target.closest && e.target.closest('.sound')) return;
+      removeEventListener('pointerdown', resume);
+      v.muted = false;
+      v.play().catch(() => {});
+      render();
+    };
+    btn.addEventListener('click', () => {
+      removeEventListener('pointerdown', resume);
+      v.muted = !v.muted;
+      if (!v.muted) v.play().catch(() => {});
+      mem.set('rg_sound', v.muted ? 'off' : 'on');
+      render();
+    });
+    if (mem.get('rg_sound') === 'on') addEventListener('pointerdown', resume);
+    render();
+    document.body.appendChild(btn);
+  }
+
+  function initBackground() {
+    const key = { register: 'register', login: 'login', home: 'inside', team: 'inside', account: 'inside' }[document.body.dataset.page];
+    const bg = document.createElement('div');
+    bg.className = 'bg';
+    bg.setAttribute('aria-hidden', 'true');
+    document.body.prepend(bg);
+
+    const src = ((window.RANGERS && window.RANGERS.VIDEOS) || {})[key];
+    const conn = navigator.connection;
+    const economy = (conn && conn.saveData) || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (!src || economy) return; // le dégradé coloré reste en fond
+
+    const v = document.createElement('video');
+    v.className = 'bgvideo';
+    v.src = src;
+    v.muted = true;
+    v.defaultMuted = true;
+    v.loop = true;
+    v.autoplay = true;
+    v.playsInline = true;
+    v.preload = 'auto';
+    v.setAttribute('playsinline', '');
+    v.setAttribute('muted', '');
+    v.addEventListener('playing', () => v.classList.add('on'));
+    v.addEventListener('error', () => v.remove());
+    bg.appendChild(v);
+    v.play().catch(() => {});
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) v.pause(); else v.play().catch(() => {});
+    });
+    if (key === 'inside') addSoundButton(v); // inscription et connexion : jamais de son
+  }
+
+  initBackground();
+
   const page = document.body.dataset.page;
   if (page === 'register') pageRegister();
   else if (page === 'login') pageLogin();
