@@ -485,6 +485,205 @@
     load();
   }
 
+
+  /* ---------- Logos des moyens de paiement ---------- */
+  function fillLogo(el, method) {
+    el.className = 'logo ' + (el.dataset.sm ? 'sm ' : '') + method; // carré de couleur si l'image manque
+    el.innerHTML = '';
+    const src = ((window.RANGERS && window.RANGERS.LOGOS) || {})[method];
+    if (!src) return;
+    const img = new Image();
+    img.alt = '';
+    img.decoding = 'async';
+    img.referrerPolicy = 'no-referrer';
+    img.addEventListener('error', () => img.remove());
+    img.src = src;
+    el.appendChild(img);
+  }
+
+  /* ---------- Dépôt : étape 1 (montant + moyen de paiement) ---------- */
+  async function pageDeposit() {
+    if (!guard()) return;
+    let cfg, me, dial = '';
+    try {
+      const [c, m, cs] = await Promise.all([api('/deposit-config'), api('/me'), api('/countries')]);
+      cfg = c; me = m.user;
+      dial = (cs.find((x) => x.code === me.country) || {}).dial || '';
+    } catch (err) {
+      if (!onAuthError(err)) showError(err.message);
+      return;
+    }
+    const bal = $('#bal');
+    bal.textContent = fcfa(me.balance);
+    bal.closest('.balance').classList.remove('skeleton');
+    $('#prefix').textContent = dial ? '+' + dial : '+';
+    $('#range').textContent = 'Min ' + fcfa(cfg.min) + ' · Max ' + fcfa(cfg.max);
+
+    const amountEl = $('#amount');
+    const totalEl = $('#total');
+    const digits = (v) => Number(String(v).replace(/\D/g, '')) || 0;
+    let method = null;
+
+    const presetBtns = cfg.presets.map((v) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'preset';
+      b.dataset.v = v;
+      b.textContent = new Intl.NumberFormat('fr-FR').format(v);
+      b.addEventListener('click', () => { amountEl.value = v; sync(); });
+      $('#presets').appendChild(b);
+      return b;
+    });
+    function sync() {
+      const n = digits(amountEl.value);
+      amountEl.value = n ? new Intl.NumberFormat('fr-FR').format(n) : '';
+      totalEl.textContent = fcfa(n);
+      presetBtns.forEach((b) => b.classList.toggle('on', Number(b.dataset.v) === n));
+    }
+    amountEl.addEventListener('input', sync);
+
+    const mbox = $('#methods');
+    if (!cfg.methods.length) {
+      showError('Les dépôts ne sont pas encore ouverts. Réessaie bientôt.');
+      $('#submit').disabled = true;
+    }
+    const mbtns = cfg.methods.map((m) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'method';
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-checked', 'false');
+      b.innerHTML = '<span class="logo ' + m.id + '"></span><span class="mtxt"><b></b><small>Touche pour choisir ce moyen de paiement</small></span><span class="radio"></span>';
+      $('b', b).textContent = m.label;
+      fillLogo($('.logo', b), m.id);
+      b.addEventListener('click', () => {
+        method = m.id;
+        mbtns.forEach((x) => x.setAttribute('aria-checked', String(x === b)));
+      });
+      mbox.appendChild(b);
+      return b;
+    });
+    if (mbtns.length === 1) mbtns[0].click();
+
+    $('#submit').addEventListener('click', async () => {
+      showError('');
+      const amount = digits(amountEl.value);
+      const payer = $('#payer').value.trim();
+      if (amount < cfg.min || amount > cfg.max) return showError('Le montant doit être entre ' + fcfa(cfg.min) + ' et ' + fcfa(cfg.max) + '.');
+      if (!method) return showError('Choisis un moyen de paiement.');
+      if (!payer) return showError('Entre le numéro avec lequel tu paies.');
+      const btn = $('#submit');
+      btn.disabled = true;
+      btn.textContent = 'Création…';
+      try {
+        const { deposit } = await api('/deposits', { method: 'POST', body: { amount, method, payer_phone: payer } });
+        location.href = 'depot-paiement.html?id=' + deposit.id;
+      } catch (err) {
+        if (!onAuthError(err)) showError(err.message);
+        btn.disabled = false;
+        btn.textContent = 'Confirmer';
+      }
+    });
+  }
+
+  /* ---------- Dépôt : étape 2 (instructions, minuteur, identifiant) ---------- */
+  const DEP_STATUS = {
+    pending: ['En attente de paiement', 'st-wait'],
+    submitted: ['Vérification en cours', 'st-sent'],
+    confirmed: ['Confirmé', 'st-ok'],
+    rejected: ['Refusé', 'st-bad'],
+    expired: ['Expiré', 'st-bad']
+  };
+
+  async function pageDepositPay() {
+    if (!guard()) return;
+    const id = new URLSearchParams(location.search).get('id');
+    if (!/^\d+$/.test(id || '')) { location.replace('depot.html'); return; }
+    let left = 0, tick = null, poll = null, current = null;
+    const mmss = (s) => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+
+    function render(d) {
+      current = d;
+      const [txt, cls] = DEP_STATUS[d.status] || ['…', ''];
+      const st = $('#status');
+      st.textContent = txt;
+      st.className = 'status ' + cls;
+      $('#total').textContent = fcfa(d.amount);
+      $('#mlabel').textContent = d.method_label;
+      fillLogo($('#plogo'), d.method);
+      $('#acclabel').textContent = d.method_label + ' · compte';
+      $('#ref').textContent = d.reference;
+      $('#payer').textContent = d.payer_phone;
+      $('#paid').textContent = fcfa(d.confirmed_amount);
+
+      const open = d.status === 'pending' || d.status === 'submitted';
+      $('#step-pay').hidden = !open;
+      if (d.pay_to) {
+        $('#accnum').textContent = d.pay_to.number;
+        $('#accname').textContent = d.pay_to.name || '–';
+        $('#copy-num').onclick = () => copy(d.pay_to.number, 'Numéro copié');
+        $('#copy-name').onclick = () => copy(d.pay_to.name || '', 'Nom copié');
+      }
+      $('#step-tx').hidden = !open;
+      $('#txform').hidden = d.status !== 'pending';
+      $('#txsent').hidden = d.status !== 'submitted';
+      if (d.tx_id) $('#txval').textContent = d.tx_id + ' — ton paiement est en cours de vérification.';
+
+      const fin = $('#final');
+      const again = $('#again');
+      fin.hidden = true; again.hidden = true;
+      if (d.status === 'confirmed') { fin.textContent = 'Dépôt confirmé : ' + fcfa(d.amount) + ' ajoutés à ton solde.'; fin.hidden = false; }
+      if (d.status === 'rejected') { fin.textContent = 'Ce dépôt a été refusé. Si tu as bien payé, contacte le service client avec la référence ' + d.reference + '.'; fin.hidden = false; again.hidden = false; }
+      if (d.status === 'expired') { fin.textContent = 'Ce dépôt a expiré. Si tu as déjà payé, contacte le service client avec la référence ' + d.reference + '.'; fin.hidden = false; again.hidden = false; }
+
+      clearInterval(tick);
+      $('#timerline').hidden = d.status !== 'pending';
+      if (d.status === 'pending') {
+        left = d.seconds_left;
+        $('#timer').textContent = mmss(left);
+        tick = setInterval(() => {
+          left = Math.max(0, left - 1);
+          $('#timer').textContent = mmss(left);
+          if (left === 0) { clearInterval(tick); load(); }
+        }, 1000);
+      }
+    }
+
+    async function load(manual) {
+      try {
+        const { deposit } = await api('/deposits/' + id);
+        render(deposit);
+        if (manual) toast('Statut actualisé');
+      } catch (err) {
+        if (onAuthError(err)) return;
+        if (err.status === 404) { location.replace('depot.html'); return; }
+        toast(err.message);
+      }
+    }
+
+    $('#refresh').addEventListener('click', () => load(true));
+    $('#tx').addEventListener('input', (e) => { e.target.value = e.target.value.replace(/[^A-Za-z0-9_-]/g, ''); });
+    $('#txform').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showError('');
+      const tx = $('#tx').value.trim();
+      if (tx.length < 6) return showError('Entre l’identifiant de transaction (6 caractères minimum).');
+      const btn = $('#txsubmit');
+      btn.disabled = true;
+      try {
+        const { deposit } = await api('/deposits/' + id + '/transaction', { method: 'POST', body: { tx_id: tx } });
+        render(deposit);
+        toast('Identifiant envoyé');
+      } catch (err) {
+        if (!onAuthError(err)) showError(err.message);
+      }
+      btn.disabled = false;
+    });
+
+    await load();
+    poll = setInterval(() => { if (!document.hidden && current && (current.status === 'pending' || current.status === 'submitted')) load(); }, 30000);
+  }
+
   /* ---------- Images (bannières) ---------- */
   function addBanner() {
     const page = document.body.dataset.page;
@@ -524,4 +723,6 @@
   else if (page === 'account') pageAccount();
   else if (page === 'history') pageHistory();
   else if (page === 'reviews') pageReviews();
+  else if (page === 'deposit') pageDeposit();
+  else if (page === 'deposit-pay') pageDepositPay();
 })();
