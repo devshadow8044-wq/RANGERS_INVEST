@@ -14,15 +14,21 @@ a{color:var(--yellow)}
 :focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
 
 /* Fond : dégradé coloré (repli) + vidéo + voile pour garder le texte lisible */
-.bg{position:fixed;inset:0;z-index:0;overflow:hidden;
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:var(--ink)}
+/* Ambiance sans vidéo : lueurs colorées qui dérivent lentement */
+.bg::before{content:'';position:absolute;inset:-25%;
   background:
-    radial-gradient(120% 80% at 85% -10%, rgba(90,63,224,.55), transparent 60%),
-    radial-gradient(90% 70% at -10% 105%, rgba(255,59,92,.32), transparent 55%),
-    radial-gradient(70% 50% at 100% 100%, rgba(47,123,255,.28), transparent 60%),
-    var(--ink)}
+    radial-gradient(45% 40% at 78% 14%, rgba(110,78,255,.85), transparent 70%),
+    radial-gradient(42% 38% at 8% 88%, rgba(255,59,92,.60), transparent 70%),
+    radial-gradient(40% 36% at 92% 80%, rgba(47,123,255,.60), transparent 70%),
+    radial-gradient(34% 30% at 18% 22%, rgba(255,88,180,.38), transparent 70%);
+  animation:drift 22s ease-in-out infinite alternate;will-change:transform}
+@keyframes drift{from{transform:translate3d(-3%,-2%,0) scale(1)}to{transform:translate3d(3%,2%,0) scale(1.12)}}
 .bgvideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s ease}
 .bgvideo.on{opacity:1}
-.bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,10,24,.55) 0%,rgba(6,10,24,.7) 50%,rgba(6,10,24,.9) 100%)}
+/* Le voile sombre n'existe que si une vidéo est affichée (pour garder le texte lisible) */
+.bg.has-video::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,10,24,.5) 0%,rgba(6,10,24,.68) 50%,rgba(6,10,24,.88) 100%)}
+.bg.has-video::before{opacity:0}
 
 .wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:18px 18px calc(100px + env(safe-area-inset-bottom))}
 .wrap.auth{padding-bottom:40px}
@@ -107,5 +113,5 @@ h2.section{font-size:1.1rem;font-weight:700;margin:26px 0 10px;text-shadow:0 1px
 .rows dd{font-weight:600;text-align:right;margin:0}
 h1.page{font-size:1.7rem;font-weight:800;margin:4px 0 16px;text-shadow:0 2px 14px rgba(0,0,0,.45)}
 
-@media (prefers-reduced-motion:reduce){.stripe{animation:none}.toast,.bgvideo{transition:none}}
+@media (prefers-reduced-motion:reduce){.stripe,.bg::before{animation:none}.toast,.bgvideo{transition:none}}
 @media (min-width:720px){.wrap{padding-top:40px}}
