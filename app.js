@@ -368,6 +368,35 @@
     if (key === 'inside') addSoundButton(v); // inscription et connexion : jamais de son
   }
 
+  /* ---------- Images (bannières) ---------- */
+  function addBanner() {
+    const page = document.body.dataset.page;
+    const src = ((window.RANGERS && window.RANGERS.IMAGES) || {})[page];
+    if (!src) return;
+    const fig = document.createElement('figure');
+    fig.className = 'banner';
+    const img = new Image();
+    img.alt = '';
+    img.decoding = 'async';
+    img.referrerPolicy = 'no-referrer';
+    img.addEventListener('load', () => img.classList.add('on'));
+    img.addEventListener('error', () => fig.remove()); // lien cassé : on n'affiche rien
+    img.src = src;
+    fig.appendChild(img);
+
+    if (page === 'register' || page === 'login') {
+      const brand = document.querySelector('.hero .brand');
+      if (brand) brand.after(fig);
+    } else if (page === 'home') {
+      const bar = document.querySelector('.topbar');
+      if (bar) bar.after(fig);
+    } else {
+      const title = document.querySelector('h1.page');
+      if (title) title.before(fig);
+    }
+  }
+
+  addBanner();
   initBackground();
 
   const page = document.body.dataset.page;
