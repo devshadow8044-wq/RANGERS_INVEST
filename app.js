@@ -309,17 +309,40 @@
     document.body.appendChild(btn);
   }
 
+  function buildAmbience(bg) {
+    bg.insertAdjacentHTML('beforeend', '<i class="glow g1"></i><i class="glow g2"></i>');
+    const box = document.createElement('div');
+    box.className = 'trails';
+    const n = innerWidth < 600 ? 9 : 16;
+    const kinds = ['gold', 'gold', 'white', 'blue'];
+    const r = (lo, hi) => lo + Math.random() * (hi - lo);
+    for (let i = 0; i < n; i++) {
+      const t = document.createElement('i');
+      t.className = 'trail ' + kinds[i % kinds.length] + (Math.random() < 0.4 ? ' rev' : '');
+      t.style.top = r(6, 94).toFixed(1) + '%';
+      t.style.width = r(80, 240).toFixed(0) + 'px';
+      t.style.height = (Math.random() < 0.25 ? 3 : 2) + 'px';
+      t.style.opacity = r(0.25, 0.7).toFixed(2);
+      t.style.animationDuration = r(7, 16).toFixed(1) + 's';
+      t.style.animationDelay = '-' + r(0, 16).toFixed(1) + 's';
+      box.appendChild(t);
+    }
+    bg.appendChild(box);
+  }
+
   function initBackground() {
     const key = { register: 'register', login: 'login', home: 'inside', team: 'inside', account: 'inside' }[document.body.dataset.page];
     const bg = document.createElement('div');
     bg.className = 'bg';
     bg.setAttribute('aria-hidden', 'true');
     document.body.prepend(bg);
+    buildAmbience(bg);
 
-    const src = ((window.RANGERS && window.RANGERS.VIDEOS) || {})[key];
+    const cfg = window.RANGERS || {};
+    const src = (cfg.VIDEOS || {})[key];
     const conn = navigator.connection;
     const economy = (conn && conn.saveData) || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
-    if (!src || economy) return; // le dégradé coloré reste en fond
+    if (cfg.USE_VIDEOS !== true || !src || economy) return;
 
     const v = document.createElement('video');
     v.className = 'bgvideo';
@@ -332,7 +355,7 @@
     v.preload = 'auto';
     v.setAttribute('playsinline', '');
     v.setAttribute('muted', '');
-    // On n'affiche la vidéo que si une vraie image est dessinée (sinon : fond dégradé, jamais d'écran noir)
+    // La vidéo n'est affichée que si une vraie image est dessinée
     const reveal = () => { if (v.videoWidth > 0) { v.classList.add('on'); bg.classList.add('has-video'); } };
     if ('requestVideoFrameCallback' in v) v.requestVideoFrameCallback(reveal);
     else v.addEventListener('playing', () => setTimeout(reveal, 400));
