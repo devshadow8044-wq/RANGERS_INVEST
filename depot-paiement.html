@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#05070F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<title>Paiement – RANGERS</title>
+</head>
+<body data-page="deposit-pay">
+<main class="wrap has-bar">
+  <div class="topbar">
+    <a class="link-btn" href="index.html" style="text-decoration:none">← Accueil</a>
+    <span class="brand">RANGERS</span>
+  </div>
+  <div class="pay-head">
+    <h1 class="page" style="margin:0">Paiement</h1>
+    <span id="status" class="status">…</span>
+  </div>
+  <p id="timerline" class="hint" style="margin:6px 0 20px">Le dépôt expire dans <b id="timer">--:--</b></p>
+
+  <ol class="steps">
+    <li id="step-pay">
+      <span class="n">1</span>
+      <div class="h2row"><h2>Envoie le paiement</h2><span id="plogo" class="logo sm" data-sm="1"></span></div>
+      <p class="hint">Envoie le montant exact à ce compte <b id="mlabel">Wave</b>.</p>
+      <div class="card" style="margin-top:10px">
+        <div class="kv"><span>Montant à payer</span><b class="big" id="total">–</b></div>
+        <div class="kv"><span id="acclabel">Compte</span>
+          <div class="copyrow"><b class="big" id="accnum">–</b><button class="copy" type="button" id="copy-num" aria-label="Copier le numéro">Copier</button></div></div>
+        <div class="kv"><span>Nom du compte</span>
+          <div class="copyrow"><b id="accname">–</b><button class="copy" type="button" id="copy-name" aria-label="Copier le nom">Copier</button></div></div>
+        <div class="kv"><span>Référence</span><b id="ref">–</b></div>
+      </div>
+    </li>
+
+    <li>
+      <span class="n">2</span>
+      <h2>Paiement effectué ?</h2>
+      <p class="hint">Appuie sur « Rafraîchir » pour voir si ton dépôt a été confirmé.</p>
+      <div class="card" style="margin-top:10px">
+        <div class="kv" style="margin:0"><span>Montant crédité</span>
+          <div class="copyrow"><b class="big" id="paid">0 FCFA</b><button class="copy primary" type="button" id="refresh">Rafraîchir</button></div></div>
+        <p class="hint">La vérification peut prendre de 2 à 10 minutes.</p>
+      </div>
+    </li>
+
+    <li id="step-tx">
+      <span class="n">3</span>
+      <h2>Accélère la vérification</h2>
+      <p class="hint">Entre l’identifiant de transaction reçu par SMS ou dans l’appli.</p>
+      <form id="txform" class="card stack" style="margin-top:10px" novalidate>
+        <div id="error" class="error" role="alert"></div>
+        <input id="tx" class="field" type="text" autocomplete="off" autocapitalize="characters" maxlength="40" placeholder="Identifiant de transaction">
+        <p class="hint" style="margin:0">Un mauvais identifiant retarde la vérification de ton paiement.</p>
+        <button id="txsubmit" class="btn" type="submit">Soumettre</button>
+      </form>
+      <div id="txsent" class="card notice" style="margin-top:10px" hidden>
+        <strong>Identifiant envoyé</strong>
+        <p id="txval" style="margin:4px 0 0"></p>
+      </div>
+    </li>
+
+    <li>
+      <span class="n">4</span>
+      <h2>Ton numéro de paiement</h2>
+      <p id="payer" class="payer">–</p>
+    </li>
+  </ol>
+
+  <div id="final" class="card notice" hidden></div>
+  <a id="again" class="btn" href="depot.html" style="margin-top:14px" hidden>Faire un nouveau dépôt</a>
+</main>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
