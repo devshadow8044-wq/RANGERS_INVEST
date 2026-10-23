@@ -171,3 +171,39 @@ input#ref{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 .q .ico{display:grid;place-items:center;width:58px;height:58px;border-radius:19px;color:var(--gold);background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.02));border:1px solid var(--line-strong);box-shadow:0 10px 26px rgba(0,0,0,.35)}
 .q .ico svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .q:active .ico{transform:scale(.95)}
+
+/* ---------- Menu du compte ---------- */
+.menu{padding:4px 18px}
+.menu .row{display:flex;align-items:center;gap:14px;padding:15px 0;color:var(--text);text-decoration:none;border-bottom:1px solid var(--line);font-weight:600}
+.menu .row:last-child{border-bottom:0}
+.menu .ico{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line)}
+.menu .ico svg{width:20px;height:20px;stroke:var(--gold);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.menu .chev{margin-left:auto;color:var(--mute);font-size:1.4rem;line-height:1}
+
+/* ---------- Historique ---------- */
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;height:38px;padding:0 15px;border-radius:99px;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--mute);font:inherit;font-size:.85rem;font-weight:600;cursor:pointer}
+.chip[aria-pressed="true"]{background:linear-gradient(135deg,#F8DD92,#DDAE45);color:#1B1303;border-color:transparent}
+.tx{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid var(--line)}
+.tx:last-child{border-bottom:0}
+.tx .t{font-weight:600}
+.tx .d{color:var(--mute);font-size:.8rem}
+.tx .a{font-weight:700;white-space:nowrap}
+.tx .a.pos{color:var(--green)}
+.tx .a.neg{color:#FF9AA3}
+
+/* ---------- Avis ---------- */
+.stars{display:flex;gap:4px}
+.stars button{background:none;border:0;font-size:2.1rem;line-height:1;padding:2px 4px;color:#363F63;cursor:pointer}
+.stars button.on{color:var(--gold)}
+textarea.field.area{height:auto;min-height:112px;padding:12px 14px;resize:vertical}
+.rev{padding:14px 0;border-bottom:1px solid var(--line)}
+.rev:last-child{border-bottom:0}
+.rev .stars-s{color:var(--gold);letter-spacing:.1em}
+.rev p{margin:4px 0}
+.rev .who{color:var(--mute);font-size:.8rem}
+
+/* ---------- Image indisponible : fond décoratif ---------- */
+.banner.fallback{background:linear-gradient(135deg,rgba(91,134,255,.3),rgba(242,207,126,.16))}
+.banner.fallback::before{content:'';position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:9px;transform:rotate(45deg);background:linear-gradient(135deg,var(--gold),var(--gold-d));opacity:.85}
