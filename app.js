@@ -232,6 +232,7 @@
     try {
       const { user } = await api('/me');
       $('#phone').textContent = user.phone;
+      const adminLink = $('#admin-link'); if (adminLink && user.role === 'admin') adminLink.hidden = false;
       const d = new Date(String(user.created_at).replace(' ', 'T') + 'Z');
       $('#since').textContent = isNaN(d) ? '–' : d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
     } catch (err) {
@@ -685,90 +686,116 @@
   }
 
 
-  /* ---------- Activités : budget, pointage, niveaux VIP ---------- */
+  /* ---------- Activités : pointage, offres VIP et investissements ---------- */
   async function pageActivities() {
     if (!guard()) return;
     let data = null;
     const plural = (n, w) => n + ' ' + w + (n > 1 ? 's' : '');
-
     function render() {
       const b = data.budget;
       const open = b.total > 0;
       $('#bremain').textContent = open ? fcfa(b.remaining) : 'Fermé';
       $('#bbar').style.width = open ? Math.round((b.remaining / b.total) * 100) + '%' : '0%';
       $('#bnote').textContent = open
-        ? 'Sur un budget de ' + fcfa(b.total) + '. Les récompenses sont offertes dans la limite de ce budget : quand il est épuisé, elles s’arrêtent.'
-        : 'Le budget de récompenses n’est pas encore ouvert.';
-
+        ? 'Budget total : ' + fcfa(b.total) + '. Les récompenses de pointage s’arrêtent lorsque ce budget est épuisé.'
+        : 'Le budget de récompenses de pointage n’est pas encore ouvert.';
       const cur = data.levels.find((l) => l.current);
       $('#reward').textContent = '+ ' + fcfa(cur.reward);
       $('#days').textContent = plural(data.days, 'jour') + ' de pointage';
-      $('#next').textContent = data.next ? 'encore ' + plural(data.next.days_left, 'jour') + ' pour VIP ' + data.next.level : 'niveau maximum atteint';
-
+      $('#next').textContent = data.next ? 'encore ' + plural(data.next.days_left, 'jour') + ' pour VIP de pointage ' + data.next.level : 'niveau de pointage maximum atteint';
       const btn = $('#checkin');
       if (data.today_done) { btn.disabled = true; btn.textContent = 'Déjà pointé aujourd’hui ✓'; }
       else if (!open || b.remaining < cur.reward) { btn.disabled = true; btn.textContent = open ? 'Budget épuisé' : 'Pointage indisponible'; }
       else { btn.disabled = false; btn.textContent = 'Pointer maintenant'; }
-
-      const box = $('#levels');
-      box.innerHTML = '';
+      const levelBox = $('#levels'); levelBox.innerHTML = '';
       data.levels.forEach((l) => {
-        const card = document.createElement('article');
-        card.className = 'vip' + (l.unlocked ? '' : ' locked') + (l.current ? ' current' : '');
-        const ph = document.createElement('div');
-        ph.className = 'ph';
-        const img = new Image();
-        img.alt = '';
-        img.loading = 'lazy';
-        img.addEventListener('error', () => img.remove());
-        img.src = 'img/vip' + l.level + '.jpg';
-        ph.appendChild(img);
-
-        const body = document.createElement('div');
-        body.className = 'vb';
-        const top = document.createElement('div');
-        top.className = 'vt';
-        const badge = document.createElement('span');
-        badge.className = 'vbadge';
-        badge.textContent = 'VIP ' + l.level;
-        const chip = document.createElement('span');
-        chip.className = 'status ' + (l.current ? 'st-wait' : l.unlocked ? 'st-ok' : '');
-        chip.textContent = l.current ? 'Niveau actuel' : l.unlocked ? 'Débloqué' : 'Verrouillé';
-        top.append(badge, chip);
-        const name = document.createElement('div');
-        name.className = 'vn';
-        name.textContent = l.name;
-        const info = document.createElement('div');
-        info.className = 'vi';
-        const unlockTxt = l.unlock_days === 0 ? 'Disponible dès le départ' : l.unlocked ? 'Débloqué à ' + plural(l.unlock_days, 'jour') : 'Se débloque à ' + plural(l.unlock_days, 'jour') + ' de pointage';
-        info.textContent = unlockTxt + ' · ' + fcfa(l.reward) + ' par pointage';
-        body.append(top, name, info);
-        card.append(ph, body);
-        box.appendChild(card);
+        const card = document.createElement('article'); card.className = 'vip' + (l.unlocked ? '' : ' locked') + (l.current ? ' current' : '');
+        const ph = document.createElement('div'); ph.className = 'ph'; const img = new Image(); img.alt = ''; img.loading = 'lazy'; img.addEventListener('error', () => img.remove()); img.src = 'img/vip' + l.level + '.jpg'; ph.appendChild(img);
+        const body = document.createElement('div'); body.className = 'vb'; const top = document.createElement('div'); top.className = 'vt';
+        const badge = document.createElement('span'); badge.className = 'vbadge'; badge.textContent = 'Pointage ' + l.level;
+        const chip = document.createElement('span'); chip.className = 'status ' + (l.current ? 'st-wait' : l.unlocked ? 'st-ok' : ''); chip.textContent = l.current ? 'Niveau actuel' : l.unlocked ? 'Débloqué' : 'Verrouillé';
+        top.append(badge, chip); const name = document.createElement('div'); name.className = 'vn'; name.textContent = l.name;
+        const info = document.createElement('div'); info.className = 'vi'; info.textContent = (l.unlock_days === 0 ? 'Disponible dès le départ' : l.unlocked ? 'Débloqué à ' + plural(l.unlock_days, 'jour') : 'Se débloque à ' + plural(l.unlock_days, 'jour') + ' de pointage') + ' · ' + fcfa(l.reward) + ' par pointage';
+        body.append(top, name, info); card.append(ph, body); levelBox.appendChild(card);
       });
     }
-
-    async function load() {
+    async function loadPlans() {
+      const box = $('#plans'); const mine = $('#my-investments');
       try {
-        data = await api('/activities');
-        render();
-      } catch (err) {
-        if (!onAuthError(err)) toast(err.message);
-      }
+        const [catalog, portfolio] = await Promise.all([api('/vip-plans'), api('/investments')]);
+        box.innerHTML = '';
+        catalog.plans.forEach((p, index) => {
+          const card = document.createElement('article'); card.className = 'vip-plan vip-plan-' + (index + 1);
+          const visual = document.createElement('div'); visual.className = 'vip-plan-visual';
+          const img = new Image(); img.className = 'vip-plan-image'; img.alt = p.name; img.loading = 'lazy'; img.src = 'img/vip' + (index + 1) + '.jpg';
+          img.addEventListener('error', () => { visual.classList.add('no-image'); img.remove(); });
+          const shade = document.createElement('div'); shade.className = 'vip-plan-shade';
+          const badge = document.createElement('span'); badge.className = 'vip-plan-badge'; badge.textContent = p.id;
+          const duration = document.createElement('span'); duration.className = 'vip-plan-duration'; duration.textContent = p.duration_days + ' jours';
+          const title = document.createElement('strong'); title.className = 'vip-plan-title'; title.textContent = p.name;
+          visual.append(img, shade, badge, duration, title);
+
+          const details = document.createElement('div'); details.className = 'vip-plan-details';
+          const price = document.createElement('div'); price.className = 'vip-metric vip-metric-price';
+          const pl = document.createElement('span'); pl.textContent = 'Prix'; const pv = document.createElement('b'); pv.textContent = fcfa(p.price); price.append(pl, pv);
+          const revenue = document.createElement('div'); revenue.className = 'vip-metric vip-metric-revenue';
+          const rl = document.createElement('span'); rl.textContent = 'Revenu quotidien annoncé'; const rv = document.createElement('b'); rv.textContent = fcfa(p.daily_income); revenue.append(rl, rv);
+          const total = document.createElement('div'); total.className = 'vip-metric vip-metric-total';
+          const tl = document.createElement('span'); tl.textContent = 'Revenu total annoncé'; const tv = document.createElement('b'); tv.textContent = fcfa(p.total_income); total.append(tl, tv);
+          const period = document.createElement('p'); period.className = 'vip-plan-period'; period.textContent = 'Durée de l’offre : ' + p.duration_days + ' jours';
+          const btn = document.createElement('button'); btn.className = 'btn vip-buy-btn'; btn.type = 'button'; btn.innerHTML = '<span>Acheter</span><span aria-hidden="true">↗</span>';
+          btn.setAttribute('aria-label', 'Acheter ' + p.id + ' ' + p.name + ' au prix de ' + fcfa(p.price));
+          btn.addEventListener('click', async () => {
+            if (!confirm('Confirmer l’achat ' + p.id + ' pour ' + fcfa(p.price) + ' ? Le montant sera débité de ton solde. Les revenus affichés ne sont pas garantis.')) return;
+            btn.disabled = true; btn.textContent = 'Traitement…';
+            try { const r = await api('/investments', {method:'POST', body:{plan_id:p.id}}); toast(r.message || 'VIP acheté'); await loadPlans(); }
+            catch(e) { if (!onAuthError(e)) toast(e.message); btn.disabled = false; btn.innerHTML = '<span>Acheter</span><span aria-hidden="true">↗</span>'; }
+          });
+          details.append(price, revenue, total, period, btn);
+          card.append(visual, details); box.appendChild(card);
+        });
+        mine.innerHTML = '';
+        if (!portfolio.investments.length) { const empty = document.createElement('p'); empty.className='empty'; empty.textContent='Aucun investissement pour le moment.'; mine.appendChild(empty); }
+        portfolio.investments.forEach((i) => { const card=document.createElement('article');card.className='card';card.style.marginTop='0';
+          const top=document.createElement('div');top.className='vt';const n=document.createElement('strong');n.textContent=i.plan_id+' · '+i.plan_name;const st=document.createElement('span');st.className='status '+(i.status==='active'?'st-ok':'');st.textContent=i.status==='active'?'Actif':i.status;top.append(n,st);
+          const amount=document.createElement('div');amount.className='kv';const al=document.createElement('span');al.textContent='Montant investi';const av=document.createElement('b');av.textContent=fcfa(i.principal);amount.append(al,av);
+          const period=document.createElement('p');period.className='hint';period.textContent='Durée : '+i.duration_days+' jours · Fin prévue : '+i.ends_at+' UTC';card.append(top,amount,period);mine.appendChild(card); });
+      } catch (err) { if (!onAuthError(err)) { box.textContent = err.message; mine.textContent = 'Impossible de charger les investissements.'; } }
     }
+    async function load() { try { data = await api('/activities'); render(); } catch (err) { if (!onAuthError(err)) toast(err.message); } }
+    $('#checkin').addEventListener('click', async () => { const btn=$('#checkin');btn.disabled=true;try{const r=await api('/checkin',{method:'POST'});toast('+ '+fcfa(r.reward)+' ajoutés à ton solde');}catch(err){if(!onAuthError(err))toast(err.message);}await load(); });
+    await Promise.all([load(),loadPlans()]);
+  }
 
-    $('#checkin').addEventListener('click', async () => {
-      const btn = $('#checkin');
-      btn.disabled = true;
+  async function pageWithdrawal() {
+    if (!guard()) return;
+    const amount=$('#withdraw-amount'), method=$('#withdraw-method'), name=$('#withdraw-name'), number=$('#withdraw-number');
+    const bal=$('#withdraw-balance'), list=$('#withdraw-list');
+    async function load() {
+      try { const d=await api('/withdrawals'); bal.textContent=fcfa(d.balance); list.innerHTML='';
+        if(!d.withdrawals.length){const e=document.createElement('p');e.className='empty';e.textContent='Aucune demande de retrait.';list.appendChild(e);}
+        d.withdrawals.forEach(w=>{const c=document.createElement('article');c.className='card';c.style.marginTop='0';const h=document.createElement('div');h.className='vt';const a=document.createElement('strong');a.textContent=fcfa(w.amount);const s=document.createElement('span');s.className='status '+(w.status==='paid'?'st-ok':'st-wait');s.textContent=w.status==='paid'?'Payé':w.status==='pending'?'En attente':'Rejeté';h.append(a,s);const p=document.createElement('p');p.className='hint';p.textContent=w.method+' · '+w.account_number+' · '+w.created_at+' UTC';c.append(h,p);if(w.admin_note){const n=document.createElement('p');n.className='hint';n.textContent=w.admin_note;c.append(n);}list.appendChild(c);});
+      } catch(e){if(!onAuthError(e))toast(e.message);}
+    }
+    $('#withdraw-form').addEventListener('submit',async e=>{e.preventDefault();const btn=$('#withdraw-submit');btn.disabled=true;try{const r=await api('/withdrawals',{method:'POST',body:{amount:Number(amount.value),method:method.value,account_name:name.value,account_number:number.value}});toast(r.message);amount.value='';await load();}catch(err){if(!onAuthError(err))toast(err.message);}btn.disabled=false;});
+    await load();
+  }
+  async function pageAdmin() {
+    if (!guard()) return;
+    const box=$('#admin-queues');
+    async function load(){
       try {
-        const r = await api('/checkin', { method: 'POST' });
-        toast('+ ' + fcfa(r.reward) + ' ajoutés à ton solde');
-      } catch (err) {
-        if (!onAuthError(err)) toast(err.message);
-      }
-      await load();
-    });
-    load();
+        const d=await api('/admin/queues'); box.innerHTML='';
+        const heading=(t)=>{const h=document.createElement('h2');h.className='section';h.textContent=t;box.appendChild(h);};
+        heading('Dépôts à vérifier');
+        if(!d.deposits.length){const p=document.createElement('p');p.className='empty';p.textContent='Aucun dépôt en attente.';box.appendChild(p);}
+        d.deposits.forEach(x=>{const c=document.createElement('article');c.className='card stack';c.style.marginTop='0';const title=document.createElement('strong');title.textContent='Dépôt #'+x.id+' · '+fcfa(x.amount);const p=document.createElement('p');p.className='hint';p.textContent='Membre #'+x.user_id+' · '+x.method+' · '+x.payer_phone+' · Réf. '+x.reference+' · Transaction '+(x.tx_id||'non fournie');c.append(title,p);const actions=document.createElement('div');actions.className='btn-row';const yes=document.createElement('button');yes.className='btn';yes.textContent='Confirmer';const no=document.createElement('button');no.className='btn btn-ghost';no.textContent='Rejeter';yes.addEventListener('click',async()=>{if(!confirm('As-tu vérifié le paiement réel de '+fcfa(x.amount)+' et sa transaction ?'))return;yes.disabled=true;try{await api('/admin/deposits/'+x.id+'/confirm',{method:'POST',body:{}});toast('Dépôt confirmé');await load();}catch(e){toast(e.message);yes.disabled=false;}});no.addEventListener('click',async()=>{if(!confirm('Rejeter ce dépôt ?'))return;no.disabled=true;try{await api('/admin/deposits/'+x.id+'/reject',{method:'POST',body:{}});toast('Dépôt rejeté');await load();}catch(e){toast(e.message);no.disabled=false;}});actions.append(yes,no);c.append(actions);box.append(c);});
+        heading('Retraits à traiter');
+        if(!d.withdrawals.length){const p=document.createElement('p');p.className='empty';p.textContent='Aucun retrait en attente.';box.appendChild(p);}
+        d.withdrawals.forEach(x=>{const c=document.createElement('article');c.className='card stack';c.style.marginTop='0';const title=document.createElement('strong');title.textContent='Retrait #'+x.id+' · '+fcfa(x.amount);const p=document.createElement('p');p.className='hint';p.textContent='Membre #'+x.user_id+' · '+x.method+' · '+x.account_name+' · '+x.account_number;c.append(title,p);const actions=document.createElement('div');actions.className='btn-row';const yes=document.createElement('button');yes.className='btn';yes.textContent='Marquer payé';const no=document.createElement('button');no.className='btn btn-ghost';no.textContent='Rejeter / rembourser';yes.addEventListener('click',async()=>{if(!confirm('Effectue le transfert réel avant de marquer cette demande comme payée. As-tu payé ?'))return;yes.disabled=true;try{await api('/admin/withdrawals/'+x.id+'/paid',{method:'POST',body:{note:'Paiement manuel effectué'}});toast('Retrait marqué payé');await load();}catch(e){toast(e.message);yes.disabled=false;}});no.addEventListener('click',async()=>{if(!confirm('Rejeter et rembourser le solde réservé ?'))return;no.disabled=true;try{await api('/admin/withdrawals/'+x.id+'/reject',{method:'POST',body:{note:'Demande rejetée; solde remboursé'}});toast('Retrait rejeté et solde remboursé');await load();}catch(e){toast(e.message);no.disabled=false;}});actions.append(yes,no);c.append(actions);box.append(c);});
+      } catch(e){if(!onAuthError(e)) box.textContent=e.message;}
+    }
+    await load();
   }
 
   /* ---------- Images (bannières) ---------- */
@@ -813,4 +840,6 @@
   else if (page === 'activities') pageActivities();
   else if (page === 'deposit') pageDeposit();
   else if (page === 'deposit-pay') pageDepositPay();
+  else if (page === 'withdrawal') pageWithdrawal();
+  else if (page === 'admin') pageAdmin();
 })();
