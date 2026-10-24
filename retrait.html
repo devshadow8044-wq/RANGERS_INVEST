@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#05070F">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><title>Retrait – RANGERS</title>
+</head>
+<body data-page="withdrawal">
+<main class="wrap has-bar"><div class="topbar"><a class="link-btn" href="index.html" style="text-decoration:none">← Accueil</a><span class="brand">RANGERS</span></div>
+<h1 class="page">Retrait</h1>
+<section class="balance mini"><div class="label">Solde disponible</div><div class="amount" id="withdraw-balance">Chargement…</div></section>
+<form id="withdraw-form" class="card stack" style="margin-top:18px">
+<div><label for="withdraw-amount">Montant (FCFA)</label><input class="field" id="withdraw-amount" type="number" min="1000" max="1000000" step="1" required placeholder="Minimum 1 000"></div>
+<div><label for="withdraw-method">Moyen de paiement</label><select class="field" id="withdraw-method" required><option value="wave">Wave</option><option value="orange">Orange Money</option></select></div>
+<div><label for="withdraw-name">Nom du titulaire du compte</label><input class="field" id="withdraw-name" maxlength="80" required autocomplete="name" placeholder="Nom complet"></div>
+<div><label for="withdraw-number">Numéro de réception</label><input class="field" id="withdraw-number" type="tel" maxlength="30" required autocomplete="tel" placeholder="Numéro Wave / Orange Money"></div>
+<p class="hint">Une demande en attente réserve le montant sur ton solde. Le paiement est manuel et doit être vérifié par l’administrateur.</p>
+<button id="withdraw-submit" class="btn" type="submit">Envoyer la demande</button></form>
+<h2 class="section">Mes demandes</h2><div id="withdraw-list" class="stack"><p class="hint">Chargement…</p></div>
+</main><nav class="tabbar" aria-label="Navigation principale"><ul><li><a href="index.html">Accueil</a></li><li><a href="activites.html">Activités</a></li><li><a href="equipe.html">Équipe</a></li><li><a href="compte.html">Compte</a></li></ul></nav><div id="toast" class="toast" role="status" aria-live="polite"></div><script src="config.js"></script><script src="app.js"></script>
+</body></html>
