@@ -314,3 +314,10 @@ textarea.field.area{height:auto;min-height:112px;padding:12px 14px;resize:vertic
 .vip-buy-btn[disabled]{opacity:.65;cursor:wait}
 @media(min-width:440px){.vip-plan-visual{height:184px}.vip-plan-details{padding:18px}.vip-metric{padding:13px}}
 @media(prefers-reduced-motion:reduce){.vip-plan,.vip-plan-image,.vip-buy-btn span:last-child{transition:none}}
+
+
+/* Améliorations de lisibilité et d'état de connexion pour les offres VIP */
+#plans-status:not([hidden]){display:block;margin:0 0 14px;padding:13px 15px;border:1px solid rgba(242,207,126,.34);border-radius:14px;background:rgba(242,207,126,.07);color:#F4DCA0;font-size:.84rem;line-height:1.55}
+.vip-buy-btn:disabled{opacity:.62;cursor:wait;filter:saturate(.65);box-shadow:none}
+.vip-metric b{overflow-wrap:anywhere}
+@media(min-width:640px){#plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.vip-plan{height:100%;display:flex;flex-direction:column}.vip-plan-details{flex:1;align-content:start}}
