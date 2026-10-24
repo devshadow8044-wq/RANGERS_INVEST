@@ -7,15 +7,16 @@
     set(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch { /* stockage bloqué */ } }
   };
 
-  let adminSecret = '';
-
   class ApiError extends Error { constructor(m, s) { super(m); this.status = s; } }
 
   async function api(path, { method = 'GET', body } = {}) {
     const headers = { 'Content-Type': 'application/json' };
     const t = mem.get('rg_token');
     if (t) headers.Authorization = 'Bearer ' + t;
-    if (adminSecret) headers['X-Admin-Password'] = adminSecret;
+    // Le mot de passe du panneau admin reste uniquement dans la session du navigateur.
+    if (path.startsWith('/admin')) {
+      try { const adminPassword = sessionStorage.getItem('rg_admin_password'); if (adminPassword) headers['x-admin-password'] = adminPassword; } catch { /* sessionStorage indisponible */ }
+    }
     let res;
     try {
       res = await fetch(API + path, { method, headers, body: body ? JSON.stringify(body) : undefined });
@@ -29,19 +30,6 @@
   }
 
   const fcfa = (n) => new Intl.NumberFormat('fr-FR').format(n) + ' FCFA';
-
-  // Catalogue de secours : les offres restent visibles si l'API est momentanément indisponible.
-  // L'achat, lui, reste côté serveur et ne peut pas être simulé par le navigateur.
-  const DEFAULT_VIP_PLANS = [
-    {id:'VIP1',name:'Range Rover',price:2000,daily_income:500,total_income:180000,duration_days:360},
-    {id:'VIP2',name:'Velar',price:7000,daily_income:1785,total_income:642600,duration_days:360},
-    {id:'VIP3',name:'Defender 110',price:20000,daily_income:5200,total_income:1872000,duration_days:360},
-    {id:'VIP4',name:'Range Rover',price:60000,daily_income:15900,total_income:5724000,duration_days:360},
-    {id:'VIP5',name:'F-Pace SVR',price:150000,daily_income:42000,total_income:15120000,duration_days:360},
-    {id:'VIP6',name:'F-Pace SVR',price:250000,daily_income:72500,total_income:26100000,duration_days:360},
-    {id:'VIP7',name:'F-Pace SVR',price:500000,daily_income:150000,total_income:54000000,duration_days:360},
-    {id:'VIP8',name:'F-Pace SVR',price:1000000,daily_income:400000,total_income:144000000,duration_days:360}
-  ];
 
   let toastTimer;
   function toast(msg) {
@@ -607,7 +595,7 @@
   const DEP_STATUS = {
     pending: ['En attente de paiement', 'st-wait'],
     submitted: ['Vérification en cours', 'st-sent'],
-    confirmed: ['Confirmé', 'st-ok'],
+    confirmed: ['Réussi', 'st-ok'],
     rejected: ['Refusé', 'st-bad'],
     expired: ['Expiré', 'st-bad']
   };
@@ -649,7 +637,8 @@
       const fin = $('#final');
       const again = $('#again');
       fin.hidden = true; again.hidden = true;
-      if (d.status === 'confirmed') { fin.textContent = 'Dépôt confirmé : ' + fcfa(d.amount) + ' ajoutés à ton solde.'; fin.hidden = false; }
+      if (d.status === 'confirmed') { fin.textContent = 'Réussi ✓ — dépôt de ' + fcfa(d.amount) + ' validé et ajouté à ton solde.'; fin.style.color = '#22c55e'; fin.hidden = false; }
+      else { fin.style.color = ''; }
       if (d.status === 'rejected') { fin.textContent = 'Ce dépôt a été refusé. Si tu as bien payé, contacte le service client avec la référence ' + d.reference + '.'; fin.hidden = false; again.hidden = false; }
       if (d.status === 'expired') { fin.textContent = 'Ce dépôt a expiré. Si tu as déjà payé, contacte le service client avec la référence ' + d.reference + '.'; fin.hidden = false; again.hidden = false; }
 
@@ -705,81 +694,79 @@
   /* ---------- Activités : pointage, offres VIP et investissements ---------- */
   async function pageActivities() {
     if (!guard()) return;
+    let data = null;
+    const plural = (n, w) => n + ' ' + w + (n > 1 ? 's' : '');
+    function render() {
+      const b = data.budget;
+      const open = b.total > 0;
+      $('#bremain').textContent = open ? fcfa(b.remaining) : 'Fermé';
+      $('#bbar').style.width = open ? Math.round((b.remaining / b.total) * 100) + '%' : '0%';
+      $('#bnote').textContent = open
+        ? 'Budget total : ' + fcfa(b.total) + '. Les récompenses de pointage s’arrêtent lorsque ce budget est épuisé.'
+        : 'Le budget de récompenses de pointage n’est pas encore ouvert.';
+      const cur = data.levels.find((l) => l.current);
+      $('#reward').textContent = '+ ' + fcfa(cur.reward);
+      $('#days').textContent = plural(data.days, 'jour') + ' de pointage';
+      $('#next').textContent = data.next ? 'encore ' + plural(data.next.days_left, 'jour') + ' pour VIP de pointage ' + data.next.level : 'niveau de pointage maximum atteint';
+      const btn = $('#checkin');
+      if (data.today_done) { btn.disabled = true; btn.textContent = 'Déjà pointé aujourd’hui ✓'; }
+      else if (!open || b.remaining < cur.reward) { btn.disabled = true; btn.textContent = open ? 'Budget épuisé' : 'Pointage indisponible'; }
+      else { btn.disabled = false; btn.textContent = 'Pointer maintenant'; }
+      const levelBox = $('#levels'); levelBox.innerHTML = '';
+      data.levels.forEach((l) => {
+        const card = document.createElement('article'); card.className = 'vip' + (l.unlocked ? '' : ' locked') + (l.current ? ' current' : '');
+        const ph = document.createElement('div'); ph.className = 'ph'; const img = new Image(); img.alt = ''; img.loading = 'lazy'; img.addEventListener('error', () => img.remove()); img.src = 'img/vip' + l.level + '.jpg'; ph.appendChild(img);
+        const body = document.createElement('div'); body.className = 'vb'; const top = document.createElement('div'); top.className = 'vt';
+        const badge = document.createElement('span'); badge.className = 'vbadge'; badge.textContent = 'Pointage ' + l.level;
+        const chip = document.createElement('span'); chip.className = 'status ' + (l.current ? 'st-wait' : l.unlocked ? 'st-ok' : ''); chip.textContent = l.current ? 'Niveau actuel' : l.unlocked ? 'Débloqué' : 'Verrouillé';
+        top.append(badge, chip); const name = document.createElement('div'); name.className = 'vn'; name.textContent = l.name;
+        const info = document.createElement('div'); info.className = 'vi'; info.textContent = (l.unlock_days === 0 ? 'Disponible dès le départ' : l.unlocked ? 'Débloqué à ' + plural(l.unlock_days, 'jour') : 'Se débloque à ' + plural(l.unlock_days, 'jour') + ' de pointage') + ' · ' + fcfa(l.reward) + ' par pointage';
+        body.append(top, name, info); card.append(ph, body); levelBox.appendChild(card);
+      });
+    }
     async function loadPlans() {
       const box = $('#plans'); const mine = $('#my-investments');
       try {
-        const [catalogResult, portfolioResult] = await Promise.allSettled([api('/vip-plans'), api('/investments')]);
-        if (catalogResult.status === 'rejected' && onAuthError(catalogResult.reason)) return;
-        if (portfolioResult.status === 'rejected' && onAuthError(portfolioResult.reason)) return;
-        const livePlans = catalogResult.status === 'fulfilled' && Array.isArray(catalogResult.value.plans)
-          ? catalogResult.value.plans : [];
-        const plans = livePlans.length ? livePlans : DEFAULT_VIP_PLANS;
-        const portfolio = portfolioResult.status === 'fulfilled' && Array.isArray(portfolioResult.value.investments)
-          ? portfolioResult.value : { investments: [] };
-        const status = $('#plans-status');
-        if (status) {
-          status.hidden = livePlans.length > 0;
-          status.textContent = livePlans.length
-            ? ''
-            : 'Mode aperçu : les offres sont affichées, mais les achats et le solde nécessitent la reconnexion du serveur. Réessaie plus tard ou contacte l’administrateur.';
-        }
-        if (catalogResult.status === 'rejected') console.warn('Catalogue VIP indisponible :', catalogResult.reason);
-        if (portfolioResult.status === 'rejected') console.warn('Portefeuille indisponible :', portfolioResult.reason);
+        const [catalog, portfolio] = await Promise.all([api('/vip-plans'), api('/investments')]);
         box.innerHTML = '';
-        plans.forEach((p, index) => {
-          const card = document.createElement('article'); card.className = 'vip-plan vip-plan-' + (index + 1);
-          const visual = document.createElement('div'); visual.className = 'vip-plan-visual';
-          const img = new Image(); img.className = 'vip-plan-image'; img.alt = p.name; img.loading = 'lazy'; img.src = 'img/vip' + (index + 1) + '.jpg';
-          img.addEventListener('error', () => { visual.classList.add('no-image'); img.remove(); });
-          const shade = document.createElement('div'); shade.className = 'vip-plan-shade';
-          const badge = document.createElement('span'); badge.className = 'vip-plan-badge'; badge.textContent = p.id;
-          const duration = document.createElement('span'); duration.className = 'vip-plan-duration'; duration.textContent = p.duration_days + ' jours';
-          const title = document.createElement('strong'); title.className = 'vip-plan-title'; title.textContent = p.name;
-          visual.append(img, shade, badge, duration, title);
-
-          const details = document.createElement('div'); details.className = 'vip-plan-details';
-          const price = document.createElement('div'); price.className = 'vip-metric vip-metric-price';
-          const pl = document.createElement('span'); pl.textContent = 'Prix'; const pv = document.createElement('b'); pv.textContent = fcfa(p.price); price.append(pl, pv);
-          const revenue = document.createElement('div'); revenue.className = 'vip-metric vip-metric-revenue';
-          const rl = document.createElement('span'); rl.textContent = 'Revenu quotidien annoncé'; const rv = document.createElement('b'); rv.textContent = fcfa(p.daily_income); revenue.append(rl, rv);
-          const total = document.createElement('div'); total.className = 'vip-metric vip-metric-total';
-          const tl = document.createElement('span'); tl.textContent = 'Revenu total annoncé'; const tv = document.createElement('b'); tv.textContent = fcfa(p.total_income); total.append(tl, tv);
-          const period = document.createElement('p'); period.className = 'vip-plan-period'; period.textContent = 'Durée de l’offre : ' + p.duration_days + ' jours';
-          const btn = document.createElement('button'); btn.className = 'btn vip-buy-btn'; btn.type = 'button'; btn.innerHTML = '<span>Acheter</span><span aria-hidden="true">↗</span>';
-          btn.setAttribute('aria-label', 'Acheter ' + p.id + ' ' + p.name + ' au prix de ' + fcfa(p.price));
+        catalog.plans.forEach((p) => {
+          const card = document.createElement('article'); card.className = 'card stack'; card.style.marginTop = '0';
+          const top = document.createElement('div'); top.className = 'vt';
+          const badge = document.createElement('span'); badge.className = 'vbadge'; badge.textContent = p.id;
+          const name = document.createElement('strong'); name.textContent = p.name; top.append(badge,name);
+          const price = document.createElement('div'); price.className = 'kv'; const pl = document.createElement('span'); pl.textContent = 'Prix'; const pv = document.createElement('b'); pv.textContent = fcfa(p.price); price.append(pl,pv);
+          const daily = document.createElement('div'); daily.className = 'kv'; const dl = document.createElement('span'); dl.textContent = 'Revenu quotidien annoncé'; const dv = document.createElement('b'); dv.textContent = fcfa(p.daily_income); daily.append(dl,dv);
+          const total = document.createElement('div'); total.className = 'kv'; const tl = document.createElement('span'); tl.textContent = 'Total annoncé sur ' + p.duration_days + ' jours'; const tv = document.createElement('b'); tv.textContent = fcfa(p.total_income); total.append(tl,tv);
+          const btn = document.createElement('button'); btn.className = 'btn'; btn.type = 'button'; btn.textContent = 'Activer ' + p.id;
           btn.addEventListener('click', async () => {
-            if (!confirm('Confirmer l’achat ' + p.id + ' pour ' + fcfa(p.price) + ' ? Le montant sera débité de ton solde. Les revenus affichés ne sont pas garantis.')) return;
-            btn.disabled = true; btn.textContent = 'Traitement…';
-            try { const r = await api('/investments', {method:'POST', body:{plan_id:p.id}}); toast(r.message || 'VIP acheté'); await loadPlans(); }
-            catch(e) { if (!onAuthError(e)) toast(e.message); btn.disabled = false; btn.innerHTML = '<span>Acheter</span><span aria-hidden="true">↗</span>'; }
+            if (!confirm('Confirmer l’achat ' + p.id + ' pour ' + fcfa(p.price) + ' ? Le montant sera débité de ton solde. Les revenus ne sont pas garantis.')) return;
+            btn.disabled = true; btn.textContent = 'Activation…';
+            try { const r = await api('/investments', {method:'POST', body:{plan_id:p.id}}); toast(r.message || 'VIP activé'); await loadPlans(); }
+            catch(e) { if (!onAuthError(e)) toast(e.message); btn.disabled = false; btn.textContent = 'Activer ' + p.id; }
           });
-          details.append(price, revenue, total, period, btn);
-          card.append(visual, details); box.appendChild(card);
+          card.append(top,price,daily,total,btn); box.appendChild(card);
         });
         mine.innerHTML = '';
-        if (portfolioResult.status === 'rejected') {
-          const empty = document.createElement('p'); empty.className='empty'; empty.textContent='Historique indisponible : impossible de joindre le serveur.'; mine.appendChild(empty);
-        } else if (!portfolio.investments.length) { const empty = document.createElement('p'); empty.className='empty'; empty.textContent='Aucun investissement pour le moment.'; mine.appendChild(empty); }
+        if (!portfolio.investments.length) { const empty = document.createElement('p'); empty.className='empty'; empty.textContent='Aucun investissement pour le moment.'; mine.appendChild(empty); }
         portfolio.investments.forEach((i) => { const card=document.createElement('article');card.className='card';card.style.marginTop='0';
           const top=document.createElement('div');top.className='vt';const n=document.createElement('strong');n.textContent=i.plan_id+' · '+i.plan_name;const st=document.createElement('span');st.className='status '+(i.status==='active'?'st-ok':'');st.textContent=i.status==='active'?'Actif':i.status;top.append(n,st);
           const amount=document.createElement('div');amount.className='kv';const al=document.createElement('span');al.textContent='Montant investi';const av=document.createElement('b');av.textContent=fcfa(i.principal);amount.append(al,av);
           const period=document.createElement('p');period.className='hint';period.textContent='Durée : '+i.duration_days+' jours · Fin prévue : '+i.ends_at+' UTC';card.append(top,amount,period);mine.appendChild(card); });
       } catch (err) { if (!onAuthError(err)) { box.textContent = err.message; mine.textContent = 'Impossible de charger les investissements.'; } }
     }
-    await loadPlans();
+    async function load() { try { data = await api('/activities'); render(); } catch (err) { if (!onAuthError(err)) toast(err.message); } }
+    $('#checkin').addEventListener('click', async () => { const btn=$('#checkin');btn.disabled=true;try{const r=await api('/checkin',{method:'POST'});toast('+ '+fcfa(r.reward)+' ajoutés à ton solde');}catch(err){if(!onAuthError(err))toast(err.message);}await load(); });
+    await Promise.all([load(),loadPlans()]);
   }
 
   async function pageWithdrawal() {
     if (!guard()) return;
     const amount=$('#withdraw-amount'), method=$('#withdraw-method'), name=$('#withdraw-name'), number=$('#withdraw-number');
-    const feeEl=$('#withdraw-fee'), netEl=$('#withdraw-net');
-    const updateFee=()=>{const n=Math.max(0,Math.floor(Number(amount.value)||0)),fee=Math.round(n*.15);if(feeEl)feeEl.textContent=fcfa(fee);if(netEl)netEl.textContent=fcfa(n-fee);};
-    amount.addEventListener('input',updateFee); updateFee();
     const bal=$('#withdraw-balance'), list=$('#withdraw-list');
     async function load() {
       try { const d=await api('/withdrawals'); bal.textContent=fcfa(d.balance); list.innerHTML='';
         if(!d.withdrawals.length){const e=document.createElement('p');e.className='empty';e.textContent='Aucune demande de retrait.';list.appendChild(e);}
-        d.withdrawals.forEach(w=>{const c=document.createElement('article');c.className='card';c.style.marginTop='0';const h=document.createElement('div');h.className='vt';const a=document.createElement('strong');a.textContent=fcfa(w.net_amount)+' net (demandé '+fcfa(w.amount)+')';const s=document.createElement('span');s.className='status '+(w.status==='paid'?'st-ok':'st-wait');s.textContent=w.status==='paid'?'Payé':w.status==='pending'?'En attente':'Rejeté';h.append(a,s);const p=document.createElement('p');p.className='hint';p.textContent=w.method+' · '+w.account_number+' · '+w.created_at+' UTC';c.append(h,p);if(w.admin_note){const n=document.createElement('p');n.className='hint';n.textContent=w.admin_note;c.append(n);}list.appendChild(c);});
+        d.withdrawals.forEach(w=>{const c=document.createElement('article');c.className='card';c.style.marginTop='0';const h=document.createElement('div');h.className='vt';const a=document.createElement('strong');a.textContent=fcfa(w.amount);const s=document.createElement('span');s.className='status '+(w.status==='paid'?'st-ok':'st-wait');s.textContent=w.status==='paid'?'Payé':w.status==='pending'?'En attente':'Rejeté';h.append(a,s);const p=document.createElement('p');p.className='hint';p.textContent=w.method+' · '+w.account_number+' · '+w.created_at+' UTC';c.append(h,p);if(w.admin_note){const n=document.createElement('p');n.className='hint';n.textContent=w.admin_note;c.append(n);}list.appendChild(c);});
       } catch(e){if(!onAuthError(e))toast(e.message);}
     }
     $('#withdraw-form').addEventListener('submit',async e=>{e.preventDefault();const btn=$('#withdraw-submit');btn.disabled=true;try{const r=await api('/withdrawals',{method:'POST',body:{amount:Number(amount.value),method:method.value,account_name:name.value,account_number:number.value}});toast(r.message);amount.value='';await load();}catch(err){if(!onAuthError(err))toast(err.message);}btn.disabled=false;});
@@ -787,58 +774,82 @@
   }
   async function pageAdmin() {
     if (!guard()) return;
-    adminSecret = prompt('Entre le mot de passe administrateur distinct :') || '';
-    if (!adminSecret) { toast('Accès administrateur annulé.'); location.href='compte.html'; return; }
-    const box=$('#admin-queues');
-    async function load(){
-      try {
-        const d=await api('/admin/queues'); box.innerHTML='';
-        const heading=(t)=>{const h=document.createElement('h2');h.className='section';h.textContent=t;box.appendChild(h);};
-        heading('Vue d’ensemble');
-        try { const stats=await api('/admin/dashboard'); const grid=document.createElement('div');grid.className='stack';
-          [['Membres',stats.users],['Actifs',stats.active_users],['Bloqués',stats.blocked_users],['Dépôts en attente',stats.pending_deposits],['Retraits en attente',stats.pending_withdrawals],['VIP actifs',stats.investments]].forEach(([label,value])=>{const c=document.createElement('article');c.className='card';const l=document.createElement('p');l.className='hint';l.textContent=label;const v=document.createElement('strong');v.className='big';v.textContent=String(value);c.append(l,v);grid.append(c);});box.append(grid);
-        } catch(e){const p=document.createElement('p');p.className='notice';p.textContent='Statistiques indisponibles : '+e.message;box.append(p);}
-        heading('Gestion des membres');
-        try { const ud=await api('/admin/users'); const userBox=document.createElement('div');userBox.className='stack';
-          if(!ud.users.length){const p=document.createElement('p');p.className='empty';p.textContent='Aucun membre.';userBox.append(p);}
-          ud.users.forEach(u=>{const c=document.createElement('article');c.className='card stack';c.style.marginTop='0';const title=document.createElement('strong');title.textContent='#'+u.id+' · '+u.phone+(u.role==='admin'?' · ADMIN':'');const detail=document.createElement('p');detail.className='hint';detail.textContent=u.country+' · '+u.status+' · solde '+fcfa(u.balance)+' · inscrit '+u.created_at+' UTC';c.append(title,detail);if(u.role!=='admin'){const actions=document.createElement('div');actions.className='btn-row';const adjust=document.createElement('button');adjust.className='btn btn-ghost';adjust.textContent='Corriger le solde';adjust.addEventListener('click',async()=>{const raw=prompt('Montant signé en FCFA (ex. 500 ou -500) :');if(raw===null)return;const amount=Number(raw);const reason=prompt('Motif obligatoire de la correction :');if(reason===null||!reason.trim())return toast('Motif obligatoire');try{await api('/admin/users/'+u.id+'/adjust-balance',{method:'POST',body:{amount,reason}});toast('Solde corrigé');await load();}catch(e){toast(e.message);}});const toggle=document.createElement('button');toggle.className='btn btn-ghost';toggle.textContent=u.status==='blocked'?'Débloquer':'Bloquer';toggle.addEventListener('click',async()=>{const reason=prompt('Motif obligatoire :');if(reason===null||!reason.trim())return;try{await api('/admin/users/'+u.id+'/'+(u.status==='blocked'?'unblock':'block'),{method:'POST',body:{reason}});toast('Statut du membre mis à jour');await load();}catch(e){toast(e.message);}});actions.append(adjust,toggle);c.append(actions);}userBox.append(c);});box.append(userBox);
-        } catch(e){const p=document.createElement('p');p.className='notice';p.textContent='Liste des membres indisponible : '+e.message;box.append(p);}
-        heading('Configuration de la roue');
-        try { const wc=await api('/admin/wheel-config');const c=document.createElement('article');c.className='card stack';const enabled=document.createElement('label');const check=document.createElement('input');check.type='checkbox';check.checked=wc.enabled===true;enabled.append(check,document.createTextNode(' Activer la roue'));const area=document.createElement('textarea');area.className='field';area.rows=6;area.value=JSON.stringify(wc.prizes||[],null,2);area.setAttribute('aria-label','Lots JSON : label, amount, weight');const hint=document.createElement('p');hint.className='hint';hint.textContent='Chaque lot doit contenir label, amount et weight. Montant en FCFA; le poids détermine la probabilité relative.';const save=document.createElement('button');save.className='btn';save.textContent='Enregistrer les lots';save.addEventListener('click',async()=>{try{const prizes=JSON.parse(area.value);await api('/admin/wheel-config',{method:'POST',body:{enabled:check.checked,prizes}});toast('Lots enregistrés');}catch(e){toast(e instanceof SyntaxError?'JSON invalide. Vérifie la liste des lots.':e.message);}});c.append(enabled,area,hint,save);box.append(c);}catch(e){const p=document.createElement('p');p.className='notice';p.textContent='Configuration de roue indisponible : '+e.message;box.append(p);}
-        heading('Dépôts à vérifier');
-        if(!d.deposits.length){const p=document.createElement('p');p.className='empty';p.textContent='Aucun dépôt en attente.';box.appendChild(p);}
-        d.deposits.forEach(x=>{const c=document.createElement('article');c.className='card stack';c.style.marginTop='0';const title=document.createElement('strong');title.textContent='Dépôt #'+x.id+' · '+fcfa(x.amount);const p=document.createElement('p');p.className='hint';p.textContent='Membre #'+x.user_id+' · '+x.method+' · '+x.payer_phone+' · Réf. '+x.reference+' · Transaction '+(x.tx_id||'non fournie');c.append(title,p);const actions=document.createElement('div');actions.className='btn-row';const yes=document.createElement('button');yes.className='btn';yes.textContent='Confirmer';const no=document.createElement('button');no.className='btn btn-ghost';no.textContent='Rejeter';yes.addEventListener('click',async()=>{if(!confirm('As-tu vérifié le paiement réel de '+fcfa(x.amount)+' et sa transaction ?'))return;yes.disabled=true;try{await api('/admin/deposits/'+x.id+'/confirm',{method:'POST',body:{}});toast('Dépôt confirmé');await load();}catch(e){toast(e.message);yes.disabled=false;}});no.addEventListener('click',async()=>{if(!confirm('Rejeter ce dépôt ?'))return;const reason=prompt('Motif obligatoire du refus :');if(reason===null||!reason.trim())return;no.disabled=true;try{await api('/admin/deposits/'+x.id+'/reject',{method:'POST',body:{reason}});toast('Dépôt rejeté');await load();}catch(e){toast(e.message);no.disabled=false;}});actions.append(yes,no);c.append(actions);box.append(c);});
-        heading('Retraits à traiter');
-        if(!d.withdrawals.length){const p=document.createElement('p');p.className='empty';p.textContent='Aucun retrait en attente.';box.appendChild(p);}
-        d.withdrawals.forEach(x=>{const c=document.createElement('article');c.className='card stack';c.style.marginTop='0';const title=document.createElement('strong');title.textContent='Retrait #'+x.id+' · '+fcfa(x.net_amount)+' net / '+fcfa(x.amount)+' demandé';const p=document.createElement('p');p.className='hint';p.textContent='Membre #'+x.user_id+' · '+x.method+' · '+x.account_name+' · '+x.account_number+' · frais '+fcfa(x.fee);c.append(title,p);const actions=document.createElement('div');actions.className='btn-row';const yes=document.createElement('button');yes.className='btn';yes.textContent='Marquer payé';const no=document.createElement('button');no.className='btn btn-ghost';no.textContent='Rejeter / rembourser';yes.addEventListener('click',async()=>{if(!confirm('Effectue le transfert réel avant de marquer cette demande comme payée. As-tu payé ?'))return;yes.disabled=true;try{await api('/admin/withdrawals/'+x.id+'/paid',{method:'POST',body:{note:'Transfert réel effectué et vérifié manuellement'}});toast('Retrait marqué payé');await load();}catch(e){toast(e.message);yes.disabled=false;}});no.addEventListener('click',async()=>{if(!confirm('Rejeter et rembourser le solde réservé ?'))return;const reason=prompt('Motif obligatoire du refus :');if(reason===null||!reason.trim())return;no.disabled=true;try{await api('/admin/withdrawals/'+x.id+'/reject',{method:'POST',body:{note:reason}});toast('Retrait rejeté et solde remboursé');await load();}catch(e){toast(e.message);no.disabled=false;}});actions.append(yes,no);c.append(actions);box.append(c);});
-      } catch(e){if(!onAuthError(e)) box.textContent=e.message;}
+    const box = $('#admin-queues');
+    const form = $('#admin-access-form');
+    const passwordInput = $('#admin-panel-password');
+    const status = $('#admin-access-status');
+    if (!box || !form || !passwordInput) return;
+
+    function setStatus(message, isError = false) {
+      status.textContent = message;
+      status.style.color = isError ? '#ff8b8b' : '';
     }
-    await load();
-  }
 
-
-  async function pageCheckin() {
-    if (!guard()) return;
-    const btn = $('#checkin'), status = $('#checkin-status'), days = $('#checkin-days');
-    const fmt = (secs) => { const h=Math.floor(secs/3600), m=Math.floor((secs%3600)/60); return h+' h '+m+' min'; };
     async function load() {
-      try { const d=await api('/activities'); days.textContent=String(d.days); if(d.today_done){status.textContent='Prochain pointage dans environ '+fmt(d.remaining_seconds)+'.';btn.disabled=true;btn.textContent='Reviens après 24 heures';} else {status.textContent='Tu peux recevoir 50 FCFA maintenant.';btn.disabled=false;btn.textContent='Recevoir 50 FCFA';} }
-      catch(e){if(!onAuthError(e)){status.textContent=e.message;btn.disabled=true;}}
+      box.innerHTML = '<p class="hint">Chargement du panneau…</p>';
+      try {
+        const [d, stats] = await Promise.all([api('/admin/queues'), api('/admin/dashboard')]);
+        box.innerHTML = '';
+        const grid = document.createElement('div'); grid.className = 'grid';
+        const metrics = [
+          ['Membres', stats.users], ['Comptes actifs', stats.active_users],
+          ['Comptes bloqués', stats.blocked_users], ['Dépôts en attente', stats.pending_deposits],
+          ['Retraits en attente', stats.pending_withdrawals], ['VIP actifs', stats.investments]
+        ];
+        metrics.forEach(([label, value]) => {
+          const card = document.createElement('article'); card.className = 'card';
+          const name = document.createElement('p'); name.className = 'hint'; name.textContent = label;
+          const number = document.createElement('strong'); number.style.fontSize = '1.5rem'; number.textContent = String(value ?? 0);
+          card.append(name, number); grid.append(card);
+        });
+        box.append(grid);
+        const heading = (t) => { const h = document.createElement('h2'); h.className = 'section'; h.textContent = t; box.append(h); };
+        heading('Dépôts à vérifier');
+        if (!d.deposits.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'Aucun dépôt en attente.'; box.append(p); }
+        d.deposits.forEach(x => {
+          const c = document.createElement('article'); c.className = 'card stack'; c.style.marginTop = '0';
+          const title = document.createElement('strong'); title.textContent = 'Dépôt #' + x.id + ' · ' + fcfa(x.amount);
+          const p = document.createElement('p'); p.className = 'hint'; p.textContent = 'Membre #' + x.user_id + ' · ' + x.method + ' · ' + x.payer_phone + ' · Réf. ' + x.reference + ' · Transaction ' + (x.tx_id || 'non fournie');
+          const actions = document.createElement('div'); actions.className = 'btn-row';
+          const yes = document.createElement('button'); yes.className = 'btn'; yes.textContent = 'Confirmer après vérification';
+          const no = document.createElement('button'); no.className = 'btn btn-ghost'; no.textContent = 'Rejeter';
+          yes.addEventListener('click', async () => { if (!confirm('As-tu vérifié le paiement réel et la transaction dans ton compte de paiement ?')) return; yes.disabled = true; try { await api('/admin/deposits/' + x.id + '/confirm', {method:'POST',body:{}}); toast('Dépôt confirmé'); await load(); } catch(e) { toast(e.message); yes.disabled = false; } });
+          no.addEventListener('click', async () => { if (!confirm('Rejeter ce dépôt ?')) return; no.disabled = true; try { await api('/admin/deposits/' + x.id + '/reject', {method:'POST',body:{}}); toast('Dépôt rejeté'); await load(); } catch(e) { toast(e.message); no.disabled = false; } });
+          actions.append(yes, no); c.append(title, p, actions); box.append(c);
+        });
+        heading('Retraits à traiter');
+        if (!d.withdrawals.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'Aucun retrait en attente.'; box.append(p); }
+        d.withdrawals.forEach(x => {
+          const c = document.createElement('article'); c.className = 'card stack'; c.style.marginTop = '0';
+          const title = document.createElement('strong'); title.textContent = 'Retrait #' + x.id + ' · ' + fcfa(x.amount);
+          const p = document.createElement('p'); p.className = 'hint'; p.textContent = 'Membre #' + x.user_id + ' · ' + x.method + ' · ' + x.account_name + ' · ' + x.account_number;
+          const actions = document.createElement('div'); actions.className = 'btn-row';
+          const yes = document.createElement('button'); yes.className = 'btn'; yes.textContent = 'Marquer payé';
+          const no = document.createElement('button'); no.className = 'btn btn-ghost'; no.textContent = 'Rejeter / rembourser';
+          yes.addEventListener('click', async () => { if (!confirm('As-tu effectué le transfert réel au bénéficiaire ?')) return; const note = prompt('Référence ou note du transfert effectué :'); if (!note || note.trim().length < 3) return toast('Ajoute une référence de transfert.'); yes.disabled = true; try { await api('/admin/withdrawals/' + x.id + '/paid', {method:'POST',body:{note:note.trim()}}); toast('Retrait marqué payé'); await load(); } catch(e) { toast(e.message); yes.disabled = false; } });
+          no.addEventListener('click', async () => { const note = prompt('Motif du rejet (le solde réservé sera remboursé) :'); if (!note || note.trim().length < 3) return toast('Un motif est obligatoire.'); no.disabled = true; try { await api('/admin/withdrawals/' + x.id + '/reject', {method:'POST',body:{note:note.trim()}}); toast('Retrait rejeté et remboursé'); await load(); } catch(e) { toast(e.message); no.disabled = false; } });
+          actions.append(yes, no); c.append(title, p, actions); box.append(c);
+        });
+        setStatus('Accès administrateur vérifié.');
+      } catch (e) {
+        box.innerHTML = '';
+        if (e.status === 403) {
+          try { sessionStorage.removeItem('rg_admin_password'); } catch {}
+          setStatus('Accès refusé : vérifie le mot de passe du panneau admin et le rôle administrateur du compte.', true);
+        } else if (!onAuthError(e)) setStatus(e.message, true);
+      }
     }
-    btn.addEventListener('click',async()=>{btn.disabled=true;try{const r=await api('/checkin',{method:'POST'});toast('+ '+fcfa(r.reward)+' ajoutés au solde');}catch(e){if(!onAuthError(e))toast(e.message);}await load();});
-    await load();
-  }
-  function initWelcome() {
-    const modal=$('#welcome-modal'); if(!modal) return;
-    modal.hidden=false; const close=()=>{modal.hidden=true;};
-    $('#welcome-close')?.addEventListener('click',close);
-    modal.addEventListener('click',e=>{if(e.target===modal)close();});
-  }
-  async function pageWheel() {
-    if(!guard())return; const btn=$('#wheel-spin'),status=$('#wheel-status'),disc=$('#wheel-disc');
-    try { const d=await api('/wheel/status'); status.textContent=!d.enabled?'La roue doit être configurée par l’administrateur.':d.available?'Une participation gratuite est disponible.':'Reviens après 24 heures.'; btn.disabled=!(d.enabled&&d.available); }
-    catch(e){status.textContent='La roue est temporairement indisponible tant que les lots ne sont pas configurés par l’administrateur.';btn.disabled=true;return;}
-    btn.addEventListener('click',async()=>{btn.disabled=true;disc.classList.remove('spinning');void disc.offsetWidth;disc.classList.add('spinning');try{const r=await api('/wheel/spin',{method:'POST'});setTimeout(()=>{status.textContent=r.message||'Résultat : '+r.prize;toast(r.message||r.prize);},2800);}catch(e){disc.classList.remove('spinning');if(!onAuthError(e))toast(e.message);}setTimeout(async()=>{try{const d=await api('/wheel/status');btn.disabled=!d.available;}catch{btn.disabled=true;}},3000);});
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const value = passwordInput.value;
+      if (value.length < 12) { setStatus('Le mot de passe du panneau doit contenir au moins 12 caractères.', true); return; }
+      try { sessionStorage.setItem('rg_admin_password', value); } catch { setStatus('Le navigateur ne permet pas de conserver la session. Essaie un autre navigateur.', true); return; }
+      passwordInput.value = '';
+      await load();
+    });
+    $('#admin-logout')?.addEventListener('click', () => { try { sessionStorage.removeItem('rg_admin_password'); } catch {} box.innerHTML = '<p class="hint">Session admin fermée.</p>'; setStatus('Reconnecte-toi pour ouvrir le panneau.'); });
+    try { if (sessionStorage.getItem('rg_admin_password')) await load(); } catch { /* sessionStorage indisponible */ }
   }
 
   /* ---------- Images (bannières) ---------- */
@@ -871,7 +882,6 @@
 
   addBanner();
   initBackground();
-  if (document.body.dataset.page === 'home') initWelcome();
 
   const page = document.body.dataset.page;
   if (page === 'register') pageRegister();
@@ -886,6 +896,4 @@
   else if (page === 'deposit-pay') pageDepositPay();
   else if (page === 'withdrawal') pageWithdrawal();
   else if (page === 'admin') pageAdmin();
-  else if (page === 'pointage') pageCheckin();
-  else if (page === 'wheel') pageWheel();
 })();
