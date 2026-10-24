@@ -32,13 +32,14 @@
   const fcfa = (n) => new Intl.NumberFormat('fr-FR').format(n) + ' FCFA';
 
   let toastTimer;
-  function toast(msg) {
+  function toast(msg, type = 'success') {
     const el = $('#toast');
     if (!el) return;
     el.textContent = msg;
+    el.classList.toggle('is-error', type === 'error');
     el.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
   }
 
   function showError(msg) {
@@ -181,7 +182,7 @@
       amount.closest('.balance').classList.remove('skeleton');
     } catch (err) {
       if (err.status === 401) { mem.set('rg_token', null); location.replace('login.html'); return; }
-      toast(err.message);
+      toast(err.message, 'error');
     }
   }
 
@@ -221,7 +222,7 @@
       $('#copy-link').addEventListener('click', () => copy(link, 'Lien copié'));
       $('#wa').href = 'https://wa.me/?text=' + encodeURIComponent('Rejoins-moi sur RANGERS : ' + link);
     } catch (err) {
-      if (!onAuthError(err)) toast(err.message);
+      if (!onAuthError(err)) toast(err.message, 'error');
     }
   }
 
@@ -240,7 +241,7 @@
       const d = new Date(String(user.created_at).replace(' ', 'T') + 'Z');
       $('#since').textContent = isNaN(d) ? '–' : d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
     } catch (err) {
-      if (!onAuthError(err)) toast(err.message);
+      if (!onAuthError(err)) toast(err.message, 'error');
     }
 
     $('#form').addEventListener('submit', async (e) => {
@@ -427,7 +428,7 @@
           list.appendChild(row);
         });
       } catch (err) {
-        if (!onAuthError(err)) toast(err.message);
+        if (!onAuthError(err)) toast(err.message, 'error');
       }
     }
     chips.forEach((c) => c.addEventListener('click', () => load(c.dataset.f)));
@@ -466,7 +467,7 @@
           list.appendChild(box);
         });
       } catch (err) {
-        if (!onAuthError(err)) toast(err.message);
+        if (!onAuthError(err)) toast(err.message, 'error');
       }
     }
 
@@ -663,7 +664,7 @@
       } catch (err) {
         if (onAuthError(err)) return;
         if (err.status === 404) { location.replace('depot.html'); return; }
-        toast(err.message);
+        toast(err.message, 'error');
       }
     }
 
@@ -742,7 +743,7 @@
             if (!confirm('Confirmer l’achat ' + p.id + ' pour ' + fcfa(p.price) + ' ? Le montant sera débité de ton solde. Les revenus ne sont pas garantis.')) return;
             btn.disabled = true; btn.textContent = 'Activation…';
             try { const r = await api('/investments', {method:'POST', body:{plan_id:p.id}}); toast(r.message || 'VIP activé'); await loadPlans(); }
-            catch(e) { if (!onAuthError(e)) toast(e.message); btn.disabled = false; btn.textContent = 'Activer ' + p.id; }
+            catch(e) { if (!onAuthError(e)) toast(e.message, 'error'); btn.disabled = false; btn.textContent = 'Activer ' + p.id; }
           });
           card.append(top,price,daily,total,btn); box.appendChild(card);
         });
@@ -754,8 +755,8 @@
           const period=document.createElement('p');period.className='hint';period.textContent='Durée : '+i.duration_days+' jours · Fin prévue : '+i.ends_at+' UTC';card.append(top,amount,period);mine.appendChild(card); });
       } catch (err) { if (!onAuthError(err)) { box.textContent = err.message; mine.textContent = 'Impossible de charger les investissements.'; } }
     }
-    async function load() { try { data = await api('/activities'); render(); } catch (err) { if (!onAuthError(err)) toast(err.message); } }
-    $('#checkin').addEventListener('click', async () => { const btn=$('#checkin');btn.disabled=true;try{const r=await api('/checkin',{method:'POST'});toast('+ '+fcfa(r.reward)+' ajoutés à ton solde');}catch(err){if(!onAuthError(err))toast(err.message);}await load(); });
+    async function load() { try { data = await api('/activities'); render(); } catch (err) { if (!onAuthError(err)) toast(err.message, 'error'); } }
+    $('#checkin').addEventListener('click', async () => { const btn=$('#checkin');btn.disabled=true;try{const r=await api('/checkin',{method:'POST'});toast('+ '+fcfa(r.reward)+' ajoutés à ton solde');}catch(err){if(!onAuthError(err))toast(err.message, 'error');}await load(); });
     await Promise.all([load(),loadPlans()]);
   }
 
@@ -767,9 +768,9 @@
       try { const d=await api('/withdrawals'); bal.textContent=fcfa(d.balance); list.innerHTML='';
         if(!d.withdrawals.length){const e=document.createElement('p');e.className='empty';e.textContent='Aucune demande de retrait.';list.appendChild(e);}
         d.withdrawals.forEach(w=>{const c=document.createElement('article');c.className='card';c.style.marginTop='0';const h=document.createElement('div');h.className='vt';const a=document.createElement('strong');a.textContent=fcfa(w.amount);const s=document.createElement('span');s.className='status '+(w.status==='paid'?'st-ok':'st-wait');s.textContent=w.status==='paid'?'Payé':w.status==='pending'?'En attente':'Rejeté';h.append(a,s);const p=document.createElement('p');p.className='hint';p.textContent=w.method+' · '+w.account_number+' · '+w.created_at+' UTC';c.append(h,p);if(w.admin_note){const n=document.createElement('p');n.className='hint';n.textContent=w.admin_note;c.append(n);}list.appendChild(c);});
-      } catch(e){if(!onAuthError(e))toast(e.message);}
+      } catch(e){if(!onAuthError(e))toast(e.message, 'error');}
     }
-    $('#withdraw-form').addEventListener('submit',async e=>{e.preventDefault();const btn=$('#withdraw-submit');btn.disabled=true;try{const r=await api('/withdrawals',{method:'POST',body:{amount:Number(amount.value),method:method.value,account_name:name.value,account_number:number.value}});toast(r.message);amount.value='';await load();}catch(err){if(!onAuthError(err))toast(err.message);}btn.disabled=false;});
+    $('#withdraw-form').addEventListener('submit',async e=>{e.preventDefault();const btn=$('#withdraw-submit');btn.disabled=true;try{const r=await api('/withdrawals',{method:'POST',body:{amount:Number(amount.value),method:method.value,account_name:name.value,account_number:number.value}});toast(r.message);amount.value='';await load();}catch(err){if(!onAuthError(err))toast(err.message, 'error');}btn.disabled=false;});
     await load();
   }
   async function pageAdmin() {
@@ -813,8 +814,8 @@
           const actions = document.createElement('div'); actions.className = 'btn-row';
           const yes = document.createElement('button'); yes.className = 'btn'; yes.textContent = 'Confirmer après vérification';
           const no = document.createElement('button'); no.className = 'btn btn-ghost'; no.textContent = 'Rejeter';
-          yes.addEventListener('click', async () => { if (!confirm('As-tu vérifié le paiement réel et la transaction dans ton compte de paiement ?')) return; yes.disabled = true; try { await api('/admin/deposits/' + x.id + '/confirm', {method:'POST',body:{}}); toast('Dépôt confirmé'); await load(); } catch(e) { toast(e.message); yes.disabled = false; } });
-          no.addEventListener('click', async () => { if (!confirm('Rejeter ce dépôt ?')) return; no.disabled = true; try { await api('/admin/deposits/' + x.id + '/reject', {method:'POST',body:{}}); toast('Dépôt rejeté'); await load(); } catch(e) { toast(e.message); no.disabled = false; } });
+          yes.addEventListener('click', async () => { if (!confirm('As-tu vérifié le paiement réel et la transaction dans ton compte de paiement ?')) return; yes.disabled = true; try { await api('/admin/deposits/' + x.id + '/confirm', {method:'POST',body:{}}); toast('Dépôt confirmé'); await load(); } catch(e) { toast(e.message, 'error'); yes.disabled = false; } });
+          no.addEventListener('click', async () => { if (!confirm('Rejeter ce dépôt ?')) return; no.disabled = true; try { await api('/admin/deposits/' + x.id + '/reject', {method:'POST',body:{}}); toast('Dépôt rejeté'); await load(); } catch(e) { toast(e.message, 'error'); no.disabled = false; } });
           actions.append(yes, no); c.append(title, p, actions); box.append(c);
         });
         heading('Retraits à traiter');
@@ -826,8 +827,8 @@
           const actions = document.createElement('div'); actions.className = 'btn-row';
           const yes = document.createElement('button'); yes.className = 'btn'; yes.textContent = 'Marquer payé';
           const no = document.createElement('button'); no.className = 'btn btn-ghost'; no.textContent = 'Rejeter / rembourser';
-          yes.addEventListener('click', async () => { if (!confirm('As-tu effectué le transfert réel au bénéficiaire ?')) return; const note = prompt('Référence ou note du transfert effectué :'); if (!note || note.trim().length < 3) return toast('Ajoute une référence de transfert.'); yes.disabled = true; try { await api('/admin/withdrawals/' + x.id + '/paid', {method:'POST',body:{note:note.trim()}}); toast('Retrait marqué payé'); await load(); } catch(e) { toast(e.message); yes.disabled = false; } });
-          no.addEventListener('click', async () => { const note = prompt('Motif du rejet (le solde réservé sera remboursé) :'); if (!note || note.trim().length < 3) return toast('Un motif est obligatoire.'); no.disabled = true; try { await api('/admin/withdrawals/' + x.id + '/reject', {method:'POST',body:{note:note.trim()}}); toast('Retrait rejeté et remboursé'); await load(); } catch(e) { toast(e.message); no.disabled = false; } });
+          yes.addEventListener('click', async () => { if (!confirm('As-tu effectué le transfert réel au bénéficiaire ?')) return; const note = prompt('Référence ou note du transfert effectué :'); if (!note || note.trim().length < 3) return toast('Ajoute une référence de transfert.', 'error'); yes.disabled = true; try { await api('/admin/withdrawals/' + x.id + '/paid', {method:'POST',body:{note:note.trim()}}); toast('Retrait marqué payé'); await load(); } catch(e) { toast(e.message, 'error'); yes.disabled = false; } });
+          no.addEventListener('click', async () => { const note = prompt('Motif du rejet (le solde réservé sera remboursé) :'); if (!note || note.trim().length < 3) return toast('Un motif est obligatoire.', 'error'); no.disabled = true; try { await api('/admin/withdrawals/' + x.id + '/reject', {method:'POST',body:{note:note.trim()}}); toast('Retrait rejeté et remboursé'); await load(); } catch(e) { toast(e.message, 'error'); no.disabled = false; } });
           actions.append(yes, no); c.append(title, p, actions); box.append(c);
         });
         setStatus('Accès administrateur vérifié.');
