@@ -684,6 +684,93 @@
     poll = setInterval(() => { if (!document.hidden && current && (current.status === 'pending' || current.status === 'submitted')) load(); }, 30000);
   }
 
+
+  /* ---------- Activités : budget, pointage, niveaux VIP ---------- */
+  async function pageActivities() {
+    if (!guard()) return;
+    let data = null;
+    const plural = (n, w) => n + ' ' + w + (n > 1 ? 's' : '');
+
+    function render() {
+      const b = data.budget;
+      const open = b.total > 0;
+      $('#bremain').textContent = open ? fcfa(b.remaining) : 'Fermé';
+      $('#bbar').style.width = open ? Math.round((b.remaining / b.total) * 100) + '%' : '0%';
+      $('#bnote').textContent = open
+        ? 'Sur un budget de ' + fcfa(b.total) + '. Les récompenses sont offertes dans la limite de ce budget : quand il est épuisé, elles s’arrêtent.'
+        : 'Le budget de récompenses n’est pas encore ouvert.';
+
+      const cur = data.levels.find((l) => l.current);
+      $('#reward').textContent = '+ ' + fcfa(cur.reward);
+      $('#days').textContent = plural(data.days, 'jour') + ' de pointage';
+      $('#next').textContent = data.next ? 'encore ' + plural(data.next.days_left, 'jour') + ' pour VIP ' + data.next.level : 'niveau maximum atteint';
+
+      const btn = $('#checkin');
+      if (data.today_done) { btn.disabled = true; btn.textContent = 'Déjà pointé aujourd’hui ✓'; }
+      else if (!open || b.remaining < cur.reward) { btn.disabled = true; btn.textContent = open ? 'Budget épuisé' : 'Pointage indisponible'; }
+      else { btn.disabled = false; btn.textContent = 'Pointer maintenant'; }
+
+      const box = $('#levels');
+      box.innerHTML = '';
+      data.levels.forEach((l) => {
+        const card = document.createElement('article');
+        card.className = 'vip' + (l.unlocked ? '' : ' locked') + (l.current ? ' current' : '');
+        const ph = document.createElement('div');
+        ph.className = 'ph';
+        const img = new Image();
+        img.alt = '';
+        img.loading = 'lazy';
+        img.addEventListener('error', () => img.remove());
+        img.src = 'img/vip' + l.level + '.jpg';
+        ph.appendChild(img);
+
+        const body = document.createElement('div');
+        body.className = 'vb';
+        const top = document.createElement('div');
+        top.className = 'vt';
+        const badge = document.createElement('span');
+        badge.className = 'vbadge';
+        badge.textContent = 'VIP ' + l.level;
+        const chip = document.createElement('span');
+        chip.className = 'status ' + (l.current ? 'st-wait' : l.unlocked ? 'st-ok' : '');
+        chip.textContent = l.current ? 'Niveau actuel' : l.unlocked ? 'Débloqué' : 'Verrouillé';
+        top.append(badge, chip);
+        const name = document.createElement('div');
+        name.className = 'vn';
+        name.textContent = l.name;
+        const info = document.createElement('div');
+        info.className = 'vi';
+        const unlockTxt = l.unlock_days === 0 ? 'Disponible dès le départ' : l.unlocked ? 'Débloqué à ' + plural(l.unlock_days, 'jour') : 'Se débloque à ' + plural(l.unlock_days, 'jour') + ' de pointage';
+        info.textContent = unlockTxt + ' · ' + fcfa(l.reward) + ' par pointage';
+        body.append(top, name, info);
+        card.append(ph, body);
+        box.appendChild(card);
+      });
+    }
+
+    async function load() {
+      try {
+        data = await api('/activities');
+        render();
+      } catch (err) {
+        if (!onAuthError(err)) toast(err.message);
+      }
+    }
+
+    $('#checkin').addEventListener('click', async () => {
+      const btn = $('#checkin');
+      btn.disabled = true;
+      try {
+        const r = await api('/checkin', { method: 'POST' });
+        toast('+ ' + fcfa(r.reward) + ' ajoutés à ton solde');
+      } catch (err) {
+        if (!onAuthError(err)) toast(err.message);
+      }
+      await load();
+    });
+    load();
+  }
+
   /* ---------- Images (bannières) ---------- */
   function addBanner() {
     const page = document.body.dataset.page;
@@ -723,6 +810,7 @@
   else if (page === 'account') pageAccount();
   else if (page === 'history') pageHistory();
   else if (page === 'reviews') pageReviews();
+  else if (page === 'activities') pageActivities();
   else if (page === 'deposit') pageDeposit();
   else if (page === 'deposit-pay') pageDepositPay();
 })();
