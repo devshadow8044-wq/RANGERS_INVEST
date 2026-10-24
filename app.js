@@ -27,6 +27,19 @@
 
   const fcfa = (n) => new Intl.NumberFormat('fr-FR').format(n) + ' FCFA';
 
+  // Catalogue de secours : les offres restent visibles si l'API est momentanément indisponible.
+  // L'achat, lui, reste côté serveur et ne peut pas être simulé par le navigateur.
+  const DEFAULT_VIP_PLANS = [
+    {id:'VIP1',name:'Range Rover',price:2000,daily_income:500,total_income:180000,duration_days:360},
+    {id:'VIP2',name:'Velar',price:7000,daily_income:1785,total_income:642600,duration_days:360},
+    {id:'VIP3',name:'Defender 110',price:20000,daily_income:5200,total_income:1872000,duration_days:360},
+    {id:'VIP4',name:'Range Rover',price:60000,daily_income:15900,total_income:5724000,duration_days:360},
+    {id:'VIP5',name:'F-Pace SVR',price:150000,daily_income:42000,total_income:15120000,duration_days:360},
+    {id:'VIP6',name:'F-Pace SVR',price:250000,daily_income:72500,total_income:26100000,duration_days:360},
+    {id:'VIP7',name:'F-Pace SVR',price:500000,daily_income:150000,total_income:54000000,duration_days:360},
+    {id:'VIP8',name:'F-Pace SVR',price:1000000,daily_income:400000,total_income:144000000,duration_days:360}
+  ];
+
   let toastTimer;
   function toast(msg) {
     const el = $('#toast');
@@ -722,9 +735,25 @@
     async function loadPlans() {
       const box = $('#plans'); const mine = $('#my-investments');
       try {
-        const [catalog, portfolio] = await Promise.all([api('/vip-plans'), api('/investments')]);
+        const [catalogResult, portfolioResult] = await Promise.allSettled([api('/vip-plans'), api('/investments')]);
+        if (catalogResult.status === 'rejected' && onAuthError(catalogResult.reason)) return;
+        if (portfolioResult.status === 'rejected' && onAuthError(portfolioResult.reason)) return;
+        const livePlans = catalogResult.status === 'fulfilled' && Array.isArray(catalogResult.value.plans)
+          ? catalogResult.value.plans : [];
+        const plans = livePlans.length ? livePlans : DEFAULT_VIP_PLANS;
+        const portfolio = portfolioResult.status === 'fulfilled' && Array.isArray(portfolioResult.value.investments)
+          ? portfolioResult.value : { investments: [] };
+        const status = $('#plans-status');
+        if (status) {
+          status.hidden = livePlans.length > 0;
+          status.textContent = livePlans.length
+            ? ''
+            : 'Mode aperçu : les offres sont affichées, mais les achats et le solde nécessitent la reconnexion du serveur. Réessaie plus tard ou contacte l’administrateur.';
+        }
+        if (catalogResult.status === 'rejected') console.warn('Catalogue VIP indisponible :', catalogResult.reason);
+        if (portfolioResult.status === 'rejected') console.warn('Portefeuille indisponible :', portfolioResult.reason);
         box.innerHTML = '';
-        catalog.plans.forEach((p, index) => {
+        plans.forEach((p, index) => {
           const card = document.createElement('article'); card.className = 'vip-plan vip-plan-' + (index + 1);
           const visual = document.createElement('div'); visual.className = 'vip-plan-visual';
           const img = new Image(); img.className = 'vip-plan-image'; img.alt = p.name; img.loading = 'lazy'; img.src = 'img/vip' + (index + 1) + '.jpg';
@@ -755,7 +784,9 @@
           card.append(visual, details); box.appendChild(card);
         });
         mine.innerHTML = '';
-        if (!portfolio.investments.length) { const empty = document.createElement('p'); empty.className='empty'; empty.textContent='Aucun investissement pour le moment.'; mine.appendChild(empty); }
+        if (portfolioResult.status === 'rejected') {
+          const empty = document.createElement('p'); empty.className='empty'; empty.textContent='Historique indisponible : impossible de joindre le serveur.'; mine.appendChild(empty);
+        } else if (!portfolio.investments.length) { const empty = document.createElement('p'); empty.className='empty'; empty.textContent='Aucun investissement pour le moment.'; mine.appendChild(empty); }
         portfolio.investments.forEach((i) => { const card=document.createElement('article');card.className='card';card.style.marginTop='0';
           const top=document.createElement('div');top.className='vt';const n=document.createElement('strong');n.textContent=i.plan_id+' · '+i.plan_name;const st=document.createElement('span');st.className='status '+(i.status==='active'?'st-ok':'');st.textContent=i.status==='active'?'Actif':i.status;top.append(n,st);
           const amount=document.createElement('div');amount.className='kv';const al=document.createElement('span');al.textContent='Montant investi';const av=document.createElement('b');av.textContent=fcfa(i.principal);amount.append(al,av);
