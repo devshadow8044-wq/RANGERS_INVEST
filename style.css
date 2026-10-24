@@ -270,3 +270,18 @@ textarea.field.area{height:auto;min-height:112px;padding:12px 14px;resize:vertic
 .logo img{display:block;width:100%;height:100%;object-fit:cover}
 .logo.sm{width:38px;height:38px;border-radius:10px}
 .h2row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+/* ---------- Activités / niveaux VIP ---------- */
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold-d),var(--gold));transition:width .6s ease}
+.vip{display:flex;gap:14px;align-items:center;padding:12px;border-radius:18px;background:var(--surface);border:1px solid var(--line);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.vip.current{border-color:rgba(242,207,126,.6);box-shadow:0 0 0 3px rgba(242,207,126,.1)}
+.vip .ph{flex:0 0 112px;height:68px;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.05)}
+.vip .ph img{display:block;width:100%;height:100%;object-fit:cover}
+.vip.locked .ph img{filter:grayscale(.85) brightness(.7)}
+.vip .vb{flex:1;min-width:0}
+.vip .vt{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.vbadge{font-family:'Unbounded',sans-serif;font-weight:600;font-size:.72rem;letter-spacing:.06em;color:var(--gold)}
+.vip .vn{font-weight:700;margin-top:2px}
+.vip .vi{color:var(--mute);font-size:.78rem;line-height:1.35;margin-top:2px}
+.vip .status{font-size:.66rem;padding:4px 8px}
