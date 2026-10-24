@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#05070F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<title>Activités – RANGERS</title>
+</head>
+<body data-page="activities">
+<main class="wrap">
+  <div class="topbar">
+    <span class="brand">RANGERS</span>
+  </div>
+  <h1 class="page">Activités</h1>
+
+  <section class="card" aria-label="Budget de récompenses">
+    <div class="kv" style="margin:0"><span>Budget de récompenses restant</span><b class="big" id="bremain">…</b></div>
+    <div class="bar" aria-hidden="true"><i id="bbar" style="width:0%"></i></div>
+    <p class="hint" id="bnote" style="margin-top:10px"></p>
+  </section>
+
+  <h2 class="section">Pointage du jour</h2>
+  <section class="card stack" aria-label="Pointage">
+    <div class="kv" style="margin:0"><span>Récompense de ton niveau</span><b class="big" id="reward">…</b></div>
+    <p class="hint" style="margin:0"><span id="days">…</span> · <span id="next"></span></p>
+    <button id="checkin" class="btn" type="button" disabled>Pointer maintenant</button>
+  </section>
+
+  <h2 class="section">Niveaux VIP</h2>
+  <div id="levels" class="stack"></div>
+  <p class="note">Aucun achat n’est nécessaire : les niveaux se débloquent avec le nombre de jours de pointage. Les récompenses sont offertes dans la limite du budget affiché et ne sont jamais garanties.</p>
+</main>
+
+<nav class="tabbar" aria-label="Navigation principale">
+  <ul>
+    <li><a href="index.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>Accueil</a></li>
+    <li><a href="activites.html" aria-current="page">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M3 13h18"/></svg>Activités</a></li>
+    <li><a href="equipe.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0"/><path d="M16 4.6a3.5 3.5 0 010 6.8"/><path d="M18 14.2A6.5 6.5 0 0121.5 20"/></svg>Équipe</a></li>
+    <li><a href="compte.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>Compte</a></li>
+  </ul>
+</nav>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
