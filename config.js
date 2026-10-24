@@ -4,7 +4,9 @@ window.RANGERS = {
   API_URL: '/api',
 
   // Lien du service client (WhatsApp, Telegram...). Laisse vide tant que tu ne l'as pas : ex. 'https://wa.me/221XXXXXXXXX'
-  SUPPORT_URL: '',
+  SUPPORT_URL: 'https://t.me/Rangers_invest_1978',
+  TELEGRAM_CHANNEL: 'https://t.me/+nVlSnjK2GVljNjhk',
+  TELEGRAM_GROUP: 'https://t.me/+O8Z8hMCMDkRlZDZk',
 
   // Logos des moyens de paiement
   LOGOS: {
