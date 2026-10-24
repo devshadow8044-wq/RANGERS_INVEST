@@ -7,12 +7,15 @@
     set(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch { /* stockage bloqué */ } }
   };
 
+  let adminSecret = '';
+
   class ApiError extends Error { constructor(m, s) { super(m); this.status = s; } }
 
   async function api(path, { method = 'GET', body } = {}) {
     const headers = { 'Content-Type': 'application/json' };
     const t = mem.get('rg_token');
     if (t) headers.Authorization = 'Bearer ' + t;
+    if (adminSecret) headers['X-Admin-Password'] = adminSecret;
     let res;
     try {
       res = await fetch(API + path, { method, headers, body: body ? JSON.stringify(body) : undefined });
@@ -702,36 +705,6 @@
   /* ---------- Activités : pointage, offres VIP et investissements ---------- */
   async function pageActivities() {
     if (!guard()) return;
-    let data = null;
-    const plural = (n, w) => n + ' ' + w + (n > 1 ? 's' : '');
-    function render() {
-      const b = data.budget;
-      const open = b.total > 0;
-      $('#bremain').textContent = open ? fcfa(b.remaining) : 'Fermé';
-      $('#bbar').style.width = open ? Math.round((b.remaining / b.total) * 100) + '%' : '0%';
-      $('#bnote').textContent = open
-        ? 'Budget total : ' + fcfa(b.total) + '. Les récompenses de pointage s’arrêtent lorsque ce budget est épuisé.'
-        : 'Le budget de récompenses de pointage n’est pas encore ouvert.';
-      const cur = data.levels.find((l) => l.current);
-      $('#reward').textContent = '+ ' + fcfa(cur.reward);
-      $('#days').textContent = plural(data.days, 'jour') + ' de pointage';
-      $('#next').textContent = data.next ? 'encore ' + plural(data.next.days_left, 'jour') + ' pour VIP de pointage ' + data.next.level : 'niveau de pointage maximum atteint';
-      const btn = $('#checkin');
-      if (data.today_done) { btn.disabled = true; btn.textContent = 'Déjà pointé aujourd’hui ✓'; }
-      else if (!open || b.remaining < cur.reward) { btn.disabled = true; btn.textContent = open ? 'Budget épuisé' : 'Pointage indisponible'; }
-      else { btn.disabled = false; btn.textContent = 'Pointer maintenant'; }
-      const levelBox = $('#levels'); levelBox.innerHTML = '';
-      data.levels.forEach((l) => {
-        const card = document.createElement('article'); card.className = 'vip' + (l.unlocked ? '' : ' locked') + (l.current ? ' current' : '');
-        const ph = document.createElement('div'); ph.className = 'ph'; const img = new Image(); img.alt = ''; img.loading = 'lazy'; img.addEventListener('error', () => img.remove()); img.src = 'img/vip' + l.level + '.jpg'; ph.appendChild(img);
-        const body = document.createElement('div'); body.className = 'vb'; const top = document.createElement('div'); top.className = 'vt';
-        const badge = document.createElement('span'); badge.className = 'vbadge'; badge.textContent = 'Pointage ' + l.level;
-        const chip = document.createElement('span'); chip.className = 'status ' + (l.current ? 'st-wait' : l.unlocked ? 'st-ok' : ''); chip.textContent = l.current ? 'Niveau actuel' : l.unlocked ? 'Débloqué' : 'Verrouillé';
-        top.append(badge, chip); const name = document.createElement('div'); name.className = 'vn'; name.textContent = l.name;
-        const info = document.createElement('div'); info.className = 'vi'; info.textContent = (l.unlock_days === 0 ? 'Disponible dès le départ' : l.unlocked ? 'Débloqué à ' + plural(l.unlock_days, 'jour') : 'Se débloque à ' + plural(l.unlock_days, 'jour') + ' de pointage') + ' · ' + fcfa(l.reward) + ' par pointage';
-        body.append(top, name, info); card.append(ph, body); levelBox.appendChild(card);
-      });
-    }
     async function loadPlans() {
       const box = $('#plans'); const mine = $('#my-investments');
       try {
@@ -793,19 +766,20 @@
           const period=document.createElement('p');period.className='hint';period.textContent='Durée : '+i.duration_days+' jours · Fin prévue : '+i.ends_at+' UTC';card.append(top,amount,period);mine.appendChild(card); });
       } catch (err) { if (!onAuthError(err)) { box.textContent = err.message; mine.textContent = 'Impossible de charger les investissements.'; } }
     }
-    async function load() { try { data = await api('/activities'); render(); } catch (err) { if (!onAuthError(err)) toast(err.message); } }
-    $('#checkin').addEventListener('click', async () => { const btn=$('#checkin');btn.disabled=true;try{const r=await api('/checkin',{method:'POST'});toast('+ '+fcfa(r.reward)+' ajoutés à ton solde');}catch(err){if(!onAuthError(err))toast(err.message);}await load(); });
-    await Promise.all([load(),loadPlans()]);
+    await loadPlans();
   }
 
   async function pageWithdrawal() {
     if (!guard()) return;
     const amount=$('#withdraw-amount'), method=$('#withdraw-method'), name=$('#withdraw-name'), number=$('#withdraw-number');
+    const feeEl=$('#withdraw-fee'), netEl=$('#withdraw-net');
+    const updateFee=()=>{const n=Math.max(0,Math.floor(Number(amount.value)||0)),fee=Math.round(n*.15);if(feeEl)feeEl.textContent=fcfa(fee);if(netEl)netEl.textContent=fcfa(n-fee);};
+    amount.addEventListener('input',updateFee); updateFee();
     const bal=$('#withdraw-balance'), list=$('#withdraw-list');
     async function load() {
       try { const d=await api('/withdrawals'); bal.textContent=fcfa(d.balance); list.innerHTML='';
         if(!d.withdrawals.length){const e=document.createElement('p');e.className='empty';e.textContent='Aucune demande de retrait.';list.appendChild(e);}
-        d.withdrawals.forEach(w=>{const c=document.createElement('article');c.className='card';c.style.marginTop='0';const h=document.createElement('div');h.className='vt';const a=document.createElement('strong');a.textContent=fcfa(w.amount);const s=document.createElement('span');s.className='status '+(w.status==='paid'?'st-ok':'st-wait');s.textContent=w.status==='paid'?'Payé':w.status==='pending'?'En attente':'Rejeté';h.append(a,s);const p=document.createElement('p');p.className='hint';p.textContent=w.method+' · '+w.account_number+' · '+w.created_at+' UTC';c.append(h,p);if(w.admin_note){const n=document.createElement('p');n.className='hint';n.textContent=w.admin_note;c.append(n);}list.appendChild(c);});
+        d.withdrawals.forEach(w=>{const c=document.createElement('article');c.className='card';c.style.marginTop='0';const h=document.createElement('div');h.className='vt';const a=document.createElement('strong');a.textContent=fcfa(w.net_amount)+' net (demandé '+fcfa(w.amount)+')';const s=document.createElement('span');s.className='status '+(w.status==='paid'?'st-ok':'st-wait');s.textContent=w.status==='paid'?'Payé':w.status==='pending'?'En attente':'Rejeté';h.append(a,s);const p=document.createElement('p');p.className='hint';p.textContent=w.method+' · '+w.account_number+' · '+w.created_at+' UTC';c.append(h,p);if(w.admin_note){const n=document.createElement('p');n.className='hint';n.textContent=w.admin_note;c.append(n);}list.appendChild(c);});
       } catch(e){if(!onAuthError(e))toast(e.message);}
     }
     $('#withdraw-form').addEventListener('submit',async e=>{e.preventDefault();const btn=$('#withdraw-submit');btn.disabled=true;try{const r=await api('/withdrawals',{method:'POST',body:{amount:Number(amount.value),method:method.value,account_name:name.value,account_number:number.value}});toast(r.message);amount.value='';await load();}catch(err){if(!onAuthError(err))toast(err.message);}btn.disabled=false;});
@@ -813,20 +787,58 @@
   }
   async function pageAdmin() {
     if (!guard()) return;
+    adminSecret = prompt('Entre le mot de passe administrateur distinct :') || '';
+    if (!adminSecret) { toast('Accès administrateur annulé.'); location.href='compte.html'; return; }
     const box=$('#admin-queues');
     async function load(){
       try {
         const d=await api('/admin/queues'); box.innerHTML='';
         const heading=(t)=>{const h=document.createElement('h2');h.className='section';h.textContent=t;box.appendChild(h);};
+        heading('Vue d’ensemble');
+        try { const stats=await api('/admin/dashboard'); const grid=document.createElement('div');grid.className='stack';
+          [['Membres',stats.users],['Actifs',stats.active_users],['Bloqués',stats.blocked_users],['Dépôts en attente',stats.pending_deposits],['Retraits en attente',stats.pending_withdrawals],['VIP actifs',stats.investments]].forEach(([label,value])=>{const c=document.createElement('article');c.className='card';const l=document.createElement('p');l.className='hint';l.textContent=label;const v=document.createElement('strong');v.className='big';v.textContent=String(value);c.append(l,v);grid.append(c);});box.append(grid);
+        } catch(e){const p=document.createElement('p');p.className='notice';p.textContent='Statistiques indisponibles : '+e.message;box.append(p);}
+        heading('Gestion des membres');
+        try { const ud=await api('/admin/users'); const userBox=document.createElement('div');userBox.className='stack';
+          if(!ud.users.length){const p=document.createElement('p');p.className='empty';p.textContent='Aucun membre.';userBox.append(p);}
+          ud.users.forEach(u=>{const c=document.createElement('article');c.className='card stack';c.style.marginTop='0';const title=document.createElement('strong');title.textContent='#'+u.id+' · '+u.phone+(u.role==='admin'?' · ADMIN':'');const detail=document.createElement('p');detail.className='hint';detail.textContent=u.country+' · '+u.status+' · solde '+fcfa(u.balance)+' · inscrit '+u.created_at+' UTC';c.append(title,detail);if(u.role!=='admin'){const actions=document.createElement('div');actions.className='btn-row';const adjust=document.createElement('button');adjust.className='btn btn-ghost';adjust.textContent='Corriger le solde';adjust.addEventListener('click',async()=>{const raw=prompt('Montant signé en FCFA (ex. 500 ou -500) :');if(raw===null)return;const amount=Number(raw);const reason=prompt('Motif obligatoire de la correction :');if(reason===null||!reason.trim())return toast('Motif obligatoire');try{await api('/admin/users/'+u.id+'/adjust-balance',{method:'POST',body:{amount,reason}});toast('Solde corrigé');await load();}catch(e){toast(e.message);}});const toggle=document.createElement('button');toggle.className='btn btn-ghost';toggle.textContent=u.status==='blocked'?'Débloquer':'Bloquer';toggle.addEventListener('click',async()=>{const reason=prompt('Motif obligatoire :');if(reason===null||!reason.trim())return;try{await api('/admin/users/'+u.id+'/'+(u.status==='blocked'?'unblock':'block'),{method:'POST',body:{reason}});toast('Statut du membre mis à jour');await load();}catch(e){toast(e.message);}});actions.append(adjust,toggle);c.append(actions);}userBox.append(c);});box.append(userBox);
+        } catch(e){const p=document.createElement('p');p.className='notice';p.textContent='Liste des membres indisponible : '+e.message;box.append(p);}
+        heading('Configuration de la roue');
+        try { const wc=await api('/admin/wheel-config');const c=document.createElement('article');c.className='card stack';const enabled=document.createElement('label');const check=document.createElement('input');check.type='checkbox';check.checked=wc.enabled===true;enabled.append(check,document.createTextNode(' Activer la roue'));const area=document.createElement('textarea');area.className='field';area.rows=6;area.value=JSON.stringify(wc.prizes||[],null,2);area.setAttribute('aria-label','Lots JSON : label, amount, weight');const hint=document.createElement('p');hint.className='hint';hint.textContent='Chaque lot doit contenir label, amount et weight. Montant en FCFA; le poids détermine la probabilité relative.';const save=document.createElement('button');save.className='btn';save.textContent='Enregistrer les lots';save.addEventListener('click',async()=>{try{const prizes=JSON.parse(area.value);await api('/admin/wheel-config',{method:'POST',body:{enabled:check.checked,prizes}});toast('Lots enregistrés');}catch(e){toast(e instanceof SyntaxError?'JSON invalide. Vérifie la liste des lots.':e.message);}});c.append(enabled,area,hint,save);box.append(c);}catch(e){const p=document.createElement('p');p.className='notice';p.textContent='Configuration de roue indisponible : '+e.message;box.append(p);}
         heading('Dépôts à vérifier');
         if(!d.deposits.length){const p=document.createElement('p');p.className='empty';p.textContent='Aucun dépôt en attente.';box.appendChild(p);}
-        d.deposits.forEach(x=>{const c=document.createElement('article');c.className='card stack';c.style.marginTop='0';const title=document.createElement('strong');title.textContent='Dépôt #'+x.id+' · '+fcfa(x.amount);const p=document.createElement('p');p.className='hint';p.textContent='Membre #'+x.user_id+' · '+x.method+' · '+x.payer_phone+' · Réf. '+x.reference+' · Transaction '+(x.tx_id||'non fournie');c.append(title,p);const actions=document.createElement('div');actions.className='btn-row';const yes=document.createElement('button');yes.className='btn';yes.textContent='Confirmer';const no=document.createElement('button');no.className='btn btn-ghost';no.textContent='Rejeter';yes.addEventListener('click',async()=>{if(!confirm('As-tu vérifié le paiement réel de '+fcfa(x.amount)+' et sa transaction ?'))return;yes.disabled=true;try{await api('/admin/deposits/'+x.id+'/confirm',{method:'POST',body:{}});toast('Dépôt confirmé');await load();}catch(e){toast(e.message);yes.disabled=false;}});no.addEventListener('click',async()=>{if(!confirm('Rejeter ce dépôt ?'))return;no.disabled=true;try{await api('/admin/deposits/'+x.id+'/reject',{method:'POST',body:{}});toast('Dépôt rejeté');await load();}catch(e){toast(e.message);no.disabled=false;}});actions.append(yes,no);c.append(actions);box.append(c);});
+        d.deposits.forEach(x=>{const c=document.createElement('article');c.className='card stack';c.style.marginTop='0';const title=document.createElement('strong');title.textContent='Dépôt #'+x.id+' · '+fcfa(x.amount);const p=document.createElement('p');p.className='hint';p.textContent='Membre #'+x.user_id+' · '+x.method+' · '+x.payer_phone+' · Réf. '+x.reference+' · Transaction '+(x.tx_id||'non fournie');c.append(title,p);const actions=document.createElement('div');actions.className='btn-row';const yes=document.createElement('button');yes.className='btn';yes.textContent='Confirmer';const no=document.createElement('button');no.className='btn btn-ghost';no.textContent='Rejeter';yes.addEventListener('click',async()=>{if(!confirm('As-tu vérifié le paiement réel de '+fcfa(x.amount)+' et sa transaction ?'))return;yes.disabled=true;try{await api('/admin/deposits/'+x.id+'/confirm',{method:'POST',body:{}});toast('Dépôt confirmé');await load();}catch(e){toast(e.message);yes.disabled=false;}});no.addEventListener('click',async()=>{if(!confirm('Rejeter ce dépôt ?'))return;const reason=prompt('Motif obligatoire du refus :');if(reason===null||!reason.trim())return;no.disabled=true;try{await api('/admin/deposits/'+x.id+'/reject',{method:'POST',body:{reason}});toast('Dépôt rejeté');await load();}catch(e){toast(e.message);no.disabled=false;}});actions.append(yes,no);c.append(actions);box.append(c);});
         heading('Retraits à traiter');
         if(!d.withdrawals.length){const p=document.createElement('p');p.className='empty';p.textContent='Aucun retrait en attente.';box.appendChild(p);}
-        d.withdrawals.forEach(x=>{const c=document.createElement('article');c.className='card stack';c.style.marginTop='0';const title=document.createElement('strong');title.textContent='Retrait #'+x.id+' · '+fcfa(x.amount);const p=document.createElement('p');p.className='hint';p.textContent='Membre #'+x.user_id+' · '+x.method+' · '+x.account_name+' · '+x.account_number;c.append(title,p);const actions=document.createElement('div');actions.className='btn-row';const yes=document.createElement('button');yes.className='btn';yes.textContent='Marquer payé';const no=document.createElement('button');no.className='btn btn-ghost';no.textContent='Rejeter / rembourser';yes.addEventListener('click',async()=>{if(!confirm('Effectue le transfert réel avant de marquer cette demande comme payée. As-tu payé ?'))return;yes.disabled=true;try{await api('/admin/withdrawals/'+x.id+'/paid',{method:'POST',body:{note:'Paiement manuel effectué'}});toast('Retrait marqué payé');await load();}catch(e){toast(e.message);yes.disabled=false;}});no.addEventListener('click',async()=>{if(!confirm('Rejeter et rembourser le solde réservé ?'))return;no.disabled=true;try{await api('/admin/withdrawals/'+x.id+'/reject',{method:'POST',body:{note:'Demande rejetée; solde remboursé'}});toast('Retrait rejeté et solde remboursé');await load();}catch(e){toast(e.message);no.disabled=false;}});actions.append(yes,no);c.append(actions);box.append(c);});
+        d.withdrawals.forEach(x=>{const c=document.createElement('article');c.className='card stack';c.style.marginTop='0';const title=document.createElement('strong');title.textContent='Retrait #'+x.id+' · '+fcfa(x.net_amount)+' net / '+fcfa(x.amount)+' demandé';const p=document.createElement('p');p.className='hint';p.textContent='Membre #'+x.user_id+' · '+x.method+' · '+x.account_name+' · '+x.account_number+' · frais '+fcfa(x.fee);c.append(title,p);const actions=document.createElement('div');actions.className='btn-row';const yes=document.createElement('button');yes.className='btn';yes.textContent='Marquer payé';const no=document.createElement('button');no.className='btn btn-ghost';no.textContent='Rejeter / rembourser';yes.addEventListener('click',async()=>{if(!confirm('Effectue le transfert réel avant de marquer cette demande comme payée. As-tu payé ?'))return;yes.disabled=true;try{await api('/admin/withdrawals/'+x.id+'/paid',{method:'POST',body:{note:'Transfert réel effectué et vérifié manuellement'}});toast('Retrait marqué payé');await load();}catch(e){toast(e.message);yes.disabled=false;}});no.addEventListener('click',async()=>{if(!confirm('Rejeter et rembourser le solde réservé ?'))return;const reason=prompt('Motif obligatoire du refus :');if(reason===null||!reason.trim())return;no.disabled=true;try{await api('/admin/withdrawals/'+x.id+'/reject',{method:'POST',body:{note:reason}});toast('Retrait rejeté et solde remboursé');await load();}catch(e){toast(e.message);no.disabled=false;}});actions.append(yes,no);c.append(actions);box.append(c);});
       } catch(e){if(!onAuthError(e)) box.textContent=e.message;}
     }
     await load();
+  }
+
+
+  async function pageCheckin() {
+    if (!guard()) return;
+    const btn = $('#checkin'), status = $('#checkin-status'), days = $('#checkin-days');
+    const fmt = (secs) => { const h=Math.floor(secs/3600), m=Math.floor((secs%3600)/60); return h+' h '+m+' min'; };
+    async function load() {
+      try { const d=await api('/activities'); days.textContent=String(d.days); if(d.today_done){status.textContent='Prochain pointage dans environ '+fmt(d.remaining_seconds)+'.';btn.disabled=true;btn.textContent='Reviens après 24 heures';} else {status.textContent='Tu peux recevoir 50 FCFA maintenant.';btn.disabled=false;btn.textContent='Recevoir 50 FCFA';} }
+      catch(e){if(!onAuthError(e)){status.textContent=e.message;btn.disabled=true;}}
+    }
+    btn.addEventListener('click',async()=>{btn.disabled=true;try{const r=await api('/checkin',{method:'POST'});toast('+ '+fcfa(r.reward)+' ajoutés au solde');}catch(e){if(!onAuthError(e))toast(e.message);}await load();});
+    await load();
+  }
+  function initWelcome() {
+    const modal=$('#welcome-modal'); if(!modal) return;
+    modal.hidden=false; const close=()=>{modal.hidden=true;};
+    $('#welcome-close')?.addEventListener('click',close);
+    modal.addEventListener('click',e=>{if(e.target===modal)close();});
+  }
+  async function pageWheel() {
+    if(!guard())return; const btn=$('#wheel-spin'),status=$('#wheel-status'),disc=$('#wheel-disc');
+    try { const d=await api('/wheel/status'); status.textContent=!d.enabled?'La roue doit être configurée par l’administrateur.':d.available?'Une participation gratuite est disponible.':'Reviens après 24 heures.'; btn.disabled=!(d.enabled&&d.available); }
+    catch(e){status.textContent='La roue est temporairement indisponible tant que les lots ne sont pas configurés par l’administrateur.';btn.disabled=true;return;}
+    btn.addEventListener('click',async()=>{btn.disabled=true;disc.classList.remove('spinning');void disc.offsetWidth;disc.classList.add('spinning');try{const r=await api('/wheel/spin',{method:'POST'});setTimeout(()=>{status.textContent=r.message||'Résultat : '+r.prize;toast(r.message||r.prize);},2800);}catch(e){disc.classList.remove('spinning');if(!onAuthError(e))toast(e.message);}setTimeout(async()=>{try{const d=await api('/wheel/status');btn.disabled=!d.available;}catch{btn.disabled=true;}},3000);});
   }
 
   /* ---------- Images (bannières) ---------- */
@@ -859,6 +871,7 @@
 
   addBanner();
   initBackground();
+  if (document.body.dataset.page === 'home') initWelcome();
 
   const page = document.body.dataset.page;
   if (page === 'register') pageRegister();
@@ -873,4 +886,6 @@
   else if (page === 'deposit-pay') pageDepositPay();
   else if (page === 'withdrawal') pageWithdrawal();
   else if (page === 'admin') pageAdmin();
+  else if (page === 'pointage') pageCheckin();
+  else if (page === 'wheel') pageWheel();
 })();
