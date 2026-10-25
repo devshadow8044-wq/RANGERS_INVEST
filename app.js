@@ -762,9 +762,9 @@
         const d = await api('/activities');
         $('#checkin-reward').textContent = fcfa(d.reward || 50);
         $('#checkin-days').textContent = plural(d.days || 0, 'jour');
-        btn.disabled = !!d.today_done;
-        btn.textContent = d.today_done ? 'Déjà pointé — reviens après 24 h ✓' : 'Pointer maintenant';
-        status.textContent = d.today_done ? 'Ton dernier pointage est enregistré.' : 'Ta récompense sera ajoutée au solde après validation du serveur.';
+        btn.disabled = !d.vip_access || !!d.today_done;
+        btn.textContent = !d.vip_access ? 'VIP actif requis' : d.today_done ? 'Déjà pointé — reviens après 24 h ✓' : 'Pointer maintenant';
+        status.textContent = !d.vip_access ? 'Le pointage quotidien est réservé aux membres ayant un VIP actif.' : d.today_done ? 'Ton dernier pointage est enregistré.' : 'Récompense créditée au solde si le serveur accepte le pointage.';
       } catch (e) { if (!onAuthError(e)) status.textContent = e.message; }
       btn.addEventListener('click', async () => {
         btn.disabled = true; btn.textContent = 'Enregistrement…';
@@ -777,6 +777,52 @@
       });
     }
     await Promise.all([loadCheckin(),loadPlans()]);
+  }
+
+  async function pageCheckin() {
+    if (!guard()) return;
+    const btn = $('#checkin'), status = $('#checkin-status');
+    const plural = (n, w) => n + ' ' + w + (n > 1 ? 's' : '');
+    async function refresh() {
+      try {
+        const d = await api('/activities');
+        $('#checkin-reward').textContent = fcfa(d.reward || 0);
+        $('#checkin-days').textContent = plural(d.days || 0, 'jour');
+        btn.disabled = !d.vip_access || !!d.today_done;
+        btn.textContent = !d.vip_access ? 'VIP actif requis' : d.today_done ? 'Déjà pointé — reviens après 24 h ✓' : 'Pointer maintenant';
+        status.textContent = !d.vip_access ? 'Active un VIP pour accéder au pointage.' : d.today_done ? 'Ton pointage est enregistré ou la période de 24 h n’est pas terminée.' : 'Tu peux effectuer ton pointage.';
+      } catch (e) { if (!onAuthError(e)) status.textContent = e.message; }
+    }
+    btn.addEventListener('click', async () => {
+      btn.disabled = true; btn.textContent = 'Enregistrement…';
+      try { const r = await api('/checkin', {method:'POST', body:{}}); status.textContent = 'Récompense reçue : '+fcfa(r.reward)+'. Nouveau solde : '+fcfa(r.balance)+'.'; toast('Pointage enregistré'); await refresh(); }
+      catch (e) { status.textContent = e.message; if (!onAuthError(e)) toast(e.message, 'error'); await refresh(); }
+    });
+    await refresh();
+  }
+
+  async function pageTasks() {
+    if (!guard()) return;
+    let inviteLink = '';
+    try {
+      const t = await api('/team');
+      inviteLink = location.origin + '/register.html?ref=' + encodeURIComponent(t.referral_code);
+      $('#task-code').textContent = t.referral_code;
+      $('#task-link').value = inviteLink;
+      $('#task-status').textContent = 'Lien personnel prêt à partager.';
+    } catch (e) { if (!onAuthError(e)) $('#task-status').textContent = e.message; }
+    const copyLink = async () => {
+      if (!inviteLink) return toast('Le lien n’est pas encore disponible.', 'error');
+      await copy(inviteLink, 'Lien copié');
+    };
+    $('#task-copy').addEventListener('click', copyLink);
+    $('#task-share').addEventListener('click', async () => {
+      if (!inviteLink) return toast('Le lien n’est pas encore disponible.', 'error');
+      if (navigator.share) { try { await navigator.share({title:'RANGERS INVEST', text:'Voici mon lien d’invitation :', url:inviteLink}); } catch(e) { if (e.name !== 'AbortError') toast('Partage impossible.', 'error'); } }
+      else await copyLink();
+    });
+    $('#task-wa').addEventListener('click', (e) => { if (!inviteLink) { e.preventDefault(); return; } e.currentTarget.href='https://wa.me/?text='+encodeURIComponent('Découvre RANGERS INVEST : '+inviteLink); });
+    $('#task-wa').href = 'https://wa.me/?text='+encodeURIComponent('Découvre RANGERS INVEST : '+inviteLink);
   }
 
   async function pageWithdrawal() {
@@ -912,6 +958,8 @@
   else if (page === 'history') pageHistory();
   else if (page === 'reviews') pageReviews();
   else if (page === 'activities') pageActivities();
+  else if (page === 'checkin') pageCheckin();
+  else if (page === 'tasks') pageTasks();
   else if (page === 'deposit') pageDeposit();
   else if (page === 'deposit-pay') pageDepositPay();
   else if (page === 'withdrawal') pageWithdrawal();
