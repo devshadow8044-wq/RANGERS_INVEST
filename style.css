@@ -484,3 +484,12 @@ select.field option{background:#141519;color:#F7F7FA}
 .vip .vi{color:#A5A6B0}
 .logo{background:#211216}
 @media (prefers-reduced-motion:reduce){.btn{transition:none}}
+
+/* Navigation compacte et confortable sur mobile */
+.tabbar ul{grid-template-columns:repeat(5,minmax(0,1fr));}
+.tabbar a{min-height:58px;gap:3px;font-size:11px;}
+.tabbar .navicon{display:block;font-size:20px;line-height:1.1;font-weight:700;color:var(--gold);}
+.tabbar a[aria-current="page"]{color:var(--gold);}
+.tabbar a[aria-current="page"] .navicon{color:#B65CFF;}
+button,a.btn{touch-action:manipulation;}
+#task-link{width:100%;min-width:0;box-sizing:border-box;background:rgba(5,10,22,.8);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px;font:inherit;}
