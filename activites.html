@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#FFDF24">
+<meta name="theme-color" content="#07101C">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
@@ -17,6 +17,14 @@
   </div>
   <h1 class="page">Activités</h1>
 
+  <section class="card stack" style="margin-bottom:22px" aria-labelledby="checkin-title">
+    <h2 id="checkin-title" class="section">Pointage quotidien</h2>
+    <p class="hint">Reviens toutes les 24 heures pour réclamer ta récompense.</p>
+    <div class="kv"><span>Récompense par pointage</span><b id="checkin-reward">50 FCFA</b></div>
+    <div class="kv"><span>Nombre de pointages effectués</span><b id="checkin-days">0 jour</b></div>
+    <button id="checkin" class="btn" type="button">Pointer maintenant</button>
+    <p id="checkin-status" class="hint" role="status" aria-live="polite"></p>
+  </section>
   <h2 class="section">Offres VIP</h2>
   <p class="hint" style="margin-bottom:12px">Choisis une offre. Le prix est débité du solde après confirmation de l’achat.</p>
   <div id="plans" class="stack"><p class="hint">Chargement des offres…</p></div>
