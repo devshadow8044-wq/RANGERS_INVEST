@@ -755,8 +755,7 @@
           const period=document.createElement('p');period.className='hint';period.textContent='Durée : '+i.duration_days+' jours · Fin prévue : '+i.ends_at+' UTC';card.append(top,amount,period);mine.appendChild(card); });
       } catch (err) { if (!onAuthError(err)) { box.textContent = err.message; mine.textContent = 'Impossible de charger les investissements.'; } }
     }
-    async function load() { try { data = await api('/activities'); render(); } catch (err) { if (!onAuthError(err)) toast(err.message, 'error'); } }
-    $('#checkin').addEventListener('click', async () => { const btn=$('#checkin');btn.disabled=true;try{const r=await api('/checkin',{method:'POST'});toast('+ '+fcfa(r.reward)+' ajoutés à ton solde');}catch(err){if(!onAuthError(err))toast(err.message, 'error');}await load(); });
+    async function load() { /* Le pointage quotidien a été retiré de l’interface. */ }
     await Promise.all([load(),loadPlans()]);
   }
 
@@ -844,7 +843,7 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const value = passwordInput.value;
-      if (value.length < 12) { setStatus('Le mot de passe du panneau doit contenir au moins 12 caractères.', true); return; }
+      if (value.length < 9) { setStatus('Le code du panneau admin doit contenir au moins 9 caractères.', true); return; }
       try { sessionStorage.setItem('rg_admin_password', value); } catch { setStatus('Le navigateur ne permet pas de conserver la session. Essaie un autre navigateur.', true); return; }
       passwordInput.value = '';
       await load();
