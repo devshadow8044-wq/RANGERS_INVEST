@@ -755,8 +755,28 @@
           const period=document.createElement('p');period.className='hint';period.textContent='Durée : '+i.duration_days+' jours · Fin prévue : '+i.ends_at+' UTC';card.append(top,amount,period);mine.appendChild(card); });
       } catch (err) { if (!onAuthError(err)) { box.textContent = err.message; mine.textContent = 'Impossible de charger les investissements.'; } }
     }
-    async function load() { /* Le pointage quotidien a été retiré de l’interface. */ }
-    await Promise.all([load(),loadPlans()]);
+    async function loadCheckin() {
+      const btn = $('#checkin'), status = $('#checkin-status');
+      if (!btn) return;
+      try {
+        const d = await api('/activities');
+        $('#checkin-reward').textContent = fcfa(d.reward || 50);
+        $('#checkin-days').textContent = plural(d.days || 0, 'jour');
+        btn.disabled = !!d.today_done;
+        btn.textContent = d.today_done ? 'Déjà pointé — reviens après 24 h ✓' : 'Pointer maintenant';
+        status.textContent = d.today_done ? 'Ton dernier pointage est enregistré.' : 'Ta récompense sera ajoutée au solde après validation du serveur.';
+      } catch (e) { if (!onAuthError(e)) status.textContent = e.message; }
+      btn.addEventListener('click', async () => {
+        btn.disabled = true; btn.textContent = 'Enregistrement…';
+        try {
+          const r = await api('/checkin', { method: 'POST', body: {} });
+          $('#checkin-days').textContent = plural(r.days, 'jour');
+          status.textContent = 'Récompense reçue : ' + fcfa(r.reward) + '. Nouveau solde : ' + fcfa(r.balance) + '.';
+          btn.textContent = 'Déjà pointé aujourd’hui ✓'; toast('Pointage enregistré !');
+        } catch (e) { status.textContent = e.message; btn.disabled = false; btn.textContent = 'Pointer maintenant'; if (!onAuthError(e)) toast(e.message, 'error'); }
+      });
+    }
+    await Promise.all([loadCheckin(),loadPlans()]);
   }
 
   async function pageWithdrawal() {
