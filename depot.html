@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RANGERS (RG) - Mon Compte & Profil</title>
+    <title>RANGERS (RG) - Recharge Sécurisée</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,10 +26,10 @@
         .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
         .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
         @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
-            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.5); }
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.8); }
         }
-        .glow-effect { animation: pulseGlow 3s infinite; }
+        .btn-pulse { animation: pulseGlow 2s infinite; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -39,113 +39,186 @@
     <header class="rg-glass sticky top-0 z-40 px-4 py-3 border-b border-amber-500/10 flex items-center justify-between">
         <div class="flex items-center space-x-3">
             <a href="index.html" class="w-8 h-8 rounded-xl rg-glass flex items-center justify-center text-amber-500 hover:text-white border border-slate-800"><i class="fa-solid fa-arrow-left text-xs"></i></a>
-            <span class="font-black text-sm text-white tracking-wide">RANGERS (RG) - Espace Membre</span>
+            <span class="font-black text-sm text-white tracking-wide">RANGERS (RG) - Recharge</span>
         </div>
-        <div class="flex items-center space-x-1 text-amber-400 text-xs font-bold">
-            <i class="fa-solid fa-shield-halved"></i><span>Sécurisé</span>
+        <div class="flex items-center space-x-1 text-emerald-400 text-xs font-bold">
+            <i class="fa-solid fa-shield-check"></i><span>Sécurisé</span>
         </div>
     </header>
 
     <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-5">
         
-        <!-- PHOTO DE COUVERTURE & PROFIL UTILISATEUR -->
-        <div class="rg-glass rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl relative glow-effect">
-            <div class="h-36 w-full relative">
-                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80">
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-slate-950/40 to-transparent"></div>
-                
-                <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-slate-950/80 border border-amber-500/40 text-[10px] font-bold text-amber-400">
-                    <i class="fa-solid fa-crown mr-1"></i> VIP ACTIF
-                </div>
+        <!-- BANNIÈRE DE CONFIANCE -->
+        <div class="rg-glass p-4 rounded-3xl border border-amber-500/30 flex items-center space-x-4 bg-gradient-to-r from-amber-500/10 via-transparent to-slate-950">
+            <div class="w-12 h-12 rounded-2xl gold-gradient flex items-center justify-center text-slate-950 text-xl font-black shrink-0 shadow-lg">
+                <i class="fa-solid fa-vault"></i>
             </div>
-
-            <div class="p-6 pt-0 relative -mt-10 space-y-4">
-                <div class="flex items-end justify-between">
-                    <div class="w-20 h-20 rounded-2xl gold-gradient p-1 shadow-2xl">
-                        <div class="w-full h-full bg-slate-950 rounded-xl flex items-center justify-center text-amber-500 text-2xl font-black">
-                            <i class="fa-solid fa-user-shield"></i>
-                        </div>
-                    </div>
-                    <span class="px-3 py-1 rounded-xl bg-emerald-500/15 text-emerald-400 text-xs font-bold border border-emerald-500/30">Vérifié & Certifié</span>
-                </div>
-
-                <div>
-                    <h3 class="text-base font-black text-white">Partenaire RANGERS</h3>
-                    <p class="text-xs text-slate-400 font-mono mt-0.5">ID Compte : #RG-884920</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3 pt-3 border-t border-slate-800 text-center">
-                    <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                        <p class="text-[9px] uppercase text-slate-400 font-bold">Solde Recharge</p>
-                        <p class="text-sm font-black text-amber-400 mt-1">FCFA <span id="profile-recharge">0.00</span></p>
-                    </div>
-                    <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                        <p class="text-[9px] uppercase text-slate-400 font-bold">Solde Retirable</p>
-                        <p class="text-sm font-black text-emerald-400 mt-1">FCFA <span id="profile-retirable">1,000.00</span></p>
-                    </div>
-                </div>
+            <div>
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Passerelle Officielle RANGERS</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">Validation manuelle par l'administration (MAMADOU GNING) sous 3 à 10 minutes.</p>
             </div>
         </div>
 
-        <!-- HISTORIQUE DES DÉPÔTS EN ATTENTE DE VALIDATION ADMIN -->
-        <div class="space-y-3">
-            <div class="flex justify-between items-center px-1">
-                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">// Suivi des recharges en attente</h4>
-                <span class="text-[10px] text-amber-500 font-bold">Validation Admin</span>
+        <!-- SOLDE ACTUEL -->
+        <div class="rg-glass p-4 rounded-3xl border border-amber-500/20 flex justify-between items-center">
+            <div>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Solde de recharge actuel</p>
+                <h2 class="text-xl font-black text-white mt-0.5">FCFA <span id="current-recharge">0.00</span></h2>
             </div>
-
-            <div id="pending-deposits-container" class="space-y-2">
-                <!-- Les demandes en attente s'afficheront ici dynamiquement -->
+            <div class="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center border border-amber-500/20">
+                <i class="fa-solid fa-wallet text-sm"></i>
             </div>
         </div>
 
-        <!-- OPTIONS DE GESTION ET SÉCURITÉ -->
-        <div class="space-y-3">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">// Paramètres du compte</h4>
-            
-            <div class="rg-glass rounded-2xl overflow-hidden border border-slate-800 divide-y divide-slate-800">
-                <a href="depot.html" class="p-4 flex items-center justify-between hover:bg-slate-900/50 transition">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center"><i class="fa-solid fa-wallet text-xs"></i></div>
-                        <span class="text-xs font-bold text-white">Effectuer une recharge</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
-                </a>
-
-                <a href="retrait.html" class="p-4 flex items-center justify-between hover:bg-slate-900/50 transition">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-money-bill-transfer text-xs"></i></div>
-                        <span class="text-xs font-bold text-white">Demander un retrait</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
-                </a>
-
-                <a href="equipe.html" class="p-4 flex items-center justify-between hover:bg-slate-900/50 transition">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center"><i class="fa-solid fa-users text-xs"></i></div>
-                        <span class="text-xs font-bold text-white">Mon réseau d'équipe</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
-                </a>
-
-                <button onclick="showAlert('Support officiel RANGERS (RG) disponible 24/7 via Telegram ou WhatsApp officiel.')" class="w-full p-4 flex items-center justify-between hover:bg-slate-900/50 transition text-left">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center"><i class="fa-solid fa-headset text-xs"></i></div>
-                        <span class="text-xs font-bold text-white">Support & Service Client</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+        <!-- ÉTAPE 1 : SÉLECTIONNER VOTRE PAYS -->
+        <div class="space-y-2">
+            <label class="text-slate-400 font-bold uppercase tracking-wider text-[10px] px-1">1. Sélectionner votre pays</label>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="selectCountry('Sénégal', '+221')" id="c-Sénégal" class="p-3 rounded-2xl rg-glass border border-amber-500 text-left transition flex items-center space-x-3 shadow">
+                    <span class="text-base">🇸🇳</span>
+                    <div><p class="text-xs font-bold text-white">Sénégal</p><p class="text-[9px] text-amber-400">+221</p></div>
                 </button>
+                <button onclick="selectCountry('Côte d\'Ivoire', '+225')" id="c-Côte d'Ivoire" class="p-3 rounded-2xl rg-glass border border-slate-800 text-left transition flex items-center space-x-3">
+                    <span class="text-base">🇨🇮</span>
+                    <div><p class="text-xs font-bold text-white">Côte d'Ivoire</p><p class="text-[9px] text-slate-400">+225</p></div>
+                </button>
+                <button onclick="selectCountry('Mali', '+223')" id="c-Mali" class="p-3 rounded-2xl rg-glass border border-slate-800 text-left transition flex items-center space-x-3">
+                    <span class="text-base">🇲🇱</span>
+                    <div><p class="text-xs font-bold text-white">Mali</p><p class="text-[9px] text-slate-400">+223</p></div>
+                </button>
+                <button onclick="selectCountry('Burkina Faso', '+226')" id="c-Burkina Faso" class="p-3 rounded-2xl rg-glass border border-slate-800 text-left transition flex items-center space-x-3">
+                    <span class="text-base">🇧🇫</span>
+                    <div><p class="text-xs font-bold text-white">Burkina Faso</p><p class="text-[9px] text-slate-400">+226</p></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- ÉTAPE 2 : CHOISIR LE SERVICE (WAVE OU OM) -->
+        <div class="space-y-2">
+            <label class="text-slate-400 font-bold uppercase tracking-wider text-[10px] px-1">2. Choisir le moyen de paiement</label>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="selectOperator('WAVE')" id="op-WAVE" class="p-3 rounded-2xl rg-glass border border-amber-500 text-left transition flex items-center space-x-3 shadow">
+                    <div class="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xs"><i class="fa-solid fa-water"></i></div>
+                    <div><p class="text-xs font-bold text-white">WAVE</p><p class="text-[9px] text-cyan-400">Paiement Rapide</p></div>
+                </button>
+                <button onclick="selectOperator('OM')" id="op-OM" class="p-3 rounded-2xl rg-glass border border-slate-800 text-left transition flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center font-bold text-xs"><i class="fa-solid fa-mobile-screen"></i></div>
+                    <div><p class="text-xs font-bold text-white">ORANGE MONEY</p><p class="text-[9px] text-amber-500">Paiement Mobile</p></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- ÉTAPE 3 : MONTANT (MINIMUM 2000 FCFA) -->
+        <div class="space-y-3">
+            <div class="flex justify-between items-center text-xs px-1">
+                <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">3. Montant de la recharge (Min 2,000 FCFA)</span>
+            </div>
+
+            <div class="rg-glass p-4 rounded-3xl border border-amber-500/30 space-y-4">
+                <div class="flex items-center justify-between bg-slate-950 px-4 py-3 rounded-2xl border border-slate-800">
+                    <span class="text-xs font-bold text-slate-400">FCFA</span>
+                    <input type="number" id="custom-amount-input" oninput="onCustomAmountInput(this.value)" class="w-full bg-transparent text-right text-2xl font-black text-white focus:outline-none ml-2" value="2000" min="2000">
+                </div>
+                
+                <div class="grid grid-cols-4 gap-2">
+                    <button onclick="setAmount(2000)" id="btn-amt-2000" class="py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 shadow">2000</button>
+                    <button onclick="setAmount(5000)" id="btn-amt-5000" class="py-2.5 rounded-xl text-xs font-bold rg-glass text-slate-300 border border-slate-800">5000</button>
+                    <button onclick="setAmount(10000)" id="btn-amt-10000" class="py-2.5 rounded-xl text-xs font-bold rg-glass text-slate-300 border border-slate-800">10000</button>
+                    <button onclick="setAmount(20000)" id="btn-amt-20000" class="py-2.5 rounded-xl text-xs font-bold rg-glass text-slate-300 border border-slate-800">20000</button>
+                    <button onclick="setAmount(40000)" id="btn-amt-40000" class="py-2.5 rounded-xl text-xs font-bold rg-glass text-slate-300 border border-slate-800">40000</button>
+                    <button onclick="setAmount(100000)" id="btn-amt-100000" class="py-2.5 rounded-xl text-xs font-bold rg-glass text-slate-300 border border-slate-800">100000</button>
+                    <button onclick="setAmount(200000)" id="btn-amt-200000" class="py-2.5 rounded-xl text-xs font-bold rg-glass text-slate-300 border border-slate-800">200000</button>
+                    <button onclick="setAmount(500000)" id="btn-amt-500000" class="py-2.5 rounded-xl text-xs font-bold rg-glass text-slate-300 border border-slate-800">500000</button>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- NAVIGATION 4 BOUTONS -->
-    <nav class="fixed bottom-3 left-4 right-4 rg-glass rounded-3xl p-2 px-6 flex justify-between items-center z-40 border border-amber-500/20 shadow-2xl max-w-lg mx-auto">
-        <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-house text-base"></i><span class="text-[9px] mt-1 font-bold">Accueil</span></a>
-        <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-layer-group text-base"></i><span class="text-[9px] mt-1 font-bold">Invest</span></a>
-        <a href="equipe.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-network-wired text-base"></i><span class="text-[9px] mt-1 font-bold">Équipe</span></a>
-        <a href="compte.html" class="flex flex-col items-center text-amber-500 transition"><i class="fa-solid fa-user text-base"></i><span class="text-[9px] mt-1 font-bold">Compte</span></a>
-    </nav>
+    <!-- BOUTON FIXE DE VALIDATION -->
+    <div class="fixed bottom-0 left-0 right-0 rg-glass p-4 border-t border-amber-500/20 max-w-lg mx-auto flex items-center justify-between z-40">
+        <div>
+            <p class="text-[9px] uppercase text-slate-400 font-bold">Total à payer</p>
+            <p class="text-base font-black text-white">FCFA <span id="footer-amount">2,000.00</span></p>
+        </div>
+        <button onclick="openPaymentModal()" class="px-6 py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg flex items-center space-x-2 btn-pulse">
+            <i class="fa-solid fa-circle-check"></i><span>Confirmer & Payer</span>
+        </button>
+    </div>
+
+    <!-- MODAL DE PAIEMENT REFAIT À NEUF AVEC PHOTO DE COUVERTURE ET LOGO SERVICE -->
+    <div id="payment-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md hidden p-4">
+        <div class="rg-glass max-w-md w-full rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl relative">
+            <button onclick="closePaymentModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-950/80 text-white z-10 flex items-center justify-center hover:bg-slate-900"><i class="fa-solid fa-xmark"></i></button>
+            
+            <!-- PHOTO DE COUVERTURE DU MODAL -->
+            <div class="h-32 w-full relative">
+                <img id="modal-cover-img" src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-transparent to-transparent"></div>
+                
+                <!-- LOGO DU SERVICE SÉLECTIONNÉ PAR DESSUS LA COUVERTURE -->
+                <div class="absolute -bottom-6 left-6 w-14 h-14 rounded-2xl bg-slate-900 border-2 border-amber-500 shadow-xl flex items-center justify-center overflow-hidden">
+                    <img id="modal-service-logo" src="https://files.catbox.moe/b5j6bw.jpg" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <div class="p-6 pt-8 space-y-4">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span id="modal-badge" class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-black border border-amber-500/30">WAVE - SÉNÉGAL</span>
+                        <h3 class="text-base font-bold text-white mt-1">Validation du Transfert</h3>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] uppercase text-slate-400 block font-bold">Montant exact</span>
+                        <span class="text-sm font-black text-amber-400" id="modal-xof-display">XOF 2000</span>
+                    </div>
+                </div>
+
+                <!-- ÉTAPE NUMÉRO DE TÉLÉPHONE AVEC PAYS CORRESPONDANT -->
+                <div id="step-phone" class="space-y-4 pt-2">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Votre numéro de téléphone (<span id="label-country-name">Sénégal</span>)</label>
+                        <div class="flex bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
+                            <span id="phone-prefix" class="px-3 flex items-center text-amber-500 text-xs font-bold border-r border-slate-800">+221</span>
+                            <input type="tel" id="user-pay-phone" class="w-full bg-transparent px-4 py-3 text-sm text-white focus:outline-none" placeholder="Ex: 771234567">
+                        </div>
+                    </div>
+                    <button onclick="proceedToTransfer()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-md btn-pulse">Continuer vers le compte officiel →</button>
+                </div>
+
+                <!-- ÉTAPE TRANSFERT COMPTE MAMADOU GNING -->
+                <div id="step-transfer" class="space-y-4 pt-2 hidden">
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-amber-500/30 space-y-3">
+                        <p class="text-[10px] uppercase text-amber-400 font-bold"><i class="fa-solid fa-circle-info mr-1"></i> Transférez sur ce compte officiel :</p>
+                        
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <div><span class="text-[9px] text-slate-400 block">Numéro officiel</span><span class="text-sm font-bold text-amber-400 font-mono">75 554 57 42</span></div>
+                            <button onclick="copyText('755545742')" class="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-400 text-xs font-bold">Copier</button>
+                        </div>
+
+                        <div class="flex justify-between items-center pt-1">
+                            <div><span class="text-[9px] text-slate-400 block">Nom du titulaire</span><span class="text-xs font-bold text-white">MAMADOU GNING</span></div>
+                            <button onclick="copyText('MAMADOU GNING')" class="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-400 text-xs font-bold">Copier</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Entrer l'ID de transaction / Référence SMS</label>
+                        <input type="text" id="tx-id-input" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: MP260312.1200.F12345">
+                    </div>
+
+                    <button onclick="submitFinalDeposit()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse">Soumettre à l'administration</button>
+                </div>
+
+                <!-- PETIT TEXTE SÉCURISÉ EN BAS DU MODAL -->
+                <div class="text-center pt-2 border-t border-slate-800">
+                    <p class="text-[10px] text-slate-500 flex items-center justify-center space-x-1">
+                        <i class="fa-solid fa-lock text-amber-500"></i>
+                        <span>Transactions chiffrées et sécurisées par RANGERS (RG)</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- POPUP ALERTE -->
     <div id="custom-alert" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
@@ -156,38 +229,65 @@
     </div>
 
     <script>
-        // Synchronisation des soldes réels
+        let selectedAmount = 2000;
+        let selectedCountry = 'Sénégal';
+        let currentPrefix = '+221';
+        let selectedOperator = 'WAVE';
+
         let rechargeBal = parseFloat(localStorage.getItem('rg_recharge') || '0.00');
-        let retirableBal = parseFloat(localStorage.getItem('rg_retirable') || '1000.00');
+        document.getElementById('current-recharge').innerText = rechargeBal.toLocaleString('fr-FR', {minimumFractionDigits: 2});
 
-        document.getElementById('profile-recharge').innerText = rechargeBal.toLocaleString('fr-FR', {minimumFractionDigits: 2});
-        document.getElementById('profile-retirable').innerText = retirableBal.toLocaleString('fr-FR', {minimumFractionDigits: 2});
-
-        // Chargement de l'historique des dépôts en attente de validation admin
-        const pendingContainer = document.getElementById('pending-deposits-container');
-        let pendingDeposits = JSON.parse(localStorage.getItem('rg_pending_deposits') || '[]');
-
-        if(pendingDeposits.length === 0) {
-            pendingContainer.innerHTML = `
-                <div class="rg-glass p-4 rounded-2xl text-center border border-slate-800 text-slate-500 text-xs">
-                    Aucune recharge en attente de validation pour le moment.
-                </div>`;
-        } else {
-            pendingContainer.innerHTML = '';
-            pendingDeposits.forEach(dep => {
-                pendingContainer.innerHTML += `
-                    <div class="rg-glass p-4 rounded-2xl border border-amber-500/30 flex justify-between items-center">
-                        <div>
-                            <span class="text-[9px] font-bold uppercase text-amber-400 px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">${dep.operator} - ${dep.country}</span>
-                            <p class="text-sm font-black text-white mt-1.5">FCFA ${dep.amount.toLocaleString()}</p>
-                            <p class="text-[10px] text-slate-400 mt-0.5">Réf : <span class="font-mono text-slate-300">${dep.txId}</span></p>
-                            <p class="text-[9px] text-slate-500 mt-0.5">${dep.date}</p>
-                        </div>
-                        <div class="text-right">
-                            <span class="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-bold border border-amber-500/30 inline-block">En attente ⏳</span>
-                        </div>
-                    </div>`;
+        function selectCountry(country, prefix) {
+            selectedCountry = country;
+            currentPrefix = prefix;
+            ['Sénégal', 'Côte d\'Ivoire', 'Mali', 'Burkina Faso'].forEach(c => {
+                const b = document.getElementById(`c-${c}`);
+                if(b) b.className = c === country ? 'p-3 rounded-2xl rg-glass border border-amber-500 text-left transition flex items-center space-x-3 shadow' : 'p-3 rounded-2xl rg-glass border border-slate-800 text-left transition flex items-center space-x-3';
             });
+            document.getElementById('phone-prefix').innerText = prefix;
+            document.getElementById('label-country-name').innerText = country;
+            updateModalUI();
+        }
+
+        function selectOperator(op) {
+            selectedOperator = op;
+            ['WAVE', 'OM'].forEach(o => {
+                const b = document.getElementById(`op-${o}`);
+                if(b) b.className = o === op ? 'p-3 rounded-2xl rg-glass border border-amber-500 text-left transition flex items-center space-x-3 shadow' : 'p-3 rounded-2xl rg-glass border border-slate-800 text-left transition flex items-center space-x-3';
+            });
+            updateModalUI();
+        }
+
+        function updateModalUI() {
+            document.getElementById('modal-badge').innerText = `${selectedOperator} - ${selectedCountry.toUpperCase()}`;
+            
+            // Mise à jour des photos/logos selon le service sélectionné (Wave ou OM)
+            if(selectedOperator === 'WAVE') {
+                document.getElementById('modal-service-logo').src = 'https://files.catbox.moe/b5j6bw.jpg';
+                document.getElementById('modal-cover-img').src = 'https://files.catbox.moe/9kbqzl.jpg';
+            } else {
+                document.getElementById('modal-service-logo').src = 'https://files.catbox.moe/6zomif.jpg';
+                document.getElementById('modal-cover-img').src = 'https://files.catbox.moe/499w19.jpg';
+            }
+        }
+
+        function setAmount(amt) {
+            selectedAmount = amt;
+            document.getElementById('custom-amount-input').value = amt;
+            document.getElementById('footer-amount').innerText = amt.toLocaleString() + '.00';
+            document.getElementById('modal-xof-display').innerText = 'XOF ' + amt.toLocaleString();
+
+            [2000, 5000, 10000, 20000, 40000, 100000, 200000, 500000].forEach(val => {
+                const b = document.getElementById(`btn-amt-${val}`);
+                if(b) b.className = val === amt ? 'py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 shadow' : 'py-2.5 rounded-xl text-xs font-bold rg-glass text-slate-300 border border-slate-800';
+            });
+        }
+
+        function onCustomAmountInput(val) {
+            let amt = parseFloat(val) || 0;
+            selectedAmount = amt;
+            document.getElementById('footer-amount').innerText = amt.toLocaleString() + '.00';
+            document.getElementById('modal-xof-display').innerText = 'XOF ' + amt.toLocaleString();
         }
 
         function showAlert(msg) {
@@ -196,6 +296,58 @@
         }
         function closeAlert() {
             document.getElementById('custom-alert').classList.add('hidden');
+        }
+
+        function openPaymentModal() {
+            if(selectedAmount < 2000) {
+                showAlert("Erreur : Le montant minimum de dépôt est de 2 000 FCFA.");
+                return;
+            }
+            updateModalUI();
+            document.getElementById('payment-modal').classList.remove('hidden');
+            document.getElementById('step-phone').classList.remove('hidden');
+            document.getElementById('step-transfer').classList.add('hidden');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.add('hidden');
+        }
+
+        function proceedToTransfer() {
+            const phone = document.getElementById('user-pay-phone').value;
+            if(!phone || phone.length < 8) {
+                showAlert("Erreur : Veuillez entrer un numéro de téléphone valide.");
+                return;
+            }
+            document.getElementById('step-phone').classList.add('hidden');
+            document.getElementById('step-transfer').classList.remove('hidden');
+        }
+
+        function copyText(txt) {
+            navigator.clipboard.writeText(txt);
+            showAlert("Copié dans le presse-papier !");
+        }
+
+        function submitFinalDeposit() {
+            const txId = document.getElementById('tx-id-input').value;
+            if(!txId) {
+                showAlert("Erreur : Veuillez saisir l'ID de transaction ou la référence SMS.");
+                return;
+            }
+            
+            let pendingDeposits = JSON.parse(localStorage.getItem('rg_pending_deposits') || '[]');
+            pendingDeposits.push({
+                amount: selectedAmount,
+                country: selectedCountry,
+                operator: selectedOperator,
+                txId: txId,
+                date: new Date().toLocaleString(),
+                status: 'En attente de validation admin'
+            });
+            localStorage.setItem('rg_pending_deposits', JSON.stringify(pendingDeposits));
+            
+            showAlert(`Demande de recharge de ${selectedAmount.toLocaleString()} FCFA soumise avec succès (MAMADOU GNING). En attente de validation admin.`);
+            setTimeout(() => { location.href = 'index.html'; }, 3000);
         }
     </script>
 </body>
