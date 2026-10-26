@@ -3,369 +3,313 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olam - Plateforme d'Investissement</title>
+    <title>APEX CAPITAL - Gestion d'Actifs & Investissements</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        apexDark: '#090a0f',
+                        apexCard: '#12151f',
+                        apexGold: '#f59e0b',
+                        apexGoldHover: '#d97706',
+                        apexGreen: '#10b981',
+                        apexBorder: '#222738'
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #070913; color: #f8fafc; font-family: 'Inter', sans-serif; }
-        .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .gradient-btn { background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899); transition: all 0.3s ease; }
-        .gradient-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-        .gradient-text { background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        /* Masquer la scrollbar tout en gardant le scroll */
+        body { background-color: #090a0f; color: #f3f4f6; font-family: 'Inter', sans-serif; }
+        .apex-glass { background: rgba(18, 21, 31, 0.9); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
+        .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .gold-text { background: linear-gradient(135deg, #f59e0b, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased pb-20">
+<body class="min-h-screen flex flex-col antialiased pb-24">
 
-    <!-- POPUP ANNONCE OFFICIELLE (Telegram) -->
-    <div id="announcement-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-        <div class="glass-card max-w-sm w-full p-6 rounded-3xl text-center relative border border-cyan-500/30 shadow-2xl">
+    <!-- POPUP INFORMATION INSTITUTIONNELLE -->
+    <div id="announcement-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4">
+        <div class="apex-glass max-w-sm w-full p-6 rounded-3xl text-center relative border border-amber-500/30 shadow-2xl">
             <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-3xl shadow-lg shadow-cyan-500/20">
-                <i class="fa-brands fa-telegram"></i>
+            <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-2xl shadow-lg border border-amber-500/20">
+                <i class="fa-solid fa-scale-balanced"></i>
             </div>
-            <h3 class="text-lg font-bold text-white mb-2">Official Information Release</h3>
-            <p class="text-xs text-slate-400 mb-6 leading-relaxed">Follow our official telegram channel to get the latest news and welfare information</p>
-            <button onclick="closeModal()" class="w-full py-3 rounded-2xl gradient-btn text-white font-semibold text-sm shadow-lg shadow-cyan-500/30">Follow Now</button>
+            <h3 class="text-base font-bold text-white mb-2">Avis Officiel APEX CAPITAL</h3>
+            <p class="text-xs text-slate-400 mb-6 leading-relaxed">Bienvenue sur notre portail sécurisé de gestion d'actifs. Consultez nos nouveaux fonds d'investissement certifiés pour maximiser vos rendements.</p>
+            <button onclick="closeModal()" class="w-full py-3 rounded-2xl gold-gradient text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20">Accéder à la plateforme</button>
         </div>
     </div>
 
-    <!-- VUE AUTHENTIFICATION (Connexion / Inscription) -->
-    <div id="auth-view" class="max-w-md mx-auto px-4 py-10 w-full">
-        <div class="text-center mb-6">
-            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl gradient-btn text-white font-black text-2xl shadow-xl mb-3">OL</div>
-            <div class="inline-block px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-bold mb-2">
-                <i class="fa-solid fa-bolt mr-1"></i> Accès premium
-            </div>
-            <h1 id="auth-main-title" class="text-2xl font-black text-white">Bon retour</h1>
-            <p id="auth-sub-title" class="text-xs text-slate-400 mt-1">Connectez-vous pour continuer à gérer vos investissements.</p>
+    <!-- VUE AUTHENTIFICATION -->
+    <div id="auth-view" class="max-w-md mx-auto px-4 py-12 w-full">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl gold-gradient text-slate-950 font-black text-2xl shadow-xl mb-3">AP</div>
+            <h1 id="auth-main-title" class="text-2xl font-black text-white tracking-wide">APEX CAPITAL</h1>
+            <p id="auth-sub-title" class="text-xs text-slate-400 mt-1">Portail d'investissement et de placement haut de gamme.</p>
         </div>
 
-        <div class="glass-card p-6 rounded-3xl shadow-2xl relative">
-            <!-- Tabs Connexion / Inscription -->
-            <div class="flex bg-slate-900/90 p-1 rounded-2xl mb-6 border border-slate-800">
-                <button onclick="switchAuthTab('login')" id="tab-btn-login" class="flex-1 py-2.5 rounded-xl text-xs font-bold gradient-btn text-white shadow-md transition">Connexion</button>
+        <div class="apex-glass p-6 rounded-3xl shadow-2xl">
+            <div class="flex bg-slate-900 p-1 rounded-2xl mb-6 border border-slate-800">
+                <button onclick="switchAuthTab('login')" id="tab-btn-login" class="flex-1 py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 shadow transition">Connexion</button>
                 <button onclick="switchAuthTab('register')" id="tab-btn-register" class="flex-1 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">Inscription</button>
             </div>
 
-            <!-- FORMULAIRE -->
             <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
                 <div id="field-name" class="hidden">
-                    <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Pseudo</label>
-                    <input type="text" id="input-name" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500" placeholder="Votre pseudo">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Nom complet</label>
+                    <input type="text" id="input-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Votre nom">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Numéro de téléphone</label>
-                    <div class="flex bg-slate-900 border border-slate-800 rounded-xl overflow-hidden focus-within:border-cyan-500">
-                        <span class="px-3 flex items-center text-slate-500 text-xs border-r border-slate-800"><i class="fa-solid fa-mobile-screen"></i></span>
-                        <input type="text" id="input-phone" required class="w-full bg-transparent px-4 py-3 text-sm text-white focus:outline-none" placeholder="Numéro de téléphone">
-                    </div>
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Identifiant / Téléphone</label>
+                    <input type="text" id="input-phone" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: 0700000000">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Mot de passe</label>
-                    <input type="password" id="input-password" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500" placeholder="Saisissez le mot de passe">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Mot de passe sécurisé</label>
+                    <input type="password" id="input-password" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="••••••••">
                 </div>
                 <div id="field-invite" class="hidden">
-                    <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Code d'invitation</label>
-                    <input type="text" id="input-invite" value="570D6" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none" readonly>
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Code de parrainage</label>
+                    <input type="text" id="input-invite" value="APEX-9980" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none" readonly>
                 </div>
 
-                <button type="submit" id="auth-submit-btn" class="w-full py-3.5 rounded-2xl gradient-btn text-white font-bold text-sm shadow-lg shadow-cyan-500/20 mt-2">Se connecter <i class="fa-solid fa-chevron-right ml-1 text-xs"></i></button>
+                <button type="submit" id="auth-submit-btn" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg shadow-amber-500/20 mt-2 transition">Se connecter</button>
             </form>
         </div>
     </div>
 
-    <!-- VUE APPLICATION PRINCIPALE -->
+    <!-- VUE PRINCIPALE -->
     <div id="app-view" class="hidden max-w-lg mx-auto w-full px-4 py-4 space-y-6">
 
-        <!-- HEADER TABLEAU DE BORD -->
+        <!-- HEADER -->
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-2xl gradient-btn flex items-center justify-center text-white font-bold shadow-lg">
-                    <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover rounded-2xl">
-                </div>
+                <div class="w-10 h-10 rounded-2xl gold-gradient flex items-center justify-center text-slate-950 font-black shadow-lg">AP</div>
                 <div>
-                    <p class="text-[10px] text-slate-400">Bon retour</p>
-                    <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-bold border border-amber-500/30">VIP 0</span>
+                    <p class="text-[10px] text-slate-400">Compte vérifié</p>
+                    <span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-500 text-[10px] font-bold border border-amber-500/20">PARTNER VIP 1</span>
                 </div>
             </div>
             <div class="flex items-center space-x-2">
-                <button onclick="alert('Aucune nouvelle notification')" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 flex items-center justify-center hover:text-white"><i class="fa-regular fa-bell"></i></button>
-                <button onclick="alert('Boîte de messagerie vide')" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 flex items-center justify-center hover:text-white"><i class="fa-regular fa-envelope"></i></button>
+                <button onclick="alert('Aucune notification récente')" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 flex items-center justify-center hover:text-white"><i class="fa-regular fa-bell"></i></button>
+                <button onclick="logout()" class="w-9 h-9 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500/20"><i class="fa-solid fa-power-off"></i></button>
             </div>
         </div>
 
-        <!-- CARTE SOLDE PRINCIPAL -->
-        <div class="glass-card p-6 rounded-3xl relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/40 border-cyan-500/20 shadow-2xl">
-            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <!-- CARTE ACTIFS FINANCIERS -->
+        <div class="apex-glass p-6 rounded-3xl relative overflow-hidden shadow-2xl border-amber-500/20">
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
             
             <div class="flex justify-between items-start mb-4">
                 <div>
-                    <p class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold"><i class="fa-solid fa-gem text-cyan-400 mr-1"></i> Actifs totaux</p>
-                    <h2 class="text-3xl font-black text-white mt-1">FCFA <span id="user-total-balance">20.00</span></h2>
+                    <p class="text-[11px] uppercase tracking-wider text-slate-400 font-bold"><i class="fa-solid fa-wallet text-amber-500 mr-1"></i> Valeur nette du portefeuille</p>
+                    <h2 class="text-3xl font-black text-white mt-1">FCFA <span id="user-total-balance">50,000.00</span></h2>
                 </div>
-                <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-[11px] font-bold border border-emerald-500/30">+FCFA0.00 aujourd'hui</span>
+                <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[11px] font-bold border border-emerald-500/20">+12.5% yield</span>
             </div>
 
             <div class="grid grid-cols-3 gap-2 pt-4 border-t border-slate-800/80 text-center">
                 <div>
-                    <p class="text-[10px] text-slate-400 uppercase">Recharge</p>
-                    <p class="text-xs font-bold text-white mt-0.5">FCFA0.00</p>
+                    <p class="text-[10px] text-slate-400 uppercase font-semibold">Dépôts</p>
+                    <p class="text-xs font-bold text-white mt-0.5">FCFA 50k</p>
                 </div>
                 <div>
-                    <p class="text-[10px] text-slate-400 uppercase">Retirable</p>
-                    <p class="text-xs font-bold text-emerald-400 mt-0.5">FCFA20.00</p>
+                    <p class="text-[10px] text-slate-400 uppercase font-semibold">Retirable</p>
+                    <p class="text-xs font-bold text-emerald-400 mt-0.5">FCFA 50,000</p>
                 </div>
                 <div>
-                    <p class="text-[10px] text-slate-400 uppercase">Revenus</p>
-                    <p class="text-xs font-bold text-cyan-400 mt-0.5">FCFA0.00</p>
+                    <p class="text-[10px] text-slate-400 uppercase font-semibold">Rendement</p>
+                    <p class="text-xs font-bold text-amber-500 mt-0.5">FCFA 0</p>
                 </div>
             </div>
 
-            <!-- Boutons Dépôt / Retirer -->
             <div class="grid grid-cols-2 gap-3 mt-5">
-                <button onclick="switchTab('wallet')" class="py-3 rounded-2xl gradient-btn text-white font-bold text-xs shadow-lg shadow-cyan-500/20 flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-plus-circle"></i><span>Déposer</span>
+                <button onclick="switchTab('wallet'); switchWalletSub('deposit')" class="py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg shadow-amber-500/20 flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-arrow-down-long"></i><span>Alimenter</span>
                 </button>
-                <button onclick="switchTab('wallet')" class="py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 flex items-center justify-center space-x-2 transition">
-                    <i class="fa-solid fa-wallet"></i><span>Retirer</span>
+                <button onclick="switchTab('wallet'); switchWalletSub('withdraw')" class="py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs border border-slate-800 flex items-center justify-center space-x-2 transition">
+                    <i class="fa-solid fa-arrow-up-long"></i><span>Retirer</span>
                 </button>
             </div>
         </div>
 
-        <!-- ACTIONS RAPIDES (5 Boutons) -->
-        <div class="grid grid-cols-5 gap-2 text-center">
-            <button onclick="switchTab('wallet')" class="flex flex-col items-center justify-center p-2.5 rounded-2xl glass-card hover:border-cyan-500/40 transition">
-                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-1.5"><i class="fa-solid fa-yen-sign"></i></div>
-                <span class="text-[11px] font-medium text-slate-300">Dépôt</span>
+        <!-- ACTIONS RAPIDES -->
+        <div class="grid grid-cols-4 gap-3 text-center">
+            <button onclick="switchTab('wallet')" class="flex flex-col items-center justify-center p-3 rounded-2xl apex-glass hover:border-amber-500/40 transition">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center mb-1.5"><i class="fa-solid fa-vault"></i></div>
+                <span class="text-[11px] font-bold text-slate-300">Portefeuille</span>
             </button>
-            <button onclick="switchTab('wallet')" class="flex flex-col items-center justify-center p-2.5 rounded-2xl glass-card hover:border-cyan-500/40 transition">
-                <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-1.5"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
-                <span class="text-[11px] font-medium text-slate-300">Retrait</span>
+            <button onclick="switchTab('team')" class="flex flex-col items-center justify-center p-3 rounded-2xl apex-glass hover:border-amber-500/40 transition">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-1.5"><i class="fa-solid fa-network-wired"></i></div>
+                <span class="text-[11px] font-bold text-slate-300">Réseau</span>
             </button>
-            <button onclick="switchTab('team')" class="flex flex-col items-center justify-center p-2.5 rounded-2xl glass-card hover:border-cyan-500/40 transition">
-                <div class="w-10 h-10 rounded-xl bg-pink-500/10 text-pink-400 flex items-center justify-center mb-1.5"><i class="fa-solid fa-users"></i></div>
-                <span class="text-[11px] font-medium text-slate-300">Équipe</span>
+            <button onclick="alert('Bonus de présence quotidienne validé : +500 FCFA')" class="flex flex-col items-center justify-center p-3 rounded-2xl apex-glass hover:border-amber-500/40 transition">
+                <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-1.5"><i class="fa-solid fa-gift"></i></div>
+                <span class="text-[11px] font-bold text-slate-300">Bonus</span>
             </button>
-            <button onclick="alert('Missions d\'invitation : Invitez des amis pour gagner des bonus exclusifs !')" class="flex flex-col items-center justify-center p-2.5 rounded-2xl glass-card hover:border-cyan-500/40 transition">
-                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-1.5"><i class="fa-solid fa-layer-group"></i></div>
-                <span class="text-[11px] font-medium text-slate-300">Missions</span>
-            </button>
-            <button onclick="claimDailyPointage()" class="flex flex-col items-center justify-center p-2.5 rounded-2xl glass-card hover:border-cyan-500/40 transition">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-1.5"><i class="fa-solid fa-calendar-check"></i></div>
-                <span class="text-[11px] font-medium text-slate-300">Pointage</span>
+            <button onclick="alert('Support client institutionnel disponible 24/7')" class="flex flex-col items-center justify-center p-3 rounded-2xl apex-glass hover:border-amber-500/40 transition">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-1.5"><i class="fa-solid fa-shield-halved"></i></div>
+                <span class="text-[11px] font-bold text-slate-300">Sécurité</span>
             </button>
         </div>
 
-        <!-- BANNIÈRE IMAGE -->
-        <div class="rounded-3xl overflow-hidden glass-card h-40 relative shadow-lg">
-            <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-4">
-                <p class="text-xs font-bold text-white">Olam Naturel & Développement Durable - 2026</p>
-            </div>
-        </div>
-
-        <!-- PLANS D'INVESTISSEMENT (CATALOGUE) -->
+        <!-- CATALOGUE DES FONDS D'INVESTISSEMENT (24 Offres) -->
         <div class="space-y-4">
             <div class="flex justify-between items-center">
-                <h3 class="text-base font-black text-white">Plans Super</h3>
-                <span class="text-xs text-cyan-400 font-semibold cursor-pointer" onclick="filterProducts('all')">Tout voir <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                <h3 class="text-base font-black text-white tracking-wide">Fonds & Actifs Disponibles</h3>
+                <span class="text-xs text-amber-500 font-bold cursor-pointer">Série 2026</span>
             </div>
 
-            <!-- Filtres catégories -->
+            <!-- Filtres -->
             <div class="flex space-x-2 overflow-x-auto no-scrollbar pb-1">
-                <button onclick="filterProducts('all')" id="btn-cat-all" class="px-4 py-1.5 rounded-xl text-xs font-bold gradient-btn text-white whitespace-nowrap shadow">Tous</button>
-                <button onclick="filterProducts('Stable')" id="btn-cat-Stable" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white whitespace-nowrap border border-slate-800">Stable</button>
-                <button onclick="filterProducts('Premium')" id="btn-cat-Premium" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white whitespace-nowrap border border-slate-800">Premium</button>
-                <button onclick="filterProducts('Événement')" id="btn-cat-Événement" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white whitespace-nowrap border border-slate-800">Événement</button>
+                <button onclick="filterProducts('all')" id="btn-cat-all" class="px-4 py-2 rounded-xl text-xs font-bold gold-gradient text-slate-950 whitespace-nowrap shadow">Tous les fonds</button>
+                <button onclick="filterProducts('Stable')" id="btn-cat-Stable" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white whitespace-nowrap border border-slate-800">Fonds Stable</button>
+                <button onclick="filterProducts('Premium')" id="btn-cat-Premium" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white whitespace-nowrap border border-slate-800">Fonds Premium</button>
+                <button onclick="filterProducts('Événement')" id="btn-cat-Événement" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white whitespace-nowrap border border-slate-800">Fonds Spécial</button>
             </div>
 
-            <!-- Liste des cartes produits -->
-            <div id="products-container" class="space-y-4">
-                <!-- Rempli dynamiquement par JS -->
-            </div>
+            <!-- Grille des produits -->
+            <div id="products-container" class="space-y-4"></div>
         </div>
 
     </div>
 
-    <!-- VUE ÉQUIPE (PARRAINAGE 3 NIVEAUX) -->
+    <!-- VUE RÉSEAU / ÉQUIPE -->
     <div id="team-view" class="hidden max-w-lg mx-auto w-full px-4 py-4 space-y-6">
         <div class="flex items-center justify-between mb-2">
-            <h2 class="text-lg font-black text-white">Équipe</h2>
-            <button onclick="switchTab('home')" class="text-xs text-cyan-400 font-semibold"><i class="fa-solid fa-arrow-left mr-1"></i> Retour</button>
+            <h2 class="text-lg font-black text-white">Réseau d'Affiliation</h2>
+            <button onclick="switchTab('home')" class="text-xs text-amber-500 font-bold"><i class="fa-solid fa-arrow-left mr-1"></i> Retour</button>
         </div>
 
-        <div class="glass-card p-6 rounded-3xl relative overflow-hidden bg-gradient-to-br from-slate-900 to-indigo-950/40">
-            <p class="text-[10px] uppercase text-slate-400 font-semibold">// Votre équipe</p>
-            <h3 class="text-xl font-black text-white mt-1 mb-4">Réseau d'équipe</h3>
+        <div class="apex-glass p-6 rounded-3xl relative overflow-hidden">
+            <p class="text-[10px] uppercase text-slate-400 font-bold">// Programme Partenaire</p>
+            <h3 class="text-xl font-black text-white mt-1 mb-4">Commissions Multiniveaux</h3>
             <div class="grid grid-cols-3 gap-2 text-center pt-3 border-t border-slate-800">
                 <div>
-                    <p class="text-[10px] text-slate-400 uppercase">Total</p>
-                    <p class="text-base font-bold text-white mt-0.5">0</p>
+                    <p class="text-[10px] text-slate-400 uppercase">Filleuls</p>
+                    <p class="text-base font-black text-white mt-0.5">0</p>
                 </div>
                 <div>
                     <p class="text-[10px] text-slate-400 uppercase">Actifs</p>
-                    <p class="text-base font-bold text-emerald-400 mt-0.5">0</p>
+                    <p class="text-base font-black text-emerald-400 mt-0.5">0</p>
                 </div>
                 <div>
-                    <p class="text-[10px] text-slate-400 uppercase">Gagné</p>
-                    <p class="text-base font-bold text-cyan-400 mt-0.5">FCFA0.00</p>
+                    <p class="text-[10px] text-slate-400 uppercase">Gains</p>
+                    <p class="text-base font-black text-amber-500 mt-0.5">FCFA 0</p>
                 </div>
             </div>
         </div>
 
-        <!-- Lien d'invitation -->
-        <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
+        <div class="apex-glass p-4 rounded-2xl flex items-center justify-between">
             <div>
-                <p class="text-[10px] uppercase text-slate-400 font-semibold">// Lien d'invitation</p>
-                <p class="text-xs font-mono text-cyan-400 mt-0.5 truncate max-w-[220px]">https://ololquick.com/?invitation_code=570D6</p>
+                <p class="text-[10px] uppercase text-slate-400 font-bold">// Lien d'affiliation unique</p>
+                <p class="text-xs font-mono text-amber-500 mt-0.5 truncate max-w-[210px]">https://apex-capital.net/ref?id=9980</p>
             </div>
-            <button onclick="copyRefLink()" class="px-4 py-2 rounded-xl gradient-btn text-white text-xs font-bold shadow-md">COPIER</button>
+            <button onclick="copyRefLink()" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 text-xs font-black shadow">COPIER</button>
         </div>
 
-        <!-- Niveaux d'équipe -->
         <div class="space-y-3">
-            <div class="flex justify-between items-center text-xs px-1">
-                <span class="text-slate-400 font-semibold">Niveaux d'équipe</span>
-                <span class="text-amber-400 font-bold">1 activation FCFA1000</span>
-            </div>
-            
-            <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
+            <div class="apex-glass p-4 rounded-2xl flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl gradient-btn flex items-center justify-center text-white font-bold">1</div>
+                    <div class="w-10 h-10 rounded-xl gold-gradient text-slate-950 flex items-center justify-center font-black">1</div>
                     <div>
-                        <p class="text-xs font-bold text-white">Niveau 1</p>
-                        <p class="text-[11px] text-emerald-400 font-semibold">30% REMISE</p>
+                        <p class="text-xs font-bold text-white">Niveau 1 - Direct</p>
+                        <p class="text-[11px] text-emerald-400 font-bold">25% de commission</p>
                     </div>
                 </div>
-                <div class="text-right text-xs">
-                    <p class="text-slate-300">0 invités</p>
-                    <p class="text-slate-500 text-[10px]">0 actifs</p>
-                </div>
+                <span class="text-xs text-slate-400">0 Actifs</span>
             </div>
-
-            <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
+            <div class="apex-glass p-4 rounded-2xl flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-slate-800 text-purple-400 flex items-center justify-center font-bold">2</div>
+                    <div class="w-10 h-10 rounded-xl bg-slate-900 text-slate-300 flex items-center justify-center font-black border border-slate-800">2</div>
                     <div>
-                        <p class="text-xs font-bold text-white">Niveau 2</p>
-                        <p class="text-[11px] text-purple-400 font-semibold">5% REMISE</p>
+                        <p class="text-xs font-bold text-white">Niveau 2 - Secondaire</p>
+                        <p class="text-[11px] text-amber-500 font-bold">5% de commission</p>
                     </div>
                 </div>
-                <div class="text-right text-xs">
-                    <p class="text-slate-300">0 invités</p>
-                    <p class="text-slate-500 text-[10px]">0 actifs</p>
-                </div>
+                <span class="text-xs text-slate-400">0 Actifs</span>
             </div>
-
-            <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
+            <div class="apex-glass p-4 rounded-2xl flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-slate-800 text-cyan-400 flex items-center justify-center font-bold">3</div>
+                    <div class="w-10 h-10 rounded-xl bg-slate-900 text-slate-300 flex items-center justify-center font-black border border-slate-800">3</div>
                     <div>
-                        <p class="text-xs font-bold text-white">Niveau 3</p>
-                        <p class="text-[11px] text-cyan-400 font-semibold">2% REMISE</p>
+                        <p class="text-xs font-bold text-white">Niveau 3 - Réseau</p>
+                        <p class="text-[11px] text-cyan-400 font-bold">2% de commission</p>
                     </div>
                 </div>
-                <div class="text-right text-xs">
-                    <p class="text-slate-300">0 invités</p>
-                    <p class="text-slate-500 text-[10px]">0 actifs</p>
-                </div>
+                <span class="text-xs text-slate-400">0 Actifs</span>
             </div>
         </div>
     </div>
 
-    <!-- VUE PORTEFEUILLE (DÉPÔT / RETRAIT) -->
+    <!-- VUE PORTEFEUILLE / TRANSACTIONS -->
     <div id="wallet-view" class="hidden max-w-lg mx-auto w-full px-4 py-4 space-y-6">
         <div class="flex items-center justify-between mb-2">
-            <h2 class="text-lg font-black text-white">Portefeuille & Relevés</h2>
-            <button onclick="switchTab('home')" class="text-xs text-cyan-400 font-semibold"><i class="fa-solid fa-arrow-left mr-1"></i> Retour</button>
+            <h2 class="text-lg font-black text-white">Trésorerie & Opérations</h2>
+            <button onclick="switchTab('home')" class="text-xs text-amber-500 font-bold"><i class="fa-solid fa-arrow-left mr-1"></i> Retour</button>
         </div>
 
-        <div class="flex bg-slate-900 p-1 rounded-2xl border border-slate-800">
-            <button onclick="switchWalletSub('deposit')" id="w-tab-deposit" class="flex-1 py-2 rounded-xl text-xs font-bold gradient-btn text-white shadow">Dépôt</button>
-            <button onclick="switchWalletSub('withdraw')" id="w-tab-withdraw" class="flex-1 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">Retrait</button>
+        <div class="flex bg-slate-950 p-1 rounded-2xl border border-slate-800">
+            <button onclick="switchWalletSub('deposit')" id="w-tab-deposit" class="flex-1 py-2 rounded-xl text-xs font-bold gold-gradient text-slate-950 shadow">Alimentation</button>
+            <button onclick="switchWalletSub('withdraw')" id="w-tab-withdraw" class="flex-1 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white">Retrait de fonds</button>
         </div>
 
-        <!-- Formulaire Dépôt -->
-        <div id="pane-deposit" class="glass-card p-6 rounded-3xl space-y-4">
-            <h3 class="text-sm font-bold text-white">Recharger votre solde</h3>
+        <div id="pane-deposit" class="apex-glass p-6 rounded-3xl space-y-4">
+            <h3 class="text-sm font-bold text-white">Dépôt sécurisé (FCFA)</h3>
             <div>
-                <label class="block text-xs font-medium text-slate-400 mb-1">Montant en FCFA</label>
-                <input type="number" id="deposit-input" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500" placeholder="Ex: 10000">
+                <label class="block text-xs font-medium text-slate-400 mb-1">Montant du dépôt</label>
+                <input type="number" id="deposit-input" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: 25000">
             </div>
-            <button onclick="submitDeposit()" class="w-full py-3.5 rounded-2xl gradient-btn text-white font-bold text-sm shadow-lg shadow-cyan-500/20">Valider le dépôt</button>
+            <button onclick="submitDeposit()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg shadow-amber-500/20">Valider l'alimentation</button>
         </div>
 
-        <!-- Formulaire Retrait -->
-        <div id="pane-withdraw" class="glass-card p-6 rounded-3xl space-y-4 hidden">
-            <h3 class="text-sm font-bold text-white">Effectuer un retrait</h3>
+        <div id="pane-withdraw" class="apex-glass p-6 rounded-3xl space-y-4 hidden">
+            <h3 class="text-sm font-bold text-white">Demande de retrait bancaire / Mobile Money</h3>
             <div>
-                <label class="block text-xs font-medium text-slate-400 mb-1">Montant (FCFA)</label>
-                <input type="number" id="withdraw-input" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500" placeholder="Ex: 5000">
+                <label class="block text-xs font-medium text-slate-400 mb-1">Montant à retirer (FCFA)</label>
+                <input type="number" id="withdraw-input" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: 10000">
             </div>
             <div>
-                <label class="block text-xs font-medium text-slate-400 mb-1">Numéro Mobile Money / Banque</label>
-                <input type="text" id="withdraw-account" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500" placeholder="Ex: 0700000000">
+                <label class="block text-xs font-medium text-slate-400 mb-1">Compte de destination</label>
+                <input type="text" id="withdraw-account" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Numéro Mobile Money">
             </div>
-            <button onclick="submitWithdraw()" class="w-full py-3.5 rounded-2xl bg-pink-600 hover:bg-pink-700 text-white font-bold text-sm shadow-lg shadow-pink-500/20 transition">Soumettre le retrait</button>
-        </div>
-
-        <!-- Options Historique -->
-        <div class="glass-card rounded-3xl overflow-hidden divide-y divide-slate-800/80">
-            <div onclick="alert('Aucune carte bancaire enregistrée')" class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-900/50 transition">
-                <div class="flex items-center space-x-3">
-                    <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center"><i class="fa-solid fa-credit-card"></i></div>
-                    <span class="text-xs font-semibold text-slate-200">Mes cartes bancaires</span>
-                </div>
-                <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
-            </div>
-            <div onclick="alert('Historique des recharges vide')" class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-900/50 transition">
-                <div class="flex items-center space-x-3">
-                    <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                    <span class="text-xs font-semibold text-slate-200">Historique des recharges</span>
-                </div>
-                <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
-            </div>
-            <div onclick="alert('Historique des retraits vide')" class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-900/50 transition">
-                <div class="flex items-center space-x-3">
-                    <div class="w-9 h-9 rounded-xl bg-pink-500/10 text-pink-400 flex items-center justify-center"><i class="fa-solid fa-receipt"></i></div>
-                    <span class="text-xs font-semibold text-slate-200">Historique des retraits</span>
-                </div>
-                <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
-            </div>
+            <button onclick="submitWithdraw()" class="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-lg shadow-emerald-600/20 transition">Soumettre le retrait</button>
         </div>
     </div>
 
-    <!-- NAVIGATION FLOTTANTE MOBILE (Bas) -->
-    <nav id="bottom-nav" class="hidden fixed bottom-3 left-4 right-4 glass-card rounded-3xl p-2 px-6 flex justify-between items-center z-40 border border-white/10 shadow-2xl">
-        <button onclick="switchTab('home')" class="flex flex-col items-center text-cyan-400 transition">
-            <i class="fa-solid fa-house text-base"></i>
-            <span class="text-[9px] mt-1 font-bold">Accueil</span>
+    <!-- NAVIGATION MOBILE FLOTTANTE -->
+    <nav id="bottom-nav" class="hidden fixed bottom-3 left-4 right-4 apex-glass rounded-3xl p-2 px-6 flex justify-between items-center z-40 border border-amber-500/20 shadow-2xl">
+        <button onclick="switchTab('home')" class="flex flex-col items-center text-amber-500 transition">
+            <i class="fa-solid fa-chart-pie text-base"></i>
+            <span class="text-[9px] mt-1 font-bold">Portefeuille</span>
         </button>
         <button onclick="switchTab('team')" class="flex flex-col items-center text-slate-400 hover:text-white transition">
-            <i class="fa-solid fa-users text-base"></i>
-            <span class="text-[9px] mt-1 font-bold">Équipe</span>
+            <i class="fa-solid fa-network-wired text-base"></i>
+            <span class="text-[9px] mt-1 font-bold">Réseau</span>
         </button>
-        <button onclick="switchTab('home')" class="relative -top-5 w-14 h-14 rounded-full gradient-btn text-white flex items-center justify-center shadow-xl shadow-cyan-500/40">
-            <i class="fa-solid fa-plus text-xl"></i>
+        <button onclick="switchTab('home')" class="relative -top-5 w-14 h-14 rounded-full gold-gradient text-slate-950 flex items-center justify-center shadow-xl shadow-amber-500/30">
+            <i class="fa-solid fa-plus text-xl font-black"></i>
         </button>
         <button onclick="switchTab('wallet')" class="flex flex-col items-center text-slate-400 hover:text-white transition">
             <i class="fa-solid fa-wallet text-base"></i>
-            <span class="text-[9px] mt-1 font-bold">Compte</span>
+            <span class="text-[9px] mt-1 font-bold">Trésorerie</span>
         </button>
-        <button onclick="alert('Support client en ligne actif')" class="flex flex-col items-center text-slate-400 hover:text-white transition">
+        <button onclick="alert('Centre de support client APEX actif')" class="flex flex-col items-center text-slate-400 hover:text-white transition">
             <i class="fa-solid fa-headset text-base"></i>
             <span class="text-[9px] mt-1 font-bold">Support</span>
         </button>
     </nav>
 
-    <!-- SCRIPT LOGIQUE -->
+    <!-- SCRIPT DE GESTION -->
     <script>
-        // 28 Liens d'images Catbox officiels fournis
         const catboxImages = [
             "https://files.catbox.moe/9kbqzl.jpg", "https://files.catbox.moe/499w19.jpg",
             "https://files.catbox.moe/78dszw.jpg", "https://files.catbox.moe/tn5jfj.jpg",
@@ -378,28 +322,25 @@
             "https://files.catbox.moe/5zxcz9.jpg", "https://files.catbox.moe/h43wa0.jpg",
             "https://files.catbox.moe/ox0vyt.jpg", "https://files.catbox.moe/v6qfsb.jpg",
             "https://files.catbox.moe/s0hv1f.jpg", "https://files.catbox.moe/ryuehq.jpg",
-            "https://files.catbox.moe/aw04wm.jpg", "https://files.catbox.moe/un0057.jpg",
-            "https://files.catbox.moe/owdtk1.jpg", "https://files.catbox.moe/qiqx3p.jpg",
-            "https://files.catbox.moe/gko6se.jpg"
+            "https://files.catbox.moe/aw04wm.jpg", "https://files.catbox.moe/un0057.jpg"
         ];
 
-        // Génération des 24 offres (8 Stable, 8 Premium, 8 Événement)
+        // 24 Offres de Fonds structurées
         const products = [];
         const categories = ['Stable', 'Premium', 'Événement'];
         let imgIdx = 0;
 
         categories.forEach((cat, cIdx) => {
             for (let i = 1; i <= 8; i++) {
-                const basePrice = (cIdx === 0) ? (i * 1500) : (cIdx === 1 ? i * 8000 : i * 20000);
+                const basePrice = (cIdx === 0) ? (i * 2000) : (cIdx === 1 ? i * 10000 : i * 25000);
                 products.push({
                     id: (cIdx * 8) + i,
                     category: cat,
-                    name: `Olam Naturel ${i}`,
+                    name: `Fonds Apex ${cat} #${i}`,
                     price: basePrice,
-                    daily: Math.round(basePrice * 0.25),
-                    total: Math.round(basePrice * 0.25 * 180),
-                    duration: 180,
-                    max: 100,
+                    daily: Math.round(basePrice * 0.20),
+                    total: Math.round(basePrice * 0.20 * 90),
+                    duration: 90,
                     image: catboxImages[imgIdx % catboxImages.length]
                 });
                 imgIdx++;
@@ -407,13 +348,12 @@
         });
 
         let currentUser = null;
-        let authMode = 'login'; // 'login' ou 'register'
 
         window.onload = function() {
             renderProducts('all');
-            const savedUser = localStorage.getItem('olam_user');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
+            const saved = localStorage.getItem('apex_user');
+            if (saved) {
+                currentUser = JSON.parse(saved);
                 loginSuccessUI();
             }
         };
@@ -423,45 +363,35 @@
         }
 
         function switchAuthTab(mode) {
-            authMode = mode;
             const btnLogin = document.getElementById('tab-btn-login');
             const btnRegister = document.getElementById('tab-btn-register');
             const fieldName = document.getElementById('field-name');
             const fieldInvite = document.getElementById('field-invite');
             const mainTitle = document.getElementById('auth-main-title');
-            const subTitle = document.getElementById('auth-sub-title');
             const submitBtn = document.getElementById('auth-submit-btn');
 
             if (mode === 'login') {
-                btnLogin.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold gradient-btn text-white shadow-md transition';
+                btnLogin.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 shadow transition';
                 btnRegister.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition';
                 fieldName.classList.add('hidden');
                 fieldInvite.classList.add('hidden');
-                mainTitle.innerText = 'Bon retour';
-                subTitle.innerText = 'Connectez-vous pour continuer à gérer vos investissements.';
-                submitBtn.innerHTML = 'Se connecter <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>';
+                mainTitle.innerText = 'APEX CAPITAL';
+                submitBtn.innerText = 'Se connecter';
             } else {
-                btnRegister.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold gradient-btn text-white shadow-md transition';
+                btnRegister.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 shadow transition';
                 btnLogin.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition';
                 fieldName.classList.remove('hidden');
                 fieldInvite.classList.remove('hidden');
-                mainTitle.innerText = 'Rejoignez le réseau';
-                subTitle.innerText = 'Créez un compte pour commencer à gagner chaque jour.';
-                submitBtn.innerHTML = 'Créer un compte <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>';
+                mainTitle.innerText = 'Créer un compte';
+                submitBtn.innerText = "S'inscrire";
             }
         }
 
         function handleAuthSubmit(e) {
             e.preventDefault();
             const phone = document.getElementById('input-phone').value;
-            const name = document.getElementById('input-name').value || 'Investisseur';
-
-            currentUser = {
-                phone: phone,
-                name: name,
-                balance: 20.00
-            };
-            localStorage.setItem('olam_user', JSON.stringify(currentUser));
+            currentUser = { phone: phone, balance: 50000 };
+            localStorage.setItem('apex_user', JSON.stringify(currentUser));
             loginSuccessUI();
         }
 
@@ -469,6 +399,11 @@
             document.getElementById('auth-view').classList.add('hidden');
             document.getElementById('app-view').classList.remove('hidden');
             document.getElementById('bottom-nav').classList.remove('hidden');
+        }
+
+        function logout() {
+            localStorage.removeItem('apex_user');
+            location.reload();
         }
 
         function switchTab(tabId) {
@@ -489,12 +424,12 @@
             const paneWd = document.getElementById('pane-withdraw');
 
             if (sub === 'deposit') {
-                btnDep.className = 'flex-1 py-2 rounded-xl text-xs font-bold gradient-btn text-white shadow';
+                btnDep.className = 'flex-1 py-2 rounded-xl text-xs font-bold gold-gradient text-slate-950 shadow';
                 btnWd.className = 'flex-1 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white';
                 paneDep.classList.remove('hidden');
                 paneWd.classList.add('hidden');
             } else {
-                btnWd.className = 'flex-1 py-2 rounded-xl text-xs font-bold gradient-btn text-white shadow';
+                btnWd.className = 'flex-1 py-2 rounded-xl text-xs font-bold gold-gradient text-slate-950 shadow';
                 btnDep.className = 'flex-1 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white';
                 paneWd.classList.remove('hidden');
                 paneDep.classList.add('hidden');
@@ -511,44 +446,43 @@
                 const btn = document.getElementById(`btn-cat-${c}`);
                 if (btn) {
                     if (c === catFilter) {
-                        btn.className = 'px-4 py-1.5 rounded-xl text-xs font-bold gradient-btn text-white whitespace-nowrap shadow';
+                        btn.className = 'px-4 py-2 rounded-xl text-xs font-bold gold-gradient text-slate-950 whitespace-nowrap shadow';
                     } else {
-                        btn.className = 'px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white whitespace-nowrap border border-slate-800';
+                        btn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white whitespace-nowrap border border-slate-800';
                     }
                 }
             });
 
             filtered.forEach(p => {
                 const card = document.createElement('div');
-                card.className = 'glass-card rounded-3xl overflow-hidden border border-slate-800/80 shadow-xl';
+                card.className = 'apex-glass rounded-3xl overflow-hidden border border-slate-800 shadow-xl';
                 card.innerHTML = `
-                    <div class="h-36 w-full relative">
+                    <div class="h-32 w-full relative">
                         <img src="${p.image}" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
-                        <div class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur border border-white/10 text-[10px] font-bold text-amber-400">VIP 0</div>
-                        <div class="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur border border-white/10 text-[10px] font-bold text-slate-300">${p.duration} Jours</div>
-                        <div class="absolute bottom-3 left-4 flex items-center space-x-2">
-                            <span class="text-xl font-black text-white tracking-wide">${p.name}</span>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent"></div>
+                        <div class="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-slate-950/80 border border-amber-500/30 text-[10px] font-bold text-amber-500">${p.category}</div>
+                        <div class="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-slate-950/80 border border-slate-700 text-[10px] font-bold text-slate-300">${p.duration} Jours</div>
+                        <div class="absolute bottom-3 left-4">
+                            <span class="text-sm font-black text-white">${p.name}</span>
                         </div>
                     </div>
                     <div class="p-4 space-y-3">
-                        <div class="grid grid-cols-3 gap-2 text-center">
+                        <div class="grid grid-cols-2 gap-2 text-center bg-slate-950/60 p-2.5 rounded-2xl border border-slate-800/80">
                             <div>
-                                <p class="text-[9px] uppercase text-slate-400 font-semibold">Revenus quotidiens</p>
-                                <p class="text-xs font-black text-emerald-400 mt-0.5">FCFA${p.daily.toLocaleString()}</p>
+                                <p class="text-[9px] uppercase text-slate-400 font-bold">Rendement Journalier</p>
+                                <p class="text-xs font-black text-emerald-400 mt-0.5">+FCFA ${p.daily.toLocaleString()}</p>
                             </div>
                             <div>
-                                <p class="text-[9px] uppercase text-slate-400 font-semibold">Total</p>
-                                <p class="text-xs font-black text-cyan-400 mt-0.5">FCFA${p.total.toLocaleString()}</p>
-                            </div>
-                            <div>
-                                <p class="text-[9px] uppercase text-slate-400 font-semibold">Max</p>
-                                <p class="text-xs font-black text-slate-300 mt-0.5">${p.max}</p>
+                                <p class="text-[9px] uppercase text-slate-400 font-bold">Rendement Total</p>
+                                <p class="text-xs font-black text-amber-500 mt-0.5">FCFA ${p.total.toLocaleString()}</p>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between pt-2 border-t border-slate-800">
-                            <span class="text-base font-black text-white">FCFA ${p.price.toLocaleString()}.00</span>
-                            <button onclick="investProduct(${p.id})" class="px-6 py-2.5 rounded-xl gradient-btn text-white text-xs font-bold shadow-lg shadow-cyan-500/20">Investir</button>
+                        <div class="flex items-center justify-between pt-1">
+                            <div>
+                                <span class="text-[10px] text-slate-400 block">Valeur de souscription</span>
+                                <span class="text-sm font-black text-white">FCFA ${p.price.toLocaleString()}</span>
+                            </div>
+                            <button onclick="investProduct(${p.id})" class="px-5 py-2.5 rounded-xl gold-gradient text-slate-950 text-xs font-black shadow-md">Souscrire</button>
                         </div>
                     </div>
                 `;
@@ -564,36 +498,30 @@
             const p = products.find(x => x.id === id);
             if (!p) return;
             if (currentUser.balance < p.price) {
-                alert("Solde insuffisant. Veuillez recharger votre compte.");
+                alert("Solde insuffisant. Veuillez alimenter votre compte.");
                 switchTab('wallet');
                 return;
             }
             currentUser.balance -= p.price;
-            alert(`Investissement validé dans ${p.name} pour ${p.price.toLocaleString()} FCFA !`);
-        }
-
-        function claimDailyPointage() {
-            currentUser.balance += 100;
-            alert("Pointage quotidien réussi ! +100 FCFA ajoutés.");
+            alert(`Souscription réussie au fonds ${p.name} pour ${p.price.toLocaleString()} FCFA !`);
         }
 
         function copyRefLink() {
-            navigator.clipboard.writeText("https://ololquick.com/?invitation_code=570D6");
-            alert("Lien d'invitation copié avec succès !");
+            navigator.clipboard.writeText("https://apex-capital.net/ref?id=9980");
+            alert("Lien d'affiliation copié !");
         }
 
         function submitDeposit() {
             const amt = document.getElementById('deposit-input').value;
-            if (!amt) return alert("Veuillez entrer un montant.");
-            alert(`Demande de recharge de ${amt} FCFA enregistrée.`);
+            if (!amt) return alert("Veuillez saisir un montant.");
+            alert(`Ordre d'alimentation de ${amt} FCFA transmis.`);
             document.getElementById('deposit-input').value = '';
         }
 
         function submitWithdraw() {
             const amt = document.getElementById('withdraw-input').value;
-            const acc = document.getElementById('withdraw-account').value;
-            if (!amt || !acc) return alert("Veuillez remplir tous les champs.");
-            alert(`Demande de retrait de ${amt} FCFA soumise.`);
+            if (!amt) return alert("Veuillez saisir un montant.");
+            alert(`Demande de retrait de ${amt} FCFA prise en compte.`);
             document.getElementById('withdraw-input').value = '';
             document.getElementById('withdraw-account').value = '';
         }
