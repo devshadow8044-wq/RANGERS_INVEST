@@ -1,0 +1,20 @@
+body {
+    background-color: #090a0f;
+    color: #f3f4f6;
+    font-family: 'Inter', sans-serif;
+}
+.apex-glass {
+    background: rgba(18, 21, 31, 0.9);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(245, 158, 11, 0.15);
+}
+.gold-gradient {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+.gold-text {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
