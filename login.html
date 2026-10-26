@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RANGERS (RG) - Connexion & Inscription</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        rgBg: '#030509',
+                        rgCard: '#0d111a',
+                        rgGold: '#f59e0b',
+                        rgBorder: '#1e2638'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
+        .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
+        .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.6); }
+        }
+        .btn-pulse { animation: pulseGlow 2s infinite; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 antialiased">
+
+    <div class="max-w-md w-full space-y-6">
+        
+        <!-- LOGO & BANNIÈRE DE COUVERTURE -->
+        <div class="rg-glass rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl relative">
+            <div class="h-32 w-full relative">
+                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-slate-950/40 to-transparent"></div>
+            </div>
+            <div class="p-6 pt-0 relative -mt-10 text-center space-y-2">
+                <div class="w-16 h-16 rounded-2xl gold-gradient mx-auto flex items-center justify-center text-slate-950 text-2xl font-black shadow-xl border-2 border-slate-950">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h1 class="text-xl font-black text-white tracking-wider">RANGERS (RG)</h1>
+                <p class="text-xs text-slate-400">Plateforme d'investissement institutionnelle</p>
+            </div>
+        </div>
+
+        <!-- ONGLETS DE SÉLECTION (CONNEXION / INSCRIPTION) -->
+        <div class="rg-glass p-1.5 rounded-2xl grid grid-cols-2 gap-1 border border-slate-800">
+            <button onclick="switchTab('login')" id="tab-login" class="py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow">Connexion</button>
+            <button onclick="switchTab('register')" id="tab-register" class="py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">Inscription</button>
+        </div>
+
+        <!-- FORMULAIRE DE CONNEXION -->
+        <div id="form-login" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/20 shadow-xl">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">// Accéder à mon compte</h3>
+            
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Numéro de téléphone</label>
+                    <input type="tel" id="login-phone" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: 771234567">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de passe</label>
+                    <input type="password" id="login-pass" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="••••••••">
+                </div>
+            </div>
+
+            <button onclick="handleLogin()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse">Se connecter →</button>
+        </div>
+
+        <!-- FORMULAIRE D'INSCRIPTION -->
+        <div id="form-register" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/20 shadow-xl hidden">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">// Créer un compte officiel</h3>
+            
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Nom complet</label>
+                    <input type="text" id="reg-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Mamadou Gning">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Numéro de téléphone</label>
+                    <input type="tel" id="reg-phone" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: 771234567">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de passe</label>
+                    <input type="password" id="reg-pass" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="••••••••">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Code d'invitation (Optionnel)</label>
+                    <input type="text" id="reg-ref" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: RG2026">
+                </div>
+            </div>
+
+            <button onclick="handleRegister()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse">S'inscrire & Recevoir le Bonus (1000F) →</button>
+        </div>
+
+    </div>
+
+    <!-- POPUP ALERTE -->
+    <div id="custom-alert" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
+        <div class="rg-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
+            <p id="alert-text" class="text-xs text-white font-medium leading-relaxed">Message</p>
+            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs">OK</button>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            const btnLogin = document.getElementById('tab-login');
+            const btnRegister = document.getElementById('tab-register');
+            const formLogin = document.getElementById('form-login');
+            const formRegister = document.getElementById('form-register');
+
+            if(tab === 'login') {
+                btnLogin.className = 'py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow';
+                btnRegister.className = 'py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition';
+                formLogin.classList.remove('hidden');
+                formRegister.classList.add('hidden');
+            } else {
+                btnRegister.className = 'py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow';
+                btnLogin.className = 'py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition';
+                formRegister.classList.remove('hidden');
+                formLogin.classList.add('hidden');
+            }
+        }
+
+        function showAlert(msg) {
+            document.getElementById('alert-text').innerText = msg;
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+        function closeAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
+        }
+
+        function handleRegister() {
+            const name = document.getElementById('reg-name').value;
+            const phone = document.getElementById('reg-phone').value;
+            const pass = document.getElementById('reg-pass').value;
+
+            if(!name || !phone || !pass || phone.length < 8) {
+                showAlert("Erreur : Veuillez remplir tous les champs obligatoires correctement.");
+                return;
+            }
+
+            // Enregistrement des données utilisateur
+            localStorage.setItem('rg_user_name', name);
+            localStorage.setItem('rg_user_phone', phone);
+            localStorage.setItem('rg_user_pass', pass);
+            
+            // Initialisation des soldes si premier enregistrement
+            if(localStorage.getItem('rg_retirable') === null) {
+                localStorage.setItem('rg_recharge', '0.00');
+                localStorage.setItem('rg_retirable', '1000.00'); // Bonus d'inscription 1000F
+                localStorage.setItem('rg_has_invested', 'false');
+            }
+
+            localStorage.setItem('rg_logged_in', 'true');
+            showAlert("Inscription réussie ! Votre bonus de 1,000 FCFA a été crédité. Redirection...");
+            setTimeout(() => { location.href = 'index.html'; }, 2000);
+        }
+
+        function handleLogin() {
+            const phone = document.getElementById('login-phone').value;
+            const pass = document.getElementById('login-pass').value;
+
+            const savedPhone = localStorage.getItem('rg_user_phone');
+            const savedPass = localStorage.getItem('rg_user_pass');
+
+            if(!phone || !pass) {
+                showAlert("Erreur : Veuillez entrer votre numéro et votre mot de passe.");
+                return;
+            }
+
+            // Si aucun compte n'a encore été créé sur cet appareil, on autorise la connexion et initialise le profil
+            if(!savedPhone) {
+                localStorage.setItem('rg_user_phone', phone);
+                localStorage.setItem('rg_user_pass', pass);
+                if(localStorage.getItem('rg_retirable') === null) {
+                    localStorage.setItem('rg_recharge', '0.00');
+                    localStorage.setItem('rg_retirable', '1000.00');
+                    localStorage.setItem('rg_has_invested', 'false');
+                }
+                localStorage.setItem('rg_logged_in', 'true');
+                showAlert("Connexion réussie ! Redirection...");
+                setTimeout(() => { location.href = 'index.html'; }, 1500);
+                return;
+            }
+
+            if(phone === savedPhone && pass === savedPass) {
+                localStorage.setItem('rg_logged_in', 'true');
+                showAlert("Connexion réussie ! Redirection...");
+                setTimeout(() => { location.href = 'index.html'; }, 1500);
+            } else {
+                showAlert("Erreur : Numéro ou mot de passe incorrect.");
+            }
+        }
+    </script>
+</body>
+</html>
