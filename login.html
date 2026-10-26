@@ -42,7 +42,7 @@
             <div class="h-32 w-full relative">
                 <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80">
                 <div class="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-slate-950/40 to-transparent"></div>
-                <div class="absolute top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-[10px] font-black text-amber-400 flex items-center space-x-1 shadow-lg">
+                <div class="absolute top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-[10px] font-black text-amber-400 flex items-center space-x-1 shadow-lg btn-pulse">
                     <i class="fa-solid fa-gift"></i><span>Bonus de bienvenue : 1,000 FCFA</span>
                 </div>
             </div>
@@ -76,12 +76,12 @@
             <button onclick="handleLogin()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse">Se connecter →</button>
         </div>
 
-        <!-- FORMULAIRE D'INSCRIPTION COMPLET -->
+        <!-- FORMULAIRE D'INSCRIPTION AVEC 4 PAYS OFFICIELS -->
         <div id="form-register" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/30 shadow-xl">
             <h3 class="text-sm font-bold text-white uppercase tracking-wider">// Inscription officielle</h3>
             
             <div class="space-y-3">
-                <!-- SÉLECTION DU PAYS ET INDICATIF -->
+                <!-- SÉLECTION DU PAYS (4 PAYS UNIQUEMENT) -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Sélectionner le pays</label>
                     <select id="reg-country" onchange="updateCountryPrefix()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-amber-500 font-bold focus:outline-none focus:border-amber-500">
@@ -89,9 +89,6 @@
                         <option value="+225">🇨🇮 Côte d'Ivoire (+225)</option>
                         <option value="+223">🇲🇱 Mali (+223)</option>
                         <option value="+226">🇧🇫 Burkina Faso (+226)</option>
-                        <option value="+237">🇨🇲 Cameroun (+237)</option>
-                        <option value="+228">🇹🇬 Togo (+228)</option>
-                        <option value="+229">🇧🇯 Bénin (+229)</option>
                     </select>
                 </div>
 
@@ -122,12 +119,12 @@
                     <input type="text" id="reg-ref" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: RG2026">
                 </div>
 
-                <!-- CODE SMS AVEC BOUTON ENVOYER -->
+                <!-- CODE SMS AUTOMATIQUE 3 SECONDES -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Code SMS de vérification</label>
                     <div class="flex space-x-2">
-                        <input type="text" id="reg-sms" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Saisissez le code">
-                        <button onclick="sendSmsCode()" class="px-4 py-3 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold whitespace-nowrap hover:bg-amber-500/30 transition">Envoyer</button>
+                        <input type="text" id="reg-sms" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-amber-400 font-bold focus:outline-none focus:border-amber-500" placeholder="Code automatique">
+                        <button id="btn-send-sms" onclick="sendSmsCode()" class="px-4 py-3 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold whitespace-nowrap hover:bg-amber-500/30 transition">Envoyer</button>
                     </div>
                 </div>
             </div>
@@ -179,13 +176,33 @@
             document.getElementById('reg-prefix').innerText = sel;
         }
 
+        // Fonction SMS avec compte à rebours de 3 secondes et saisie automatique
         function sendSmsCode() {
             const phone = document.getElementById('reg-phone').value;
             if(!phone || phone.length < 7) {
                 showAlert("Veuillez d'abord entrer un numéro de téléphone valide.");
                 return;
             }
-            showAlert("Code SMS simulé envoyé avec succès ! Utilisez le code : 2026");
+
+            const btn = document.getElementById('btn-send-sms');
+            btn.disabled = true;
+            let countdown = 3;
+            btn.innerText = `Envoi (${countdown}s)...`;
+
+            let timer = setInterval(() => {
+                countdown--;
+                if(countdown > 0) {
+                    btn.innerText = `Envoi (${countdown}s)...`;
+                } else {
+                    clearInterval(timer);
+                    btn.innerText = 'Envoyé ✓';
+                    btn.className = 'px-4 py-3 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold whitespace-nowrap';
+                    
+                    // Saisie automatique du code SMS dans le champ
+                    document.getElementById('reg-sms').value = '2026';
+                    showAlert("Code SMS envoyé et saisi automatiquement !");
+                }
+            }, 1000);
         }
 
         function showAlert(msg) {
@@ -208,8 +225,8 @@
                 return;
             }
 
-            if(sms !== '2026' && sms !== '1234') {
-                showAlert("Erreur : Code SMS incorrect. (Indice de test : 2026)");
+            if(sms !== '2026') {
+                showAlert("Erreur : Code SMS invalide.");
                 return;
             }
 
