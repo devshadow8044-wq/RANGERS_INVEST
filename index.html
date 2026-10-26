@@ -3,109 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olam - Tableau de bord</title>
+    <title>Olam Capital - Gestion d'Actifs & Investissements</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        olamBg: '#030509',
+                        olamCard: '#0d111a',
+                        olamGold: '#f59e0b',
+                        olamGoldHover: '#d97706',
+                        olamGreen: '#10b981',
+                        olamBorder: '#1e2638'
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
+        .olam-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
+        .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .gold-text { background: linear-gradient(135deg, #f59e0b, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
+            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.4); }
+        }
+        .glow-effect { animation: pulseGlow 3s infinite; }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased pb-28">
 
+    <!-- TICKER DÉFILANT D'INFORMATIONS EN TEMPS RÉEL (REND LE SITE VIVANT) -->
+    <div class="bg-amber-500/10 border-b border-amber-500/20 text-amber-400 text-[11px] py-1.5 px-4 overflow-hidden whitespace-nowrap flex items-center">
+        <i class="fa-solid fa-bullhorn mr-2 text-amber-500 animate-bounce"></i>
+        <div class="inline-block animate-[marquee_20s_linear_infinite]">
+            <span>🎉 Utilisateur (+221 77***) vient de retirer 45,000 FCFA • 🚀 Nouveau fonds "Olam Premium #4" complet à 85% • 💎 Bonus de parrainage crédité pour +225 05*** •</span>
+        </div>
+    </div>
+
     <!-- HEADER -->
-    <header class="olam-glass sticky top-0 z-40 px-4 py-3 border-b border-white/5 flex justify-between items-center">
+    <header class="olam-glass sticky top-0 z-40 px-4 py-3 border-b border-amber-500/10 flex justify-between items-center">
         <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 rounded-xl olam-glass flex items-center justify-center text-cyan-400 font-bold border border-cyan-500/30">
-                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover rounded-xl">
+            <div class="w-9 h-9 rounded-xl gold-gradient flex items-center justify-center text-slate-950 font-black shadow-md">
+                <i class="fa-solid fa-shield-halved text-sm"></i>
             </div>
             <div>
-                <span class="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-bold border border-purple-500/30" id="user-vip-label">VIP 1</span>
+                <h1 class="font-black text-sm tracking-wider text-white">OLAM CAPITAL</h1>
+                <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[9px] font-bold border border-amber-500/30">VIP 1 ACTIF</span>
             </div>
         </div>
         <div class="flex items-center space-x-2">
-            <button onclick="showAlert('Aucune nouvelle notification.')" class="w-9 h-9 rounded-xl olam-glass text-slate-300 flex items-center justify-center hover:text-white"><i class="fa-regular fa-bell text-xs"></i></button>
-            <button onclick="showAlert('Boîte de messagerie vide.')" class="w-9 h-9 rounded-xl olam-glass text-slate-300 flex items-center justify-center hover:text-white"><i class="fa-regular fa-envelope text-xs"></i></button>
+            <button onclick="showAlert('Aucune nouvelle notification système.')" class="w-9 h-9 rounded-xl olam-glass text-slate-300 flex items-center justify-center hover:text-white border border-slate-800"><i class="fa-regular fa-bell text-xs"></i></button>
+            <button onclick="showAlert('Messagerie sécurisée chiffrée de bout en bout.')" class="w-9 h-9 rounded-xl olam-glass text-slate-300 flex items-center justify-center hover:text-white border border-slate-800"><i class="fa-regular fa-envelope text-xs"></i></button>
         </div>
     </header>
 
     <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-5">
         
-        <!-- CARTE SOLDE PRINCIPAL & SOUS-SOLDES -->
-        <div class="olam-glass p-5 rounded-3xl relative overflow-hidden shadow-2xl border-cyan-500/20">
-            <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl"></div>
+        <!-- CARTE SOLDE PRINCIPAL & SOUS-SOLDES (DESIGN OR & ONYX) -->
+        <div class="olam-glass p-6 rounded-3xl relative overflow-hidden shadow-2xl border-amber-500/30 glow-effect">
+            <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
             
-            <div class="flex justify-between items-start mb-3">
+            <div class="flex justify-between items-start mb-4">
                 <div>
-                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold"><i class="fa-solid fa-gem text-cyan-400 mr-1"></i> Actifs totaux</p>
-                    <h2 class="text-3xl font-black text-white mt-0.5">FCFA <span id="total-balance">1,250.00</span></h2>
+                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold"><i class="fa-solid fa-vault text-amber-500 mr-1"></i> Actifs totaux du compte</p>
+                    <h2 class="text-3xl font-black text-white mt-1">FCFA <span id="total-balance">1,250.00</span></h2>
                 </div>
-                <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold border border-emerald-500/30">+FCFA0.00 aujourd'hui</span>
+                <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold border border-emerald-500/30">+FCFA 0.00 aujourd'hui</span>
             </div>
 
-            <div class="grid grid-cols-3 gap-2 pt-3 border-t border-slate-800/80 text-center mb-4">
+            <div class="grid grid-cols-3 gap-2 pt-3 border-t border-slate-800 text-center mb-5">
                 <div>
-                    <p class="text-[9px] text-slate-400 uppercase font-semibold">Recharge</p>
-                    <p class="text-xs font-bold text-cyan-400 mt-0.5">FCFA <span id="recharge-balance">1,240.00</span></p>
+                    <p class="text-[9px] text-slate-400 uppercase font-bold">Recharge</p>
+                    <p class="text-xs font-black text-amber-400 mt-0.5">FCFA <span id="recharge-balance">1,240.00</span></p>
                 </div>
                 <div>
-                    <p class="text-[9px] text-slate-400 uppercase font-semibold">Retirable</p>
-                    <p class="text-xs font-bold text-emerald-400 mt-0.5">FCFA <span id="retirable-balance">10.00</span></p>
+                    <p class="text-[9px] text-slate-400 uppercase font-bold">Retirable</p>
+                    <p class="text-xs font-black text-emerald-400 mt-0.5">FCFA <span id="retirable-balance">10.00</span></p>
                 </div>
                 <div>
-                    <p class="text-[9px] text-slate-400 uppercase font-semibold">Revenus</p>
-                    <p class="text-xs font-bold text-amber-400 mt-0.5">FCFA0.00</p>
+                    <p class="text-[9px] text-slate-400 uppercase font-bold">Revenus</p>
+                    <p class="text-xs font-black text-cyan-400 mt-0.5">FCFA 0.00</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
-                <a href="depot.html" class="py-3 rounded-2xl olam-gradient text-white font-bold text-xs text-center shadow-lg shadow-cyan-500/20 flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-plus-circle"></i><span>Déposer</span>
+                <a href="depot.html" class="py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs text-center shadow-lg shadow-amber-500/20 flex items-center justify-center space-x-2 transition hover:opacity-90">
+                    <i class="fa-solid fa-arrow-down-long"></i><span>Dépôt</span>
                 </a>
-                <a href="retrait.html" class="py-3 rounded-2xl olam-glass text-white font-bold text-xs text-center border border-slate-700 hover:border-slate-500 flex items-center justify-center space-x-2 transition">
-                    <i class="fa-solid fa-wallet"></i><span>Retirer</span>
+                <a href="retrait.html" class="py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs text-center border border-slate-800 flex items-center justify-center space-x-2 transition">
+                    <i class="fa-solid fa-arrow-up-long"></i><span>Retirer</span>
                 </a>
             </div>
         </div>
 
-        <!-- 5 BOUTONS D'ACTIONS RAPIDES -->
+        <!-- 5 BOUTONS D'ACTIONS RAPIDES ANIMÉS -->
         <div class="grid grid-cols-5 gap-2 text-center">
-            <a href="depot.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-cyan-500/40 transition">
-                <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-yen-sign"></i></div>
-                <span class="text-[10px] font-medium text-slate-300">Dépôt</span>
+            <a href="depot.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-amber-500/40 transition group">
+                <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center mb-1 text-sm group-hover:scale-110 transition"><i class="fa-solid fa-wallet"></i></div>
+                <span class="text-[10px] font-semibold text-slate-300">Dépôt</span>
             </a>
-            <a href="retrait.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-cyan-500/40 transition">
-                <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
-                <span class="text-[10px] font-medium text-slate-300">Retrait</span>
+            <a href="retrait.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-amber-500/40 transition group">
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-1 text-sm group-hover:scale-110 transition"><i class="fa-solid fa-money-bill-transfer"></i></div>
+                <span class="text-[10px] font-semibold text-slate-300">Retrait</span>
             </a>
-            <a href="equipe.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-cyan-500/40 transition">
-                <div class="w-9 h-9 rounded-xl bg-pink-500/10 text-pink-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-users"></i></div>
-                <span class="text-[10px] font-medium text-slate-300">Équipe</span>
+            <a href="equipe.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-amber-500/40 transition group">
+                <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-1 text-sm group-hover:scale-110 transition"><i class="fa-solid fa-users"></i></div>
+                <span class="text-[10px] font-semibold text-slate-300">Équipe</span>
             </a>
-            <a href="missions.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-cyan-500/40 transition">
-                <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-layer-group"></i></div>
-                <span class="text-[10px] font-medium text-slate-300">Missions</span>
+            <a href="missions.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-amber-500/40 transition group">
+                <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-1 text-sm group-hover:scale-110 transition"><i class="fa-solid fa-award"></i></div>
+                <span class="text-[10px] font-semibold text-slate-300">Missions</span>
             </a>
-            <button onclick="claimPointage()" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-cyan-500/40 transition">
-                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-calendar-check"></i></div>
-                <span class="text-[10px] font-medium text-slate-300">Pointage</span>
+            <button onclick="claimPointage()" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-amber-500/40 transition group">
+                <div class="w-9 h-9 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center mb-1 text-sm group-hover:scale-110 transition"><i class="fa-solid fa-calendar-check"></i></div>
+                <span class="text-[10px] font-semibold text-slate-300">Pointage</span>
             </button>
         </div>
 
-<!-- BANNIÈRE -->
-        <div class="rounded-3xl overflow-hidden olam-glass h-36 relative border border-white/5">
-            <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex items-end p-4">
-                <p class="text-xs font-bold text-white">Olam Agriculture & Développement Durable</p>
+        <!-- BANNIÈRE DYNAMIQUE -->
+        <div class="rounded-3xl overflow-hidden olam-glass h-36 relative border border-amber-500/20 shadow-lg">
+            <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-90">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent flex items-end p-4">
+                <div>
+                    <span class="px-2 py-0.5 rounded bg-amber-500 text-slate-950 text-[9px] font-black uppercase">Certifié 2026</span>
+                    <p class="text-xs font-bold text-white mt-1">Fonds d'Investissement Durable Olam</p>
+                </div>
             </div>
         </div>
 
-        <!-- PLANS D'INVESTISSEMENT -->
+        <!-- PLANS D'INVESTISSEMENT (CATALOGUE) -->
         <div class="space-y-3">
             <div class="flex justify-between items-center">
-                <h3 class="text-sm font-black text-white">Plans Super</h3>
-                <span class="text-xs text-cyan-400 font-semibold cursor-pointer">Tout voir</span>
+                <h3 class="text-sm font-black text-white tracking-wide">Plans d'Investissement</h3>
+                <span class="text-xs text-amber-500 font-bold cursor-pointer">Tout voir</span>
             </div>
 
+            <!-- Filtres -->
             <div class="flex space-x-2 overflow-x-auto no-scrollbar pb-1">
-                <button onclick="filterCat('Tous')" id="f-Tous" class="px-4 py-1.5 rounded-xl text-xs font-bold olam-gradient text-white whitespace-nowrap">Tous</button>
+                <button onclick="filterCat('Tous')" id="f-Tous" class="px-4 py-1.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 whitespace-nowrap shadow">Tous</button>
                 <button onclick="filterCat('Stable')" id="f-Stable" class="px-4 py-1.5 rounded-xl text-xs font-bold olam-glass text-slate-400 whitespace-nowrap border border-slate-800">Stable</button>
                 <button onclick="filterCat('Benefits')" id="f-Benefits" class="px-4 py-1.5 rounded-xl text-xs font-bold olam-glass text-slate-400 whitespace-nowrap border border-slate-800">Benefits</button>
                 <button onclick="filterCat('Event')" id="f-Event" class="px-4 py-1.5 rounded-xl text-xs font-bold olam-glass text-slate-400 whitespace-nowrap border border-slate-800">Event</button>
@@ -115,20 +158,29 @@
         </div>
     </main>
 
-    <!-- NAVIGATION 4 BOUTONS -->
-    <nav class="fixed bottom-3 left-4 right-4 olam-glass rounded-3xl p-2 px-6 flex justify-between items-center z-40 border border-white/10 shadow-2xl max-w-lg mx-auto">
-        <a href="index.html" class="flex flex-col items-center text-cyan-400"><i class="fa-solid fa-house text-base"></i><span class="text-[9px] mt-1 font-bold">Accueil</span></a>
-        <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-white"><i class="fa-solid fa-layer-group text-base"></i><span class="text-[9px] mt-1 font-bold">Invest</span></a>
-        <a href="equipe.html" class="flex flex-col items-center text-slate-400 hover:text-white"><i class="fa-solid fa-network-wired text-base"></i><span class="text-[9px] mt-1 font-bold">Équipe</span></a>
-        <a href="compte.html" class="flex flex-col items-center text-slate-400 hover:text-white"><i class="fa-solid fa-user text-base"></i><span class="text-[9px] mt-1 font-bold">Compte</span></a>
+    <!-- NAVIGATION 4 BOUTONS (DESIGN PRO) -->
+    <nav class="fixed bottom-3 left-4 right-4 olam-glass rounded-3xl p-2 px-6 flex justify-between items-center z-40 border border-amber-500/20 shadow-2xl max-w-lg mx-auto">
+        <a href="index.html" class="flex flex-col items-center text-amber-500 transition"><i class="fa-solid fa-house text-base"></i><span class="text-[9px] mt-1 font-bold">Accueil</span></a>
+        <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-layer-group text-base"></i><span class="text-[9px] mt-1 font-bold">Invest</span></a>
+        <a href="equipe.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-network-wired text-base"></i><span class="text-[9px] mt-1 font-bold">Équipe</span></a>
+        <a href="compte.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-user text-base"></i><span class="text-[9px] mt-1 font-bold">Compte</span></a>
     </nav>
 
-    <!-- POPUP MESSAGE ERREUR / SUCCÈS PERSONNALISÉ -->
-    <div id="custom-alert" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden p-4">
-        <div class="olam-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-cyan-500/30">
-            <div id="alert-icon" class="w-12 h-12 rounded-full bg-cyan-500/20 text-cyan-400 mx-auto flex items-center justify-center text-xl"><i class="fa-solid fa-info"></i></div>
-            <p id="alert-text" class="text-xs text-white font-medium leading-relaxed">Message</p>
-            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl olam-gradient text-white font-bold text-xs">OK</button>
+    <!-- POPUP ERREUR / SUCCÈS SÉCURISÉ -->
+    <div id="custom-alert" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
+        <div class="olam-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
+            <div id="alert-icon" class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-500 mx-auto flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <p id="alert-text" class="text-xs text-white font-medium leading-relaxed">Message d'erreur</p>
+            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-md">Compris</button>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST FLOTTANTE (VIVANT) -->
+    <div id="toast-notification" class="fixed top-12 right-4 z-50 transform translate-x-full transition-transform duration-500 olam-glass px-4 py-3 rounded-2xl border border-emerald-500/30 flex items-center space-x-3 shadow-2xl">
+        <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-check text-xs"></i></div>
+        <div>
+            <p class="text-[10px] text-slate-400">Activité en direct</p>
+            <p id="toast-msg" class="text-xs font-bold text-white">Investissement validé</p>
         </div>
     </div>
 
@@ -141,7 +193,7 @@
         categories.forEach(cat => {
             for(let i=1; i<=8; i++) {
                 let price = i * 2000;
-                products.push({ id: products.length+1, category: cat, name: `Olam Naturel ${i}`, price: price, daily: Math.round(price * 0.25), total: Math.round(price * 0.25 * 180), duration: 180, image: catboxImages[imgIdx % catboxImages.length] });
+                products.push({ id: products.length+1, category: cat, name: `Olam Capital ${i}`, price: price, daily: Math.round(price * 0.25), total: Math.round(price * 0.25 * 180), duration: 180, image: catboxImages[imgIdx % catboxImages.length] });
                 imgIdx++;
             }
         });
@@ -154,6 +206,13 @@
             document.getElementById('custom-alert').classList.add('hidden');
         }
 
+        function showToast(msg) {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('translate-x-full');
+            setTimeout(() => { toast.classList.add('translate-x-full'); }, 4000);
+        }
+
         function renderProducts(catFilter) {
             const list = document.getElementById('products-list');
             list.innerHTML = '';
@@ -161,22 +220,22 @@
             
             filtered.forEach(p => {
                 list.innerHTML += `
-                    <div class="olam-glass rounded-3xl overflow-hidden border border-white/5 shadow-xl">
+                    <div class="olam-glass rounded-3xl overflow-hidden border border-slate-800 shadow-xl">
                         <div class="h-32 w-full relative">
                             <img src="${p.image}" class="w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
-                            <div class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-black/60 text-[9px] font-bold text-amber-400 border border-white/10">VIP 0</div>
-                            <div class="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-black/60 text-[9px] font-bold text-slate-300 border border-white/10">${p.duration} Jours</div>
-                            <div class="absolute bottom-3 left-4"><span class="text-base font-black text-white">${p.name}</span></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent"></div>
+                            <div class="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-slate-950/80 border border-amber-500/30 text-[9px] font-bold text-amber-500">VIP 0</div>
+                            <div class="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-slate-950/80 border border-slate-700 text-[9px] font-bold text-slate-300">${p.duration} Jours</div>
+                            <div class="absolute bottom-3 left-4"><span class="text-sm font-black text-white">${p.name}</span></div>
                         </div>
                         <div class="p-4 space-y-3">
-                            <div class="grid grid-cols-2 gap-2 text-center bg-black/40 p-2 rounded-xl border border-white/5">
-                                <div><p class="text-[9px] uppercase text-slate-400">Revenus quotidiens</p><p class="text-xs font-black text-emerald-400">FCFA ${p.daily.toLocaleString()}</p></div>
-                                <div><p class="text-[9px] uppercase text-slate-400">Total</p><p class="text-xs font-black text-cyan-400">FCFA ${p.total.toLocaleString()}</p></div>
+                            <div class="grid grid-cols-2 gap-2 text-center bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
+                                <div><p class="text-[9px] uppercase text-slate-400 font-bold">Revenu quotidien</p><p class="text-xs font-black text-emerald-400">FCFA ${p.daily.toLocaleString()}</p></div>
+                                <div><p class="text-[9px] uppercase text-slate-400 font-bold">Rendement total</p><p class="text-xs font-black text-amber-500">FCFA ${p.total.toLocaleString()}</p></div>
                             </div>
                             <div class="flex items-center justify-between pt-1">
-                                <span class="text-sm font-black text-white">FCFA ${p.price.toLocaleString()}.00</span>
-                                <button onclick="buyProduct(${p.price}, '${p.name}')" class="px-5 py-2.5 rounded-xl olam-gradient text-white text-xs font-bold shadow-lg">Investir</button>
+                                <span class="text-sm font-black text-white">FCFA ${p.price.toLocaleString()}</span>
+                                <button onclick="buyProduct(${p.price}, '${p.name}')" class="px-5 py-2.5 rounded-xl gold-gradient text-slate-950 text-xs font-black shadow-md hover:opacity-90">Souscrire</button>
                             </div>
                         </div>
                     </div>`;
@@ -186,7 +245,7 @@
         function filterCat(cat) {
             ['Tous', 'Stable', 'Benefits', 'Event'].forEach(c => {
                 const btn = document.getElementById(`f-${c}`);
-                if(btn) btn.className = c === cat ? 'px-4 py-1.5 rounded-xl text-xs font-bold olam-gradient text-white whitespace-nowrap' : 'px-4 py-1.5 rounded-xl text-xs font-bold olam-glass text-slate-400 whitespace-nowrap border border-slate-800';
+                if(btn) btn.className = c === cat ? 'px-4 py-1.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 whitespace-nowrap shadow' : 'px-4 py-1.5 rounded-xl text-xs font-bold olam-glass text-slate-400 whitespace-nowrap border border-slate-800';
             });
             renderProducts(cat);
         }
@@ -194,21 +253,25 @@
         function buyProduct(price, name) {
             let bal = parseFloat(localStorage.getItem('olam_recharge') || '1240');
             if(bal < price) {
-                showAlert("Erreur : Solde de recharge insuffisant pour souscrire à ce plan. Veuillez effectuer un dépôt.");
+                showAlert(`Erreur de souscription : Votre solde de recharge (FCFA ${bal.toLocaleString()}) est insuffisant pour acquérir "${name}" (FCFA ${price.toLocaleString()}). Veuillez effectuer un dépôt.`);
                 return;
             }
             bal -= price;
             localStorage.setItem('olam_recharge', bal);
             localStorage.setItem('olam_has_invested', 'true');
-            showAlert(`Succès : Investissement validé dans ${name} !`);
+            showToast(`Souscription confirmée au fonds ${name} !`);
             setTimeout(() => location.reload(), 1500);
         }
 
         function claimPointage() {
-            showAlert("Pointage quotidien déjà effectué pour aujourd'hui.");
+            showAlert("Pointage quotidien : Vous avez déjà récupéré votre prime de présence pour aujourd'hui.");
         }
 
-        window.onload = () => { renderProducts('Tous'); }
+        window.onload = () => {
+            renderProducts('Tous');
+            // Simulation d'activité vivante au bout de 5 secondes
+            setTimeout(() => { showToast("Nouvel investisseur enregistré au Sénégal (+221)"); }, 4000);
+        }
     </script>
 </body>
 </html>
