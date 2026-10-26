@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olam Capital - Gestion d'Actifs & Investissements</title>
+    <title>RANGERS (RG) - Plateforme d'Investissement</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -11,12 +11,10 @@
             theme: {
                 extend: {
                     colors: {
-                        olamBg: '#030509',
-                        olamCard: '#0d111a',
-                        olamGold: '#f59e0b',
-                        olamGoldHover: '#d97706',
-                        olamGreen: '#10b981',
-                        olamBorder: '#1e2638'
+                        rgBg: '#030509',
+                        rgCard: '#0d111a',
+                        rgGold: '#f59e0b',
+                        rgBorder: '#1e2638'
                     }
                 }
             }
@@ -26,67 +24,59 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
-        .olam-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
+        .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
         .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .gold-text { background: linear-gradient(135deg, #f59e0b, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
-            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.4); }
-        }
-        .glow-effect { animation: pulseGlow 3s infinite; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased pb-28">
 
-    <!-- TICKER DÉFILANT EN TEMPS RÉEL -->
+    <!-- TICKER D'ANNONCES OFFICIELLES -->
     <div class="bg-amber-500/10 border-b border-amber-500/20 text-amber-400 text-[11px] py-1.5 px-4 overflow-hidden whitespace-nowrap flex items-center">
-        <i class="fa-solid fa-bullhorn mr-2 text-amber-500 animate-bounce"></i>
-        <div class="inline-block animate-[marquee_20s_linear_infinite]">
-            <span>🎉 Utilisateur (+221 77***) vient de retirer 45,000 FCFA • 🚀 Nouveau fonds "Olam Premium #4" complet à 85% • 💎 Bonus de parrainage crédité pour +225 05*** •</span>
+        <i class="fa-solid fa-shield-halved mr-2 text-amber-500"></i>
+        <div class="inline-block animate-[marquee_25s_linear_infinite]">
+            <span>RANGERS (RG) SÉCURITÉ OFFICIELLE • Validation des transactions en temps réel • Portefeuille multi-dehors XOF/USDT actif •</span>
         </div>
     </div>
 
     <!-- HEADER -->
-    <header class="olam-glass sticky top-0 z-40 px-4 py-3 border-b border-amber-500/10 flex justify-between items-center">
+    <header class="rg-glass sticky top-0 z-40 px-4 py-3 border-b border-amber-500/10 flex justify-between items-center">
         <div class="flex items-center space-x-3">
             <div class="w-9 h-9 rounded-xl gold-gradient flex items-center justify-center text-slate-950 font-black shadow-md">
-                <i class="fa-solid fa-shield-halved text-sm"></i>
+                <i class="fa-solid fa-chart-line text-sm"></i>
             </div>
             <div>
-                <h1 class="font-black text-sm tracking-wider text-white">OLAM CAPITAL</h1>
-                <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[9px] font-bold border border-amber-500/30">VIP 1 ACTIF</span>
+                <h1 class="font-black text-sm tracking-wider text-white">RANGERS (RG)</h1>
+                <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[9px] font-bold border border-amber-500/30" id="user-vip-badge">VIP 0</span>
             </div>
         </div>
         <div class="flex items-center space-x-2">
-            <button onclick="showAlert('Aucune nouvelle notification système.')" class="w-9 h-9 rounded-xl olam-glass text-slate-300 flex items-center justify-center hover:text-white border border-slate-800"><i class="fa-regular fa-bell text-xs"></i></button>
-            <button onclick="showAlert('Messagerie sécurisée chiffrée de bout en bout.')" class="w-9 h-9 rounded-xl olam-glass text-slate-300 flex items-center justify-center hover:text-white border border-slate-800"><i class="fa-regular fa-envelope text-xs"></i></button>
+            <button onclick="showAlert('Aucun message système non lu.')" class="w-9 h-9 rounded-xl rg-glass text-slate-300 flex items-center justify-center hover:text-white border border-slate-800"><i class="fa-regular fa-bell text-xs"></i></button>
+            <a href="compte.html" class="w-9 h-9 rounded-xl rg-glass text-amber-500 flex items-center justify-center hover:text-white border border-slate-800"><i class="fa-solid fa-user text-xs"></i></a>
         </div>
     </header>
 
     <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-5">
         
-        <!-- CARTE SOLDE PRINCIPAL & SOUS-SOLDES SYNCHRONISÉS -->
-        <div class="olam-glass p-6 rounded-3xl relative overflow-hidden shadow-2xl border-amber-500/30 glow-effect">
-            <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            
+        <!-- CARTE DES SOLDES RÉELS -->
+        <div class="rg-glass p-6 rounded-3xl relative overflow-hidden shadow-2xl border-amber-500/30">
             <div class="flex justify-between items-start mb-4">
                 <div>
-                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold"><i class="fa-solid fa-vault text-amber-500 mr-1"></i> Actifs totaux du compte</p>
-                    <h2 class="text-3xl font-black text-white mt-1">FCFA <span id="total-balance">1,250.00</span></h2>
+                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold"><i class="fa-solid fa-wallet text-amber-500 mr-1"></i> Actifs totaux du compte</p>
+                    <h2 class="text-3xl font-black text-white mt-1">FCFA <span id="total-balance">1,000.00</span></h2>
                 </div>
-                <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold border border-emerald-500/30">+FCFA 0.00 aujourd'hui</span>
+                <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold border border-emerald-500/30" id="bonus-status-tag">Bonus bloqué</span>
             </div>
 
             <div class="grid grid-cols-3 gap-2 pt-3 border-t border-slate-800 text-center mb-5">
                 <div>
                     <p class="text-[9px] text-slate-400 uppercase font-bold">Recharge</p>
-                    <p class="text-xs font-black text-amber-400 mt-0.5">FCFA <span id="recharge-balance">1,240.00</span></p>
+                    <p class="text-xs font-black text-amber-400 mt-0.5">FCFA <span id="recharge-balance">0.00</span></p>
                 </div>
                 <div>
                     <p class="text-[9px] text-slate-400 uppercase font-bold">Retirable</p>
-                    <p class="text-xs font-black text-emerald-400 mt-0.5">FCFA <span id="retirable-balance">10.00</span></p>
+                    <p class="text-xs font-black text-emerald-400 mt-0.5">FCFA <span id="retirable-balance">1,000.00</span></p>
                 </div>
                 <div>
                     <p class="text-[9px] text-slate-400 uppercase font-bold">Revenus</p>
@@ -104,62 +94,35 @@
             </div>
         </div>
 
-        <!-- 5 BOUTONS D'ACTIONS RAPIDES -->
-        <div class="grid grid-cols-5 gap-2 text-center">
-            <a href="depot.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-amber-500/40 transition group">
-                <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center mb-1 text-sm group-hover:scale-110 transition"><i class="fa-solid fa-wallet"></i></div>
+        <!-- 4 BOUTONS D'ACTIONS RAPIDES -->
+        <div class="grid grid-cols-4 gap-2 text-center">
+            <a href="depot.html" class="flex flex-col items-center justify-center p-3 rounded-2xl rg-glass hover:border-amber-500/40 transition">
+                <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-wallet"></i></div>
                 <span class="text-[10px] font-semibold text-slate-300">Dépôt</span>
             </a>
-            <a href="retrait.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-amber-500/40 transition group">
-                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-1 text-sm group-hover:scale-110 transition"><i class="fa-solid fa-money-bill-transfer"></i></div>
+            <a href="retrait.html" class="flex flex-col items-center justify-center p-3 rounded-2xl rg-glass hover:border-amber-500/40 transition">
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-money-bill-transfer"></i></div>
                 <span class="text-[10px] font-semibold text-slate-300">Retrait</span>
             </a>
-            <a href="equipe.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-amber-500/40 transition group">
-                <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-1 text-sm group-hover:scale-110 transition"><i class="fa-solid fa-users"></i></div>
+            <a href="equipe.html" class="flex flex-col items-center justify-center p-3 rounded-2xl rg-glass hover:border-amber-500/40 transition">
+                <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-users"></i></div>
                 <span class="text-[10px] font-semibold text-slate-300">Équipe</span>
             </a>
-            <a href="missions.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-amber-500/40 transition group">
-                <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-1 text-sm group-hover:scale-110 transition"><i class="fa-solid fa-award"></i></div>
-                <span class="text-[10px] font-semibold text-slate-300">Missions</span>
+            <a href="compte.html" class="flex flex-col items-center justify-center p-3 rounded-2xl rg-glass hover:border-amber-500/40 transition">
+                <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-user-gear"></i></div>
+                <span class="text-[10px] font-semibold text-slate-300">Compte</span>
             </a>
-            <button onclick="claimPointage()" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-amber-500/40 transition group">
-                <div class="w-9 h-9 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center mb-1 text-sm group-hover:scale-110 transition"><i class="fa-solid fa-calendar-check"></i></div>
-                <span class="text-[10px] font-semibold text-slate-300">Pointage</span>
-            </button>
         </div>
 
-        <!-- BANNIÈRE -->
-        <div class="rounded-3xl overflow-hidden olam-glass h-36 relative border border-amber-500/20 shadow-lg">
-            <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-90">
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent flex items-end p-4">
-                <div>
-                    <span class="px-2 py-0.5 rounded bg-amber-500 text-slate-950 text-[9px] font-black uppercase">Certifié 2026</span>
-                    <p class="text-xs font-bold text-white mt-1">Fonds d'Investissement Durable Olam</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- PLANS D'INVESTISSEMENT -->
+        <!-- CATALOGUE DES FONDS D'INVESTISSEMENT RÉELS -->
         <div class="space-y-3">
-            <div class="flex justify-between items-center">
-                <h3 class="text-sm font-black text-white tracking-wide">Plans d'Investissement</h3>
-                <span class="text-xs text-amber-500 font-bold cursor-pointer">Tout voir</span>
-            </div>
-
-            <!-- Filtres -->
-            <div class="flex space-x-2 overflow-x-auto no-scrollbar pb-1">
-                <button onclick="filterCat('Tous')" id="f-Tous" class="px-4 py-1.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 whitespace-nowrap shadow">Tous</button>
-                <button onclick="filterCat('Stable')" id="f-Stable" class="px-4 py-1.5 rounded-xl text-xs font-bold olam-glass text-slate-400 whitespace-nowrap border border-slate-800">Stable</button>
-                <button onclick="filterCat('Benefits')" id="f-Benefits" class="px-4 py-1.5 rounded-xl text-xs font-bold olam-glass text-slate-400 whitespace-nowrap border border-slate-800">Benefits</button>
-                <button onclick="filterCat('Event')" id="f-Event" class="px-4 py-1.5 rounded-xl text-xs font-bold olam-glass text-slate-400 whitespace-nowrap border border-slate-800">Event</button>
-            </div>
-
+            <h3 class="text-sm font-black text-white tracking-wide">Fonds d'Investissement RANGERS (RG)</h3>
             <div id="products-list" class="space-y-4"></div>
         </div>
     </main>
 
     <!-- NAVIGATION 4 BOUTONS -->
-    <nav class="fixed bottom-3 left-4 right-4 olam-glass rounded-3xl p-2 px-6 flex justify-between items-center z-40 border border-amber-500/20 shadow-2xl max-w-lg mx-auto">
+    <nav class="fixed bottom-3 left-4 right-4 rg-glass rounded-3xl p-2 px-6 flex justify-between items-center z-40 border border-amber-500/20 shadow-2xl max-w-lg mx-auto">
         <a href="index.html" class="flex flex-col items-center text-amber-500 transition"><i class="fa-solid fa-house text-base"></i><span class="text-[9px] mt-1 font-bold">Accueil</span></a>
         <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-layer-group text-base"></i><span class="text-[9px] mt-1 font-bold">Invest</span></a>
         <a href="equipe.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-network-wired text-base"></i><span class="text-[9px] mt-1 font-bold">Équipe</span></a>
@@ -168,43 +131,66 @@
 
     <!-- POPUP ALERTE SÉCURISÉE -->
     <div id="custom-alert" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
-        <div class="olam-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
+        <div class="rg-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
             <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-500 mx-auto flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-triangle-exclamation"></i></div>
             <p id="alert-text" class="text-xs text-white font-medium leading-relaxed">Message</p>
             <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-md">Compris</button>
         </div>
     </div>
 
-    <!-- NOTIFICATION TOAST -->
-    <div id="toast-notification" class="fixed top-12 right-4 z-50 transform translate-x-full transition-transform duration-500 olam-glass px-4 py-3 rounded-2xl border border-emerald-500/30 flex items-center space-x-3 shadow-2xl">
-        <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-check text-xs"></i></div>
-        <div>
-            <p class="text-[10px] text-slate-400">Activité en direct</p>
-            <p id="toast-msg" class="text-xs font-bold text-white">Action validée</p>
-        </div>
-    </div>
-
     <script>
-        // Synchronisation dynamique des soldes avec depot.html
-        let rechargeBal = parseFloat(localStorage.getItem('olam_recharge') || '1240.00');
-        let retirableBal = parseFloat(localStorage.getItem('olam_retirable') || '10.00');
+        // Initialisation des données réelles dans localStorage si inexistantes
+        if(localStorage.getItem('rg_recharge') === null) {
+            localStorage.setItem('rg_recharge', '0.00');
+            localStorage.setItem('rg_retirable', '1000.00'); // Bonus d'inscription 1000F
+            localStorage.setItem('rg_has_invested', 'false');
+        }
+
+        let rechargeBal = parseFloat(localStorage.getItem('rg_recharge'));
+        let retirableBal = parseFloat(localStorage.getItem('rg_retirable'));
         let totalBal = rechargeBal + retirableBal;
+        let hasInvested = localStorage.getItem('rg_has_invested') === 'true';
 
         document.getElementById('total-balance').innerText = totalBal.toLocaleString('fr-FR', {minimumFractionDigits: 2});
         document.getElementById('recharge-balance').innerText = rechargeBal.toLocaleString('fr-FR', {minimumFractionDigits: 2});
         document.getElementById('retirable-balance').innerText = retirableBal.toLocaleString('fr-FR', {minimumFractionDigits: 2});
 
-        const catboxImages = ["https://files.catbox.moe/9kbqzl.jpg", "https://files.catbox.moe/499w19.jpg", "https://files.catbox.moe/78dszw.jpg", "https://files.catbox.moe/tn5jfj.jpg", "https://files.catbox.moe/gd9e2y.jpg", "https://files.catbox.moe/60nntp.jpg"];
+        if(hasInvested) {
+            document.getElementById('user-vip-badge').innerText = 'VIP 1';
+            document.getElementById('bonus-status-tag').innerText = 'Bonus débloqué';
+            document.getElementById('bonus-status-tag').className = 'px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold border border-emerald-500/30';
+        }
+
+        const catboxImages = ["https://files.catbox.moe/9kbqzl.jpg", "https://files.catbox.moe/499w19.jpg", "https://files.catbox.moe/78dszw.jpg", "https://files.catbox.moe/tn5jfj.jpg"];
         
         let products = [];
-        let categories = ['Stable', 'Benefits', 'Event'];
-        let imgIdx = 0;
-        categories.forEach(cat => {
-            for(let i=1; i<=8; i++) {
-                let price = i * 2000;
-                products.push({ id: products.length+1, category: cat, name: `Olam Capital ${i}`, price: price, daily: Math.round(price * 0.25), total: Math.round(price * 0.25 * 180), duration: 180, image: catboxImages[imgIdx % catboxImages.length] });
-                imgIdx++;
-            }
+        for(let i=1; i<=4; i++) {
+            let price = i * 5000;
+            products.push({ id: i, name: `Fonds RANGERS #${i}`, price: price, daily: Math.round(price * 0.25), total: Math.round(price * 0.25 * 180), duration: 180, image: catboxImages[(i-1)%catboxImages.length] });
+        }
+
+        const list = document.getElementById('products-list');
+        products.forEach(p => {
+            list.innerHTML += `
+                <div class="rg-glass rounded-3xl overflow-hidden border border-slate-800 shadow-xl">
+                    <div class="h-32 w-full relative">
+                        <img src="${p.image}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent"></div>
+                        <div class="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-slate-950/80 border border-amber-500/30 text-[9px] font-bold text-amber-500">VIP ${p.id}</div>
+                        <div class="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-slate-950/80 border border-slate-700 text-[9px] font-bold text-slate-300">${p.duration} Jours</div>
+                        <div class="absolute bottom-3 left-4"><span class="text-sm font-black text-white">${p.name}</span></div>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <div class="grid grid-cols-2 gap-2 text-center bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
+                            <div><p class="text-[9px] uppercase text-slate-400 font-bold">Revenu quotidien</p><p class="text-xs font-black text-emerald-400">FCFA ${p.daily.toLocaleString()}</p></div>
+                            <div><p class="text-[9px] uppercase text-slate-400 font-bold">Rendement total</p><p class="text-xs font-black text-amber-500">FCFA ${p.total.toLocaleString()}</p></div>
+                        </div>
+                        <div class="flex items-center justify-between pt-1">
+                            <span class="text-sm font-black text-white">FCFA ${p.price.toLocaleString()}</span>
+                            <button onclick="buyProduct(${p.price}, '${p.name}')" class="px-5 py-2.5 rounded-xl gold-gradient text-slate-950 text-xs font-black shadow-md hover:opacity-90">Souscrire</button>
+                        </div>
+                    </div>
+                </div>`;
         });
 
         function showAlert(msg) {
@@ -215,69 +201,27 @@
             document.getElementById('custom-alert').classList.add('hidden');
         }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast-notification');
-            document.getElementById('toast-msg').innerText = msg;
-            toast.classList.remove('translate-x-full');
-            setTimeout(() => { toast.classList.add('translate-x-full'); }, 4000);
-        }
-
-        function renderProducts(catFilter) {
-            const list = document.getElementById('products-list');
-            list.innerHTML = '';
-            let filtered = catFilter === 'Tous' ? products : products.filter(p => p.category === catFilter);
-            
-            filtered.forEach(p => {
-                list.innerHTML += `
-                    <div class="olam-glass rounded-3xl overflow-hidden border border-slate-800 shadow-xl">
-                        <div class="h-32 w-full relative">
-                            <img src="${p.image}" class="w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent"></div>
-                            <div class="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-slate-950/80 border border-amber-500/30 text-[9px] font-bold text-amber-500">VIP 0</div>
-                            <div class="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-slate-950/80 border border-slate-700 text-[9px] font-bold text-slate-300">${p.duration} Jours</div>
-                            <div class="absolute bottom-3 left-4"><span class="text-sm font-black text-white">${p.name}</span></div>
-                        </div>
-                        <div class="p-4 space-y-3">
-                            <div class="grid grid-cols-2 gap-2 text-center bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
-                                <div><p class="text-[9px] uppercase text-slate-400 font-bold">Revenu quotidien</p><p class="text-xs font-black text-emerald-400">FCFA ${p.daily.toLocaleString()}</p></div>
-                                <div><p class="text-[9px] uppercase text-slate-400 font-bold">Rendement total</p><p class="text-xs font-black text-amber-500">FCFA ${p.total.toLocaleString()}</p></div>
-                            </div>
-                            <div class="flex items-center justify-between pt-1">
-                                <span class="text-sm font-black text-white">FCFA ${p.price.toLocaleString()}</span>
-                                <button onclick="buyProduct(${p.price}, '${p.name}')" class="px-5 py-2.5 rounded-xl gold-gradient text-slate-950 text-xs font-black shadow-md hover:opacity-90">Souscrire</button>
-                            </div>
-                        </div>
-                    </div>`;
-            });
-        }
-
-        function filterCat(cat) {
-            ['Tous', 'Stable', 'Benefits', 'Event'].forEach(c => {
-                const btn = document.getElementById(`f-${c}`);
-                if(btn) btn.className = c === cat ? 'px-4 py-1.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 whitespace-nowrap shadow' : 'px-4 py-1.5 rounded-xl text-xs font-bold olam-glass text-slate-400 whitespace-nowrap border border-slate-800';
-            });
-            renderProducts(cat);
-        }
-
         function buyProduct(price, name) {
-            if(rechargeBal < price) {
-                showAlert(`Erreur de souscription : Votre solde de recharge (FCFA ${rechargeBal.toLocaleString()}) est insuffisant pour acquérir "${name}" (FCFA ${price.toLocaleString()}). Veuillez effectuer un dépôt.`);
+            let totalAvailable = rechargeBal + retirableBal;
+            if(totalAvailable < price) {
+                showAlert(`Erreur financière : Solde global insuffisant (FCFA ${totalAvailable.toLocaleString()}) pour acquérir "${name}" (FCFA ${price.toLocaleString()}). Veuillez effectuer un dépôt.`);
                 return;
             }
-            rechargeBal -= price;
-            localStorage.setItem('olam_recharge', rechargeBal);
-            localStorage.setItem('olam_has_invested', 'true');
-            showToast(`Souscription confirmée au fonds ${name} !`);
-            setTimeout(() => location.reload(), 1500);
-        }
-
-        function claimPointage() {
-            showAlert("Pointage quotidien : Vous avez déjà récupéré votre prime de présence pour aujourd'hui.");
-        }
-
-        window.onload = () => {
-            renderProducts('Tous');
-            setTimeout(() => { showToast("Nouvel investisseur enregistré au Sénégal (+221)"); }, 4000);
+            // Déduire en priorité du solde de recharge, puis du retirable
+            if(rechargeBal >= price) {
+                rechargeBal -= price;
+            } else {
+                let diff = price - rechargeBal;
+                rechargeBal = 0;
+                retirableBal -= diff;
+            }
+            
+            localStorage.setItem('rg_recharge', rechargeBal);
+            localStorage.setItem('rg_retirable', retirableBal);
+            localStorage.setItem('rg_has_invested', 'true');
+            
+            showAlert(`Succès : Investissement validé dans ${name}. Votre bonus d'inscription est désormais débloqué !`);
+            setTimeout(() => location.reload(), 2000);
         }
     </script>
 </body>
