@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RANGERS (RG) - Retrait de Fonds Sécurisé</title>
+    <title>RANGERS (RG) - Retrait de Fonds Sécurisé 24h/24</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -41,7 +41,9 @@
             <a href="index.html" class="w-8 h-8 rounded-xl rg-glass flex items-center justify-center text-amber-500 hover:text-white border border-slate-800"><i class="fa-solid fa-arrow-left text-xs"></i></a>
             <span class="font-black text-sm text-white tracking-wide">RANGERS (RG) - Retrait</span>
         </div>
-        <button onclick="showAlert('Limite de retrait : 1 fois par jour maximum.')" class="text-amber-500 text-xs font-bold"><i class="fa-regular fa-clock"></i></button>
+        <div class="flex items-center space-x-1 text-emerald-400 text-xs font-bold">
+            <i class="fa-solid fa-clock"></i><span>24h/24 Actif</span>
+        </div>
     </header>
 
     <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-5">
@@ -52,7 +54,7 @@
                 <img src="https://files.catbox.moe/499w19.jpg" class="w-full h-full object-cover opacity-85">
                 <div class="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-slate-950/40 to-transparent"></div>
                 <div class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-slate-950/80 border border-amber-500/30 text-[9px] font-bold text-amber-400">
-                    <i class="fa-solid fa-shield-halved mr-1"></i> Retrait Sécurisé 15%
+                    <i class="fa-solid fa-bolt mr-1"></i> Retraits ouverts 24h/24 • Frais 15%
                 </div>
             </div>
             <div class="p-5 pt-0 relative -mt-6">
@@ -61,7 +63,7 @@
                         <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Disponible au retrait</p>
                         <h2 class="text-2xl font-black text-emerald-400 mt-0.5">FCFA <span id="retirable-display">1,000.00</span></h2>
                     </div>
-                    <span class="px-2.5 py-1 rounded-full bg-slate-900 text-slate-400 text-[10px] font-bold border border-slate-800">Max/jour : 1</span>
+                    <span class="px-2.5 py-1 rounded-full bg-slate-900 text-slate-400 text-[10px] font-bold border border-slate-800">Service 24/7</span>
                 </div>
                 <p class="text-[10px] text-slate-500 mt-2">Total du compte : FCFA <span id="total-display">1,000.00</span></p>
             </div>
@@ -92,18 +94,18 @@
             </div>
         </div>
 
-        <!-- CARTE DE RÉCEPTION (MOBILE MONEY) -->
+        <!-- CARTE DE RÉCEPTION (MOBILE MONEY PERSISTANTE) -->
         <div class="space-y-2">
             <span class="text-[10px] font-bold uppercase text-slate-400 px-1">Compte de réception officiel</span>
             <div class="rg-glass p-4 rounded-2xl flex items-center justify-between border border-slate-800">
                 <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-wallet"></i></div>
                     <div>
-                        <p class="text-xs font-bold text-white" id="account-name">Wave / Orange Money</p>
+                        <p class="text-xs font-bold text-white" id="account-name">Compte Mobile Money</p>
                         <p class="text-[10px] text-slate-400" id="account-number">Non configuré</p>
                     </div>
                 </div>
-                <button onclick="openCardModal()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-500 text-xs font-bold border border-amber-500/30">Lier un compte</button>
+                <button onclick="openCardModal()" id="btn-link-account" class="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-500 text-xs font-bold border border-amber-500/30">Lier un compte</button>
             </div>
         </div>
     </main>
@@ -115,7 +117,7 @@
             <p class="text-base font-black text-emerald-400">FCFA <span id="footer-receive">0.00</span></p>
         </div>
         <button onclick="submitWithdraw()" class="px-6 py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg flex items-center space-x-2 btn-pulse">
-            <i class="fa-solid fa-paper-plane"></i><span>Valider le retrait</span>
+            <i class="fa-solid fa-paper-plane"></i><span>Valider le retrait 24/24</span>
         </button>
     </div>
 
@@ -153,17 +155,23 @@
     <script>
         let retirableBal = parseFloat(localStorage.getItem('rg_retirable') || '1000.00');
         let totalBal = parseFloat(localStorage.getItem('rg_recharge') || '0.00') + retirableBal;
-        let savedAccount = localStorage.getItem('rg_withdraw_account');
 
         document.getElementById('retirable-display').innerText = retirableBal.toLocaleString('fr-FR', {minimumFractionDigits: 2});
         document.getElementById('total-display').innerText = totalBal.toLocaleString('fr-FR', {minimumFractionDigits: 2});
 
-        if(savedAccount) {
-            document.getElementById('account-number').innerText = savedAccount;
+        // Chargement persistant du compte enregistré
+        let savedOperator = localStorage.getItem('rg_withdraw_operator');
+        let savedPhone = localStorage.getItem('rg_withdraw_phone');
+
+        if(savedPhone) {
+            document.getElementById('account-name').innerText = savedOperator || 'Mobile Money';
+            document.getElementById('account-number').innerText = savedPhone;
+            document.getElementById('btn-link-account').innerText = 'Modifier';
         }
 
         function showAlert(msg) {
             document.getElementById('alert-text').innerText = msg;
+            document.getElementById('custom-alert').classList.add('hidden'); // Reset state
             document.getElementById('custom-alert').classList.remove('hidden');
         }
         function closeAlert() {
@@ -177,7 +185,7 @@
 
         function calculateFees() {
             let amt = parseFloat(document.getElementById('withdraw-amt').value) || 0;
-            let fee = amt * 0.15; // Frais mis à 15%
+            let fee = amt * 0.15; // 15% de frais
             let receive = amt - fee;
             document.getElementById('fee-display').innerText = 'FCFA ' + fee.toLocaleString('fr-FR', {minimumFractionDigits: 2});
             document.getElementById('receive-display').innerText = 'FCFA ' + receive.toLocaleString('fr-FR', {minimumFractionDigits: 2});
@@ -198,12 +206,15 @@
                 showAlert("Erreur : Veuillez entrer un numéro de compte valide.");
                 return;
             }
-            const fullAcc = op + ' - ' + ph;
-            localStorage.setItem('rg_withdraw_account', fullAcc);
+            // Sauvegarde persistante dans localStorage
+            localStorage.setItem('rg_withdraw_operator', op);
+            localStorage.setItem('rg_withdraw_phone', ph);
+
             document.getElementById('account-name').innerText = op;
             document.getElementById('account-number').innerText = ph;
+            document.getElementById('btn-link-account').innerText = 'Modifier';
             closeCardModal();
-            showAlert("Compte de retrait associé avec succès !");
+            showAlert("Compte de retrait enregistré et mémorisé avec succès !");
         }
 
         function submitWithdraw() {
@@ -212,7 +223,7 @@
                 showAlert("Action bloquée : Vous devez souscrire à au moins un plan d'investissement avant de pouvoir effectuer un retrait.");
                 return;
             }
-            if(!localStorage.getItem('rg_withdraw_account')) {
+            if(!localStorage.getItem('rg_withdraw_phone')) {
                 showAlert("Erreur : Veuillez lier un compte de réception avant de demander un retrait.");
                 return;
             }
@@ -228,7 +239,7 @@
 
             retirableBal -= amt;
             localStorage.setItem('rg_retirable', retirableBal);
-            showAlert("Demande de retrait transmise avec succès ! Traitement par l'administration en cours.");
+            showAlert("Demande de retrait 24h/24 transmise avec succès ! Traitement par l'administration en cours.");
             setTimeout(() => { location.href = 'index.html'; }, 2000);
         }
     </script>
