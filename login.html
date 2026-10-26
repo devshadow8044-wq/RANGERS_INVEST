@@ -54,12 +54,12 @@
 
         <!-- ONGLETS DE SÉLECTION (CONNEXION / INSCRIPTION) -->
         <div class="rg-glass p-1.5 rounded-2xl grid grid-cols-2 gap-1 border border-slate-800">
-            <button onclick="switchTab('login')" id="tab-login" class="py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">Connexion</button>
-            <button onclick="switchTab('register')" id="tab-register" class="py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow btn-pulse">Inscription</button>
+            <button onclick="switchTab('login')" id="tab-login" class="py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow btn-pulse">Connexion</button>
+            <button onclick="switchTab('register')" id="tab-register" class="py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">Inscription</button>
         </div>
 
         <!-- FORMULAIRE DE CONNEXION -->
-        <div id="form-login" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/20 shadow-xl hidden">
+        <div id="form-login" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/20 shadow-xl">
             <h3 class="text-sm font-bold text-white uppercase tracking-wider">// Connexion au compte</h3>
             
             <div class="space-y-3">
@@ -74,14 +74,17 @@
             </div>
 
             <button onclick="handleLogin()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse">Se connecter →</button>
+            
+            <div class="text-center pt-2">
+                <button onclick="switchTab('register')" class="text-[11px] text-slate-400 hover:text-amber-400 transition">Pas encore de compte ? <span class="text-amber-500 font-bold underline">S'inscrire</span></button>
+            </div>
         </div>
 
         <!-- FORMULAIRE D'INSCRIPTION -->
-        <div id="form-register" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/30 shadow-xl">
+        <div id="form-register" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/30 shadow-xl hidden">
             <h3 class="text-sm font-bold text-white uppercase tracking-wider">// Inscription officielle</h3>
             
             <div class="space-y-3">
-                <!-- SÉLECTION DU PAYS (4 PAYS OFFICIELS) -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Sélectionner le pays</label>
                     <select id="reg-country" onchange="updateCountryPrefix()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-amber-500 font-bold focus:outline-none focus:border-amber-500">
@@ -92,7 +95,6 @@
                     </select>
                 </div>
 
-                <!-- NUMÉRO DE TÉLÉPHONE -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Numéro de téléphone</label>
                     <div class="flex bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
@@ -101,25 +103,21 @@
                     </div>
                 </div>
 
-                <!-- NOM / PSEUDO -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Nom / Pseudo</label>
                     <input type="text" id="reg-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Votre nom complet">
                 </div>
 
-                <!-- MOT DE PASSE -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de passe (Min 6 caractères)</label>
                     <input type="password" id="reg-pass" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="••••••••">
                 </div>
 
-                <!-- CODE D'INVITATION -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Code d'invitation (Optionnel)</label>
                     <input type="text" id="reg-ref" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: RG2026">
                 </div>
 
-                <!-- CODE SMS ALÉATOIRE (3 SECONDES) -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Code SMS de vérification</label>
                     <div class="flex space-x-2">
@@ -129,13 +127,11 @@
                 </div>
             </div>
 
-            <!-- BOUTON CRÉER UN COMPTE CLIGNOTANT -->
             <button onclick="handleRegister()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse flex items-center justify-center space-x-2">
                 <span>Créer un compte</span>
                 <i class="fa-solid fa-chevron-right text-[10px]"></i>
             </button>
 
-            <!-- LIEN BAS DE PAGE -->
             <div class="text-center pt-2">
                 <button onclick="switchTab('login')" class="text-[11px] text-slate-400 hover:text-amber-400 transition">Déjà membre ? <span class="text-amber-500 font-bold underline">Se connecter</span></button>
             </div>
@@ -178,7 +174,6 @@
             document.getElementById('reg-prefix').innerText = sel;
         }
 
-        // Fonction SMS avec génération aléatoire (ex: 3858, 8799, 1196...) et compte à rebours de 3 secondes
         function sendSmsCode() {
             const phone = document.getElementById('reg-phone').value;
             if(!phone || phone.length < 7) {
@@ -200,10 +195,7 @@
                     btn.innerText = 'Envoyé ✓';
                     btn.className = 'px-4 py-3 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold whitespace-nowrap';
                     
-                    // Génération aléatoire d'un code à 4 chiffres (entre 1000 et 9999)
                     generatedRandomSms = Math.floor(1000 + Math.random() * 9000).toString();
-                    
-                    // Saisie automatique dans le champ
                     document.getElementById('reg-sms').value = generatedRandomSms;
                     showAlert(`Code SMS (${generatedRandomSms}) généré et saisi automatiquement !`);
                 }
@@ -226,7 +218,7 @@
             const sms = document.getElementById('reg-sms').value;
 
             if(!phone || !name || !pass || !sms) {
-                showAlert("Erreur : Veuillez remplir tous les champs obligatoires (Pays, Numéro, Nom, Mot de passe, Code SMS).");
+                showAlert("Erreur : Veuillez remplir tous les champs obligatoires.");
                 return;
             }
 
@@ -235,12 +227,10 @@
                 return;
             }
 
-            // Enregistrement des données utilisateur
             localStorage.setItem('rg_user_name', name);
             localStorage.setItem('rg_user_phone', country + ' ' + phone);
             localStorage.setItem('rg_user_pass', pass);
             
-            // Bonus d'inscription 1000F
             if(localStorage.getItem('rg_retirable') === null) {
                 localStorage.setItem('rg_recharge', '0.00');
                 localStorage.setItem('rg_retirable', '1000.00');
@@ -264,6 +254,7 @@
                 return;
             }
 
+            // Si aucun compte n'est enregistré sur l'appareil, on autorise la connexion directe et crée le profil
             if(!savedPhone) {
                 localStorage.setItem('rg_user_phone', phone);
                 localStorage.setItem('rg_user_pass', pass);
@@ -278,12 +269,13 @@
                 return;
             }
 
+            // Vérification stricte si un compte existe déjà
             if(savedPhone.includes(phone) && pass === savedPass) {
                 localStorage.setItem('rg_logged_in', 'true');
                 showAlert("Connexion réussie ! Redirection...");
                 setTimeout(() => { location.href = 'index.html'; }, 1500);
             } else {
-                showAlert("Erreur : Numéro ou mot de passe incorrect.");
+                showAlert("Erreur : Numéro de téléphone ou mot de passe incorrect.");
             }
         }
     </script>
