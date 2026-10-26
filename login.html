@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RANGERS (RG) - Connexion & Inscription</title>
+    <title>RANGERS (RG) - Connexion & Inscription Sécurisée</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -23,44 +23,44 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
-        .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
+        .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.2); }
         .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
         @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
-            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.6); }
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.8); }
         }
         .btn-pulse { animation: pulseGlow 2s infinite; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4 antialiased">
+<body class="min-h-screen flex flex-col items-center justify-center p-4 antialiased py-10">
 
-    <div class="max-w-md w-full space-y-6">
+    <div class="max-w-md w-full space-y-5">
         
-        <!-- LOGO & BANNIÈRE DE COUVERTURE -->
+        <!-- BANNIÈRE DE COUVERTURE & BONUS DE BIENVENUE -->
         <div class="rg-glass rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl relative">
             <div class="h-32 w-full relative">
                 <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80">
                 <div class="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-slate-950/40 to-transparent"></div>
-            </div>
-            <div class="p-6 pt-0 relative -mt-10 text-center space-y-2">
-                <div class="w-16 h-16 rounded-2xl gold-gradient mx-auto flex items-center justify-center text-slate-950 text-2xl font-black shadow-xl border-2 border-slate-950">
-                    <i class="fa-solid fa-chart-line"></i>
+                <div class="absolute top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-[10px] font-black text-amber-400 flex items-center space-x-1 shadow-lg">
+                    <i class="fa-solid fa-gift"></i><span>Bonus de bienvenue : 1,000 FCFA</span>
                 </div>
-                <h1 class="text-xl font-black text-white tracking-wider">RANGERS (RG)</h1>
-                <p class="text-xs text-slate-400">Plateforme d'investissement institutionnelle</p>
+            </div>
+            <div class="p-5 pt-0 relative -mt-6 text-center space-y-1">
+                <h1 class="text-xl font-black text-white tracking-wider">Rejoignez le réseau</h1>
+                <p class="text-xs text-slate-400">Créez un compte pour commencer à gagner chaque jour.</p>
             </div>
         </div>
 
         <!-- ONGLETS DE SÉLECTION (CONNEXION / INSCRIPTION) -->
         <div class="rg-glass p-1.5 rounded-2xl grid grid-cols-2 gap-1 border border-slate-800">
-            <button onclick="switchTab('login')" id="tab-login" class="py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow">Connexion</button>
-            <button onclick="switchTab('register')" id="tab-register" class="py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">Inscription</button>
+            <button onclick="switchTab('login')" id="tab-login" class="py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">Connexion</button>
+            <button onclick="switchTab('register')" id="tab-register" class="py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow btn-pulse">Inscription</button>
         </div>
 
         <!-- FORMULAIRE DE CONNEXION -->
-        <div id="form-login" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/20 shadow-xl">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">// Accéder à mon compte</h3>
+        <div id="form-login" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/20 shadow-xl hidden">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">// Connexion au compte</h3>
             
             <div class="space-y-3">
                 <div>
@@ -76,30 +76,72 @@
             <button onclick="handleLogin()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse">Se connecter →</button>
         </div>
 
-        <!-- FORMULAIRE D'INSCRIPTION -->
-        <div id="form-register" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/20 shadow-xl hidden">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">// Créer un compte officiel</h3>
+        <!-- FORMULAIRE D'INSCRIPTION COMPLET -->
+        <div id="form-register" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/30 shadow-xl">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">// Inscription officielle</h3>
             
             <div class="space-y-3">
+                <!-- SÉLECTION DU PAYS ET INDICATIF -->
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Nom complet</label>
-                    <input type="text" id="reg-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: Mamadou Gning">
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Sélectionner le pays</label>
+                    <select id="reg-country" onchange="updateCountryPrefix()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-amber-500 font-bold focus:outline-none focus:border-amber-500">
+                        <option value="+221">🇸🇳 Sénégal (+221)</option>
+                        <option value="+225">🇨🇮 Côte d'Ivoire (+225)</option>
+                        <option value="+223">🇲🇱 Mali (+223)</option>
+                        <option value="+226">🇧🇫 Burkina Faso (+226)</option>
+                        <option value="+237">🇨🇲 Cameroun (+237)</option>
+                        <option value="+228">🇹🇬 Togo (+228)</option>
+                        <option value="+229">🇧🇯 Bénin (+229)</option>
+                    </select>
                 </div>
+
+                <!-- NUMÉRO DE TÉLÉPHONE -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Numéro de téléphone</label>
-                    <input type="tel" id="reg-phone" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: 771234567">
+                    <div class="flex bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
+                        <span id="reg-prefix" class="px-3 flex items-center text-amber-500 text-xs font-bold border-r border-slate-800">+221</span>
+                        <input type="tel" id="reg-phone" class="w-full bg-transparent px-4 py-3 text-sm text-white focus:outline-none" placeholder="Ex: 771234567">
+                    </div>
                 </div>
+
+                <!-- NOM / PSEUDO -->
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de passe</label>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Nom / Pseudo</label>
+                    <input type="text" id="reg-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Votre nom complet">
+                </div>
+
+                <!-- MOT DE PASSE -->
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de passe (Min 6 caractères)</label>
                     <input type="password" id="reg-pass" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="••••••••">
                 </div>
+
+                <!-- CODE D'INVITATION -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Code d'invitation (Optionnel)</label>
                     <input type="text" id="reg-ref" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: RG2026">
                 </div>
+
+                <!-- CODE SMS AVEC BOUTON ENVOYER -->
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Code SMS de vérification</label>
+                    <div class="flex space-x-2">
+                        <input type="text" id="reg-sms" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Saisissez le code">
+                        <button onclick="sendSmsCode()" class="px-4 py-3 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold whitespace-nowrap hover:bg-amber-500/30 transition">Envoyer</button>
+                    </div>
+                </div>
             </div>
 
-            <button onclick="handleRegister()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse">S'inscrire & Recevoir le Bonus (1000F) →</button>
+            <!-- BOUTON CRÉER UN COMPTE CLIGNOTANT -->
+            <button onclick="handleRegister()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse flex items-center justify-center space-x-2">
+                <span>Créer un compte</span>
+                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            </button>
+
+            <!-- LIEN BAS DE PAGE -->
+            <div class="text-center pt-2">
+                <button onclick="switchTab('login')" class="text-[11px] text-slate-400 hover:text-amber-400 transition">Déjà membre ? <span class="text-amber-500 font-bold underline">Se connecter</span></button>
+            </div>
         </div>
 
     </div>
@@ -120,16 +162,30 @@
             const formRegister = document.getElementById('form-register');
 
             if(tab === 'login') {
-                btnLogin.className = 'py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow';
+                btnLogin.className = 'py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow btn-pulse';
                 btnRegister.className = 'py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition';
                 formLogin.classList.remove('hidden');
                 formRegister.classList.add('hidden');
             } else {
-                btnRegister.className = 'py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow';
+                btnRegister.className = 'py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow btn-pulse';
                 btnLogin.className = 'py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition';
                 formRegister.classList.remove('hidden');
                 formLogin.classList.add('hidden');
             }
+        }
+
+        function updateCountryPrefix() {
+            const sel = document.getElementById('reg-country').value;
+            document.getElementById('reg-prefix').innerText = sel;
+        }
+
+        function sendSmsCode() {
+            const phone = document.getElementById('reg-phone').value;
+            if(!phone || phone.length < 7) {
+                showAlert("Veuillez d'abord entrer un numéro de téléphone valide.");
+                return;
+            }
+            showAlert("Code SMS simulé envoyé avec succès ! Utilisez le code : 2026");
         }
 
         function showAlert(msg) {
@@ -141,24 +197,31 @@
         }
 
         function handleRegister() {
-            const name = document.getElementById('reg-name').value;
+            const country = document.getElementById('reg-country').value;
             const phone = document.getElementById('reg-phone').value;
+            const name = document.getElementById('reg-name').value;
             const pass = document.getElementById('reg-pass').value;
+            const sms = document.getElementById('reg-sms').value;
 
-            if(!name || !phone || !pass || phone.length < 8) {
-                showAlert("Erreur : Veuillez remplir tous les champs obligatoires correctement.");
+            if(!phone || !name || !pass || !sms) {
+                showAlert("Erreur : Veuillez remplir tous les champs obligatoires (Pays, Numéro, Nom, Mot de passe, Code SMS).");
+                return;
+            }
+
+            if(sms !== '2026' && sms !== '1234') {
+                showAlert("Erreur : Code SMS incorrect. (Indice de test : 2026)");
                 return;
             }
 
             // Enregistrement des données utilisateur
             localStorage.setItem('rg_user_name', name);
-            localStorage.setItem('rg_user_phone', phone);
+            localStorage.setItem('rg_user_phone', country + ' ' + phone);
             localStorage.setItem('rg_user_pass', pass);
             
-            // Initialisation des soldes si premier enregistrement
+            // Bonus d'inscription 1000F
             if(localStorage.getItem('rg_retirable') === null) {
                 localStorage.setItem('rg_recharge', '0.00');
-                localStorage.setItem('rg_retirable', '1000.00'); // Bonus d'inscription 1000F
+                localStorage.setItem('rg_retirable', '1000.00');
                 localStorage.setItem('rg_has_invested', 'false');
             }
 
@@ -179,7 +242,6 @@
                 return;
             }
 
-            // Si aucun compte n'a encore été créé sur cet appareil, on autorise la connexion et initialise le profil
             if(!savedPhone) {
                 localStorage.setItem('rg_user_phone', phone);
                 localStorage.setItem('rg_user_pass', pass);
@@ -194,7 +256,7 @@
                 return;
             }
 
-            if(phone === savedPhone && pass === savedPass) {
+            if(savedPhone.includes(phone) && pass === savedPass) {
                 localStorage.setItem('rg_logged_in', 'true');
                 showAlert("Connexion réussie ! Redirection...");
                 setTimeout(() => { location.href = 'index.html'; }, 1500);
