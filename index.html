@@ -1,1 +1,167 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080b17"><title>RANGERS INVEST — Espace membre</title><link rel="stylesheet" href="style.css"></head><body><div class="app"><header class="top"><a class="brand" href="#home"><span class="logo">R</span><span>RANGERS <b>INVEST</b><small>ESPACE MEMBRE</small></span></a><button id="profileBtn" class="avatar" aria-label="Compte">RI</button></header><main id="view"><section class="hero"><div class="eyebrow"><i></i> PLATEFORME MEMBRE</div><h1>Construis ton<br><em>prochain niveau.</em></h1><p>Un espace simple pour suivre tes activités, tes offres et ton historique.</p><div class="hero-actions"><button class="primary" data-go="vip">Découvrir les offres <span>↗</span></button><button class="ghost" data-go="account">Mon espace</button></div><div class="hero-art"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orbit"></div><div class="art-label">RANGERS <b>• 01</b></div></div></section><section class="balance card"><div><span class="muted">SOLDE DISPONIBLE</span><h2 id="balance">— FCFA</h2><small id="userLine">Connecte-toi pour voir ton espace personnel.</small></div><button class="round" data-go="account">↗</button></section><section class="section"><div class="section-head"><div><span class="eyebrow">ACCÈS RAPIDE</span><h2>Ton espace, à portée de main</h2></div></div><div class="quick-grid"><button class="quick" data-go="vip"><span class="qicon cyan">◇</span><b>Offres VIP</b><small>Découvrir les offres</small></button><button class="quick" data-go="checkin"><span class="qicon violet">◷</span><b>Pointage</b><small>Activité quotidienne</small></button><button class="quick" data-go="tasks"><span class="qicon pink">✦</span><b>Tâches</b><small>Missions disponibles</small></button><button class="quick" data-go="team"><span class="qicon blue">♧</span><b>Mon équipe</b><small>Parrainage & réseau</small></button></div></section><section class="section"><div class="section-head"><div><span class="eyebrow">À LA UNE</span><h2>Choisis ton parcours</h2></div><button class="text-btn" data-go="vip">Tout voir →</button></div><div class="feature card"><div><span class="pill">ESPACE MEMBRE</span><h3>Un tableau de bord<br>qui te ressemble.</h3><p>Retrouve tes activités et tes demandes au même endroit.</p><button class="primary small" data-go="account">Ouvrir mon compte</button></div><div class="feature-mark">R<span>+</span></div></div></section><section class="notice"> <span>ⓘ</span><p><b>À savoir</b><br>Les demandes financières affichées dans cette interface ne transfèrent pas d’argent automatiquement. Tout paiement doit être vérifié par un opérateur et par un prestataire autorisé.</p></section></main><nav class="bottom"><button class="active" data-go="home"><span>⌂</span>Accueil</button><button data-go="vip"><span>◇</span>Offres</button><button data-go="checkin"><span>◷</span>Pointage</button><button data-go="team"><span>♧</span>Équipe</button><button data-go="account"><span>◎</span>Compte</button></nav></div><div id="toast" role="status"></div><script src="app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RANGERS INVEST - Plateforme d'Investissement Professionnelle</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0f19',
+                        cardBg: '#131c2e',
+                        borderDark: '#1e293b',
+                        cyanAccent: '#06b6d4',
+                        purpleAccent: '#8b5cf6',
+                        pinkAccent: '#ec4899',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #0b0f19; color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(19, 28, 46, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .gradient-text { background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gradient-btn { background: linear-gradient(135deg, #06b6d4, #8b5cf6); transition: all 0.3s ease; }
+        .gradient-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0b0f19; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-cyan-500 selection:text-white">
+
+    <!-- NAVIGATION HEADER -->
+    <header class="sticky top-0 z-50 glass-card border-b border-borderDark px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+            <div class="w-10 h-10 rounded-xl gradient-btn flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-cyan-500/20">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+                <h1 class="font-extrabold text-lg tracking-wider gradient-text">RANGERS INVEST</h1>
+                <p class="text-xs text-slate-400">Plateforme Officielle</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <div id="user-balance-badge" class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-xs">
+                <i class="fa-solid fa-wallet text-cyan-400"></i>
+                <span id="header-balance" class="font-bold text-cyan-300">0 FCFA</span>
+            </div>
+            <button onclick="switchTab('admin')" class="px-3.5 py-1.5 rounded-lg bg-purple-900/40 border border-purple-500/40 text-purple-300 text-xs font-semibold hover:bg-purple-900/60 transition">
+                <i class="fa-solid fa-lock mr-1"></i> Admin
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 pb-24">
+
+        <!-- AUTH SCREEN (Si non connecté) -->
+        <div id="auth-view" class="max-w-md mx-auto mt-10">
+            <div class="glass-card p-8 rounded-2xl shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl"></div>
+                <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl"></div>
+                
+                <div class="text-center mb-8">
+                    <h2 id="auth-title" class="text-2xl font-bold tracking-tight text-white">Connexion à votre compte</h2>
+                    <p class="text-xs text-slate-400 mt-1">Accédez à vos investissements en FCFA</p>
+                </div>
+
+                <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-4">
+                    <div id="register-name-group" class="hidden">
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Nom complet</label>
+                        <input type="text" id="auth-name" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" placeholder="Votre nom">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Numéro de téléphone / Email</label>
+                        <input type="text" id="auth-username" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" placeholder="Ex: 0700000000">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Mot de passe</label>
+                        <input type="password" id="auth-password" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" placeholder="••••••••">
+                    </div>
+                    <button type="submit" id="auth-submit-btn" class="w-full py-3 rounded-xl gradient-btn text-white font-semibold text-sm shadow-lg shadow-cyan-500/20">Se connecter</button>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <button type="button" onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-xs text-cyan-400 hover:underline">Pas encore de compte ? S'inscrire</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- APP DASHBOARD (Si connecté) -->
+        <div id="app-view" class="hidden space-y-6">
+
+            <!-- TAB 1: HOME -->
+            <div id="tab-home" class="space-y-6 tab-content">
+                <!-- Solde Card -->
+                <div class="glass-card p-6 rounded-2xl relative overflow-hidden bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-900 border-cyan-500/20">
+                    <div class="absolute right-0 top-0 w-64 h-64 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Solde Total Disponible</p>
+                            <h2 id="dash-balance" class="text-3xl sm:text-4xl font-extrabold text-white mt-1">0 FCFA</h2>
+                        </div>
+                        <span id="dash-vip-badge" class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400 text-xs font-bold border border-cyan-500/30">VIP 0</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-slate-800">
+                        <div>
+                            <p class="text-xs text-slate-400">Revenus Quotidiens</p>
+                            <p id="dash-daily-income" class="text-lg font-bold text-emerald-400 mt-0.5">0 FCFA</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">Total Investi</p>
+                            <p id="dash-total-invested" class="text-lg font-bold text-purple-400 mt-0.5">0 FCFA</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="grid grid-cols-4 gap-2 mt-6">
+                        <button onclick="switchTab('wallet'); openWalletTab('deposit')" class="flex flex-col items-center justify-center p-3 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 transition">
+                            <i class="fa-solid fa-circle-arrow-down text-cyan-400 text-lg mb-1"></i>
+                            <span class="text-xs text-slate-200">Recharger</span>
+                        </button>
+                        <button onclick="switchTab('wallet'); openWalletTab('withdraw')" class="flex flex-col items-center justify-center p-3 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 transition">
+                            <i class="fa-solid fa-circle-arrow-up text-pink-400 text-lg mb-1"></i>
+                            <span class="text-xs text-slate-200">Retirer</span>
+                        </button>
+                        <button onclick="claimDailyCheckin()" class="flex flex-col items-center justify-center p-3 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 transition">
+                            <i class="fa-solid fa-calendar-check text-purple-400 text-lg mb-1"></i>
+                            <span class="text-xs text-slate-200">Pointage</span>
+                        </button>
+                        <button onclick="switchTab('team')" class="flex flex-col items-center justify-center p-3 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 transition">
+                            <i class="fa-solid fa-users text-amber-400 text-lg mb-1"></i>
+                            <span class="text-xs text-slate-200">Équipe</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Banner / Annonce -->
+                <div class="glass-card p-4 rounded-xl bg-gradient-to-r from-purple-900/30 to-pink-900/30 border-purple-500/30 flex items-center space-x-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400 flex-shrink-0">
+                        <i class="fa-solid fa-bullhorn text-lg"></i>
+                    </div>
+                    <div class="flex-1 text-xs">
+                        <p class="font-bold text-white">Annonce officielle RANGERS INVEST</p>
+                        <p class="text-slate-300 mt-0.5">Profitez de nos offres Stables, Premium et Événement pour maximiser vos rendements quotidiens en FCFA.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: PRODUCTS (24 Offres) -->
+            <div id="tab-products" class="space-y-6 tab-content hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Catalogue des Offres</h2>
+                        <p class="text-xs text-slate-400">Choisissez parmi nos 24 offres d'investissement</p>
+                    </div>
+                    <!-- Catégories Filter -->
+                    <div class="flex space-x-2 bg-slate-900 p-1 rounded-xl border border-slate
