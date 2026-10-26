@@ -64,8 +64,8 @@
             
             <div class="space-y-3">
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Numéro de téléphone / Identifiant</label>
-                    <input type="text" id="login-phone" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: 771234567 ou admin">
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Numéro de téléphone</label>
+                    <input type="tel" id="login-phone" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="77 123 45 67">
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de passe</label>
@@ -99,7 +99,7 @@
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Numéro de téléphone</label>
                     <div class="flex bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
                         <span id="reg-prefix" class="px-3 flex items-center text-amber-500 text-xs font-bold border-r border-slate-800">+221</span>
-                        <input type="tel" id="reg-phone" class="w-full bg-transparent px-4 py-3 text-sm text-white focus:outline-none" placeholder="Ex: 771234567">
+                        <input type="tel" id="reg-phone" class="w-full bg-transparent px-4 py-3 text-sm text-white focus:outline-none" placeholder="77 123 45 67">
                     </div>
                 </div>
 
@@ -115,7 +115,7 @@
 
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Code d'invitation (Optionnel)</label>
-                    <input type="text" id="reg-ref" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: RG2026">
+                    <input type="text" id="reg-ref" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Code d'invitation">
                 </div>
 
                 <div>
@@ -243,27 +243,17 @@
         }
 
         function handleLogin() {
-            const inputVal = document.getElementById('login-phone').value.trim();
-            const pass = document.getElementById('login-pass').value;
+            const phoneInput = document.getElementById('login-phone').value.trim();
+            const passInput = document.getElementById('login-pass').value;
 
-            if(!inputVal || !pass) {
-                showAlert("Erreur : Veuillez entrer l'identifiant et le mot de passe.");
+            if(!phoneInput || !passInput) {
+                showAlert("Erreur : Veuillez entrer votre numéro et votre mot de passe.");
                 return;
             }
 
-            // Connexion Administrateur
-            if(inputVal.toLowerCase() === 'admin' && pass === 'admin221') {
-                localStorage.setItem('rg_user_name', 'Administrateur RANGERS');
-                localStorage.setItem('rg_user_phone', 'Admin');
-                localStorage.setItem('rg_logged_in', 'true');
-                showAlert("Connexion Administrateur réussie ! Redirection...");
-                setTimeout(() => { location.href = 'index.html'; }, 1500);
-                return;
-            }
-
-            // Connexion utilisateur universelle et flexible (accepte n'importe quel identifiant/mot de passe sans bloquer)
-            localStorage.setItem('rg_user_phone', inputVal);
-            localStorage.setItem('rg_user_pass', pass);
+            // Enregistrement et connexion fluide pour tout utilisateur
+            localStorage.setItem('rg_user_phone', phoneInput);
+            localStorage.setItem('rg_user_pass', passInput);
             localStorage.setItem('rg_user_name', 'Membre RANGERS');
             
             if(localStorage.getItem('rg_retirable') === null) {
