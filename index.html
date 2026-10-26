@@ -3,99 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APEX CAPITAL - Accueil & Invest</title>
+    <title>Olam - Tableau de bord</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="min-h-screen flex flex-col antialiased pb-28">
 
-    <header class="apex-glass sticky top-0 z-40 px-4 py-3 border-b border-amber-500/10 flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-            <div class="w-9 h-9 rounded-xl gold-gradient flex items-center justify-center text-slate-950 font-black">AP</div>
-            <span class="font-black tracking-wider text-white">APEX CAPITAL</span>
+    <!-- HEADER -->
+    <header class="olam-glass sticky top-0 z-40 px-4 py-3 border-b border-white/5 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl olam-glass flex items-center justify-center text-cyan-400 font-bold border border-cyan-500/30">
+                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover rounded-xl">
+            </div>
+            <div>
+                <span class="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-bold border border-purple-500/30" id="user-vip-label">VIP 1</span>
+            </div>
         </div>
-        <div class="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-bold" id="user-vip-badge">VIP 0</div>
+        <div class="flex items-center space-x-2">
+            <button onclick="showAlert('Aucune nouvelle notification.')" class="w-9 h-9 rounded-xl olam-glass text-slate-300 flex items-center justify-center hover:text-white"><i class="fa-regular fa-bell text-xs"></i></button>
+            <button onclick="showAlert('Boîte de messagerie vide.')" class="w-9 h-9 rounded-xl olam-glass text-slate-300 flex items-center justify-center hover:text-white"><i class="fa-regular fa-envelope text-xs"></i></button>
+        </div>
     </header>
 
-    <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-6">
+    <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-5">
         
-        <div class="apex-glass p-6 rounded-3xl relative overflow-hidden shadow-2xl border-amber-500/20">
-            <p class="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Solde du portefeuille</p>
-            <h2 class="text-3xl font-black text-white mt-1">FCFA <span id="user-balance">1,000.00</span></h2>
-            <p id="bonus-notice" class="text-[10px] text-amber-400 mt-1"><i class="fa-solid fa-gift mr-1"></i> Bonus de 1,000 FCFA bloqué jusqu'au premier investissement</p>
+        <!-- CARTE SOLDE PRINCIPAL & SOUS-SOLDES -->
+        <div class="olam-glass p-5 rounded-3xl relative overflow-hidden shadow-2xl border-cyan-500/20">
+            <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl"></div>
             
-            <div class="grid grid-cols-2 gap-3 mt-5">
-                <a href="depot.html" class="py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs text-center shadow-lg shadow-amber-500/20 block">
-                    <i class="fa-solid fa-wallet mr-1"></i> Dépôt
+            <div class="flex justify-between items-start mb-3">
+                <div>
+                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold"><i class="fa-solid fa-gem text-cyan-400 mr-1"></i> Actifs totaux</p>
+                    <h2 class="text-3xl font-black text-white mt-0.5">FCFA <span id="total-balance">1,250.00</span></h2>
+                </div>
+                <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold border border-emerald-500/30">+FCFA0.00 aujourd'hui</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 pt-3 border-t border-slate-800/80 text-center mb-4">
+                <div>
+                    <p class="text-[9px] text-slate-400 uppercase font-semibold">Recharge</p>
+                    <p class="text-xs font-bold text-cyan-400 mt-0.5">FCFA <span id="recharge-balance">1,240.00</span></p>
+                </div>
+                <div>
+                    <p class="text-[9px] text-slate-400 uppercase font-semibold">Retirable</p>
+                    <p class="text-xs font-bold text-emerald-400 mt-0.5">FCFA <span id="retirable-balance">10.00</span></p>
+                </div>
+                <div>
+                    <p class="text-[9px] text-slate-400 uppercase font-semibold">Revenus</p>
+                    <p class="text-xs font-bold text-amber-400 mt-0.5">FCFA0.00</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <a href="depot.html" class="py-3 rounded-2xl olam-gradient text-white font-bold text-xs text-center shadow-lg shadow-cyan-500/20 flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-plus-circle"></i><span>Déposer</span>
                 </a>
-                <a href="retrait.html" class="py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs border border-slate-800 text-center block transition">
-                    <i class="fa-solid fa-arrow-up-long mr-1"></i> Retirer
+                <a href="retrait.html" class="py-3 rounded-2xl olam-glass text-white font-bold text-xs text-center border border-slate-700 hover:border-slate-500 flex items-center justify-center space-x-2 transition">
+                    <i class="fa-solid fa-wallet"></i><span>Retirer</span>
                 </a>
             </div>
         </div>
 
-        <!-- Section Niveaux VIP -->
-        <div class="apex-glass p-4 rounded-3xl border border-amber-500/20 space-y-2">
-            <h4 class="text-xs font-black text-white uppercase tracking-wider"><i class="fa-solid fa-crown text-amber-500 mr-1"></i> Niveaux VIP & Avantages</h4>
-            <p class="text-[11px] text-slate-400">Chaque investissement vous élève au rang VIP supérieur pour maximiser vos rendements.</p>
+        <!-- 5 BOUTONS D'ACTIONS RAPIDES -->
+        <div class="grid grid-cols-5 gap-2 text-center">
+            <a href="depot.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-cyan-500/40 transition">
+                <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-yen-sign"></i></div>
+                <span class="text-[10px] font-medium text-slate-300">Dépôt</span>
+            </a>
+            <a href="retrait.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-cyan-500/40 transition">
+                <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                <span class="text-[10px] font-medium text-slate-300">Retrait</span>
+            </a>
+            <a href="equipe.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-cyan-500/40 transition">
+                <div class="w-9 h-9 rounded-xl bg-pink-500/10 text-pink-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-users"></i></div>
+                <span class="text-[10px] font-medium text-slate-300">Équipe</span>
+            </a>
+            <a href="missions.html" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-cyan-500/40 transition">
+                <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-layer-group"></i></div>
+                <span class="text-[10px] font-medium text-slate-300">Missions</span>
+            </a>
+            <button onclick="claimPointage()" class="flex flex-col items-center justify-center p-2.5 rounded-2xl olam-glass hover:border-cyan-500/40 transition">
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-calendar-check"></i></div>
+                <span class="text-[10px] font-medium text-slate-300">Pointage</span>
+            </button>
         </div>
 
-        <div class="space-y-4">
-            <h3 class="text-base font-black text-white tracking-wide">Fonds & Investissements</h3>
-            <div id="products-container" class="space-y-4"></div>
+<!-- BANNIÈRE -->
+        <div class="rounded-3xl overflow-hidden olam-glass h-36 relative border border-white/5">
+            <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex items-end p-4">
+                <p class="text-xs font-bold text-white">Olam Agriculture & Développement Durable</p>
+            </div>
+        </div>
+
+        <!-- PLANS D'INVESTISSEMENT -->
+        <div class="space-y-3">
+            <div class="flex justify-between items-center">
+                <h3 class="text-sm font-black text-white">Plans Super</h3>
+                <span class="text-xs text-cyan-400 font-semibold cursor-pointer">Tout voir</span>
+            </div>
+
+            <div class="flex space-x-2 overflow-x-auto no-scrollbar pb-1">
+                <button onclick="filterCat('Tous')" id="f-Tous" class="px-4 py-1.5 rounded-xl text-xs font-bold olam-gradient text-white whitespace-nowrap">Tous</button>
+                <button onclick="filterCat('Stable')" id="f-Stable" class="px-4 py-1.5 rounded-xl text-xs font-bold olam-glass text-slate-400 whitespace-nowrap border border-slate-800">Stable</button>
+                <button onclick="filterCat('Benefits')" id="f-Benefits" class="px-4 py-1.5 rounded-xl text-xs font-bold olam-glass text-slate-400 whitespace-nowrap border border-slate-800">Benefits</button>
+                <button onclick="filterCat('Event')" id="f-Event" class="px-4 py-1.5 rounded-xl text-xs font-bold olam-glass text-slate-400 whitespace-nowrap border border-slate-800">Event</button>
+            </div>
+
+            <div id="products-list" class="space-y-4"></div>
         </div>
     </main>
 
-    <!-- Navigation 4 boutons -->
-    <nav class="fixed bottom-3 left-4 right-4 apex-glass rounded-3xl p-2 px-6 flex justify-between items-center z-40 border border-amber-500/20 shadow-2xl max-w-lg mx-auto">
-        <a href="index.html" class="flex flex-col items-center text-amber-500"><i class="fa-solid fa-house text-base"></i><span class="text-[9px] mt-1 font-bold">Accueil</span></a>
+    <!-- NAVIGATION 4 BOUTONS -->
+    <nav class="fixed bottom-3 left-4 right-4 olam-glass rounded-3xl p-2 px-6 flex justify-between items-center z-40 border border-white/10 shadow-2xl max-w-lg mx-auto">
+        <a href="index.html" class="flex flex-col items-center text-cyan-400"><i class="fa-solid fa-house text-base"></i><span class="text-[9px] mt-1 font-bold">Accueil</span></a>
         <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-white"><i class="fa-solid fa-layer-group text-base"></i><span class="text-[9px] mt-1 font-bold">Invest</span></a>
         <a href="equipe.html" class="flex flex-col items-center text-slate-400 hover:text-white"><i class="fa-solid fa-network-wired text-base"></i><span class="text-[9px] mt-1 font-bold">Équipe</span></a>
         <a href="compte.html" class="flex flex-col items-center text-slate-400 hover:text-white"><i class="fa-solid fa-user text-base"></i><span class="text-[9px] mt-1 font-bold">Compte</span></a>
     </nav>
 
+    <!-- POPUP MESSAGE ERREUR / SUCCÈS PERSONNALISÉ -->
+    <div id="custom-alert" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden p-4">
+        <div class="olam-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-cyan-500/30">
+            <div id="alert-icon" class="w-12 h-12 rounded-full bg-cyan-500/20 text-cyan-400 mx-auto flex items-center justify-center text-xl"><i class="fa-solid fa-info"></i></div>
+            <p id="alert-text" class="text-xs text-white font-medium leading-relaxed">Message</p>
+            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl olam-gradient text-white font-bold text-xs">OK</button>
+        </div>
+    </div>
+
     <script>
-        const catboxImages = ["https://files.catbox.moe/9kbqzl.jpg", "https://files.catbox.moe/499w19.jpg", "https://files.catbox.moe/78dszw.jpg", "https://files.catbox.moe/tn5jfj.jpg"];
-        let hasInvested = localStorage.getItem('apex_has_invested') === 'true';
-        let balance = localStorage.getItem('apex_balance') ? parseFloat(localStorage.getItem('apex_balance')) : 1000.00;
+        const catboxImages = ["https://files.catbox.moe/9kbqzl.jpg", "https://files.catbox.moe/499w19.jpg", "https://files.catbox.moe/78dszw.jpg", "https://files.catbox.moe/tn5jfj.jpg", "https://files.catbox.moe/gd9e2y.jpg", "https://files.catbox.moe/60nntp.jpg"];
+        
+        let products = [];
+        let categories = ['Stable', 'Benefits', 'Event'];
+        let imgIdx = 0;
+        categories.forEach(cat => {
+            for(let i=1; i<=8; i++) {
+                let price = i * 2000;
+                products.push({ id: products.length+1, category: cat, name: `Olam Naturel ${i}`, price: price, daily: Math.round(price * 0.25), total: Math.round(price * 0.25 * 180), duration: 180, image: catboxImages[imgIdx % catboxImages.length] });
+                imgIdx++;
+            }
+        });
 
-        document.getElementById('user-balance').innerText = balance.toLocaleString() + '.00';
-        if (hasInvested) {
-            document.getElementById('bonus-notice').style.display = 'none';
-            document.getElementById('user-vip-badge').innerText = 'VIP 1';
+        function showAlert(msg) {
+            document.getElementById('alert-text').innerText = msg;
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+        function closeAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
         }
 
-        const container = document.getElementById('products-container');
-        for(let i=1; i<=4; i++) {
-            const price = i * 5000;
-            container.innerHTML += `
-                <div class="apex-glass rounded-3xl overflow-hidden border border-slate-800 p-4 space-y-3">
-                    <div class="flex items-center space-x-3">
-                        <img src="${catboxImages[i%catboxImages.length]}" class="w-16 h-16 rounded-2xl object-cover">
-                        <div>
-                            <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 text-[9px] font-bold">VIP ${i}</span>
-                            <h4 class="font-black text-white text-sm mt-1">Fonds Capital #${i}</h4>
-                            <p class="text-xs text-emerald-400 font-bold">+20% journalier</p>
+        function renderProducts(catFilter) {
+            const list = document.getElementById('products-list');
+            list.innerHTML = '';
+            let filtered = catFilter === 'Tous' ? products : products.filter(p => p.category === catFilter);
+            
+            filtered.forEach(p => {
+                list.innerHTML += `
+                    <div class="olam-glass rounded-3xl overflow-hidden border border-white/5 shadow-xl">
+                        <div class="h-32 w-full relative">
+                            <img src="${p.image}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+                            <div class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-black/60 text-[9px] font-bold text-amber-400 border border-white/10">VIP 0</div>
+                            <div class="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-black/60 text-[9px] font-bold text-slate-300 border border-white/10">${p.duration} Jours</div>
+                            <div class="absolute bottom-3 left-4"><span class="text-base font-black text-white">${p.name}</span></div>
                         </div>
-                    </div>
-                    <button onclick="invest(${price})" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow">Investir (FCFA ${price.toLocaleString()})</button>
-                </div>`;
+                        <div class="p-4 space-y-3">
+                            <div class="grid grid-cols-2 gap-2 text-center bg-black/40 p-2 rounded-xl border border-white/5">
+                                <div><p class="text-[9px] uppercase text-slate-400">Revenus quotidiens</p><p class="text-xs font-black text-emerald-400">FCFA ${p.daily.toLocaleString()}</p></div>
+                                <div><p class="text-[9px] uppercase text-slate-400">Total</p><p class="text-xs font-black text-cyan-400">FCFA ${p.total.toLocaleString()}</p></div>
+                            </div>
+                            <div class="flex items-center justify-between pt-1">
+                                <span class="text-sm font-black text-white">FCFA ${p.price.toLocaleString()}.00</span>
+                                <button onclick="buyProduct(${p.price}, '${p.name}')" class="px-5 py-2.5 rounded-xl olam-gradient text-white text-xs font-bold shadow-lg">Investir</button>
+                            </div>
+                        </div>
+                    </div>`;
+            });
         }
 
-        function invest(amount) {
-            if (balance < amount) {
-                alert("Solde insuffisant. Veuillez effectuer un dépôt.");
-                location.href = 'depot.html';
+        function filterCat(cat) {
+            ['Tous', 'Stable', 'Benefits', 'Event'].forEach(c => {
+                const btn = document.getElementById(`f-${c}`);
+                if(btn) btn.className = c === cat ? 'px-4 py-1.5 rounded-xl text-xs font-bold olam-gradient text-white whitespace-nowrap' : 'px-4 py-1.5 rounded-xl text-xs font-bold olam-glass text-slate-400 whitespace-nowrap border border-slate-800';
+            });
+            renderProducts(cat);
+        }
+
+        function buyProduct(price, name) {
+            let bal = parseFloat(localStorage.getItem('olam_recharge') || '1240');
+            if(bal < price) {
+                showAlert("Erreur : Solde de recharge insuffisant pour souscrire à ce plan. Veuillez effectuer un dépôt.");
                 return;
             }
-            balance -= amount;
-            hasInvested = true;
-            localStorage.setItem('apex_balance', balance);
-            localStorage.setItem('apex_has_invested', 'true');
-            alert("Investissement réussi ! Votre bonus est débloqué.");
-            location.reload();
+            bal -= price;
+            localStorage.setItem('olam_recharge', bal);
+            localStorage.setItem('olam_has_invested', 'true');
+            showAlert(`Succès : Investissement validé dans ${name} !`);
+            setTimeout(() => location.reload(), 1500);
         }
+
+        function claimPointage() {
+            showAlert("Pointage quotidien déjà effectué pour aujourd'hui.");
+        }
+
+        window.onload = () => { renderProducts('Tous'); }
     </script>
 </body>
 </html>
