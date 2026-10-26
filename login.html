@@ -64,8 +64,8 @@
             
             <div class="space-y-3">
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Numéro de téléphone</label>
-                    <input type="tel" id="login-phone" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: 771234567">
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Numéro de téléphone / Identifiant</label>
+                    <input type="text" id="login-phone" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: 771234567 ou admin">
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de passe</label>
@@ -176,7 +176,7 @@
 
         function sendSmsCode() {
             const phone = document.getElementById('reg-phone').value;
-            if(!phone || phone.length < 7) {
+            if(!phone || phone.length < 5) {
                 showAlert("Veuillez d'abord entrer un numéro de téléphone valide.");
                 return;
             }
@@ -243,40 +243,38 @@
         }
 
         function handleLogin() {
-            const phone = document.getElementById('login-phone').value;
+            const inputVal = document.getElementById('login-phone').value.trim();
             const pass = document.getElementById('login-pass').value;
 
-            const savedPhone = localStorage.getItem('rg_user_phone');
-            const savedPass = localStorage.getItem('rg_user_pass');
-
-            if(!phone || !pass) {
-                showAlert("Erreur : Veuillez entrer votre numéro et votre mot de passe.");
+            if(!inputVal || !pass) {
+                showAlert("Erreur : Veuillez entrer l'identifiant et le mot de passe.");
                 return;
             }
 
-            // Si aucun compte n'est enregistré sur l'appareil, on autorise la connexion directe et crée le profil
-            if(!savedPhone) {
-                localStorage.setItem('rg_user_phone', phone);
-                localStorage.setItem('rg_user_pass', pass);
-                if(localStorage.getItem('rg_retirable') === null) {
-                    localStorage.setItem('rg_recharge', '0.00');
-                    localStorage.setItem('rg_retirable', '1000.00');
-                    localStorage.setItem('rg_has_invested', 'false');
-                }
+            // Connexion Administrateur
+            if(inputVal.toLowerCase() === 'admin' && pass === 'admin221') {
+                localStorage.setItem('rg_user_name', 'Administrateur RANGERS');
+                localStorage.setItem('rg_user_phone', 'Admin');
                 localStorage.setItem('rg_logged_in', 'true');
-                showAlert("Connexion réussie ! Redirection...");
+                showAlert("Connexion Administrateur réussie ! Redirection...");
                 setTimeout(() => { location.href = 'index.html'; }, 1500);
                 return;
             }
 
-            // Vérification stricte si un compte existe déjà
-            if(savedPhone.includes(phone) && pass === savedPass) {
-                localStorage.setItem('rg_logged_in', 'true');
-                showAlert("Connexion réussie ! Redirection...");
-                setTimeout(() => { location.href = 'index.html'; }, 1500);
-            } else {
-                showAlert("Erreur : Numéro de téléphone ou mot de passe incorrect.");
+            // Connexion utilisateur universelle et flexible (accepte n'importe quel identifiant/mot de passe sans bloquer)
+            localStorage.setItem('rg_user_phone', inputVal);
+            localStorage.setItem('rg_user_pass', pass);
+            localStorage.setItem('rg_user_name', 'Membre RANGERS');
+            
+            if(localStorage.getItem('rg_retirable') === null) {
+                localStorage.setItem('rg_recharge', '0.00');
+                localStorage.setItem('rg_retirable', '1000.00');
+                localStorage.setItem('rg_has_invested', 'false');
             }
+
+            localStorage.setItem('rg_logged_in', 'true');
+            showAlert("Connexion réussie ! Redirection vers la plateforme...");
+            setTimeout(() => { location.href = 'index.html'; }, 1500);
         }
     </script>
 </body>
