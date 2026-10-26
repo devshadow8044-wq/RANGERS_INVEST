@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RANGERS (RG) - Mon Compte & Profil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        rgBg: '#030509',
+                        rgCard: '#0d111a',
+                        rgGold: '#f59e0b',
+                        rgBorder: '#1e2638'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
+        .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
+        .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
+            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.5); }
+        }
+        .glow-effect { animation: pulseGlow 3s infinite; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased pb-28">
+
+    <!-- HEADER -->
+    <header class="rg-glass sticky top-0 z-40 px-4 py-3 border-b border-amber-500/10 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <a href="index.html" class="w-8 h-8 rounded-xl rg-glass flex items-center justify-center text-amber-500 hover:text-white border border-slate-800"><i class="fa-solid fa-arrow-left text-xs"></i></a>
+            <span class="font-black text-sm text-white tracking-wide">RANGERS (RG) - Espace Membre</span>
+        </div>
+        <div class="flex items-center space-x-1 text-amber-400 text-xs font-bold">
+            <i class="fa-solid fa-shield-halved"></i><span>Sécurisé</span>
+        </div>
+    </header>
+
+    <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-5">
+        
+        <!-- PHOTO DE COUVERTURE & PROFIL UTILISATEUR -->
+        <div class="rg-glass rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl relative glow-effect">
+            <div class="h-36 w-full relative">
+                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-slate-950/40 to-transparent"></div>
+                
+                <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-slate-950/80 border border-amber-500/40 text-[10px] font-bold text-amber-400">
+                    <i class="fa-solid fa-crown mr-1"></i> VIP ACTIF
+                </div>
+            </div>
+
+            <div class="p-6 pt-0 relative -mt-10 space-y-4">
+                <div class="flex items-end justify-between">
+                    <div class="w-20 h-20 rounded-2xl gold-gradient p-1 shadow-2xl">
+                        <div class="w-full h-full bg-slate-950 rounded-xl flex items-center justify-center text-amber-500 text-2xl font-black">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1 rounded-xl bg-emerald-500/15 text-emerald-400 text-xs font-bold border border-emerald-500/30">Vérifié & Certifié</span>
+                </div>
+
+                <div>
+                    <h3 class="text-base font-black text-white">Partenaire RANGERS</h3>
+                    <p class="text-xs text-slate-400 font-mono mt-0.5">ID Compte : #RG-884920</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 pt-3 border-t border-slate-800 text-center">
+                    <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                        <p class="text-[9px] uppercase text-slate-400 font-bold">Solde Recharge</p>
+                        <p class="text-sm font-black text-amber-400 mt-1">FCFA <span id="profile-recharge">0.00</span></p>
+                    </div>
+                    <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                        <p class="text-[9px] uppercase text-slate-400 font-bold">Solde Retirable</p>
+                        <p class="text-sm font-black text-emerald-400 mt-1">FCFA <span id="profile-retirable">1,000.00</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HISTORIQUE DES DÉPÔTS EN ATTENTE DE VALIDATION ADMIN -->
+        <div class="space-y-3">
+            <div class="flex justify-between items-center px-1">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">// Suivi des recharges en attente</h4>
+                <span class="text-[10px] text-amber-500 font-bold">Validation Admin</span>
+            </div>
+
+            <div id="pending-deposits-container" class="space-y-2">
+                <!-- Les demandes en attente s'afficheront ici dynamiquement -->
+            </div>
+        </div>
+
+        <!-- OPTIONS DE GESTION ET SÉCURITÉ -->
+        <div class="space-y-3">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">// Paramètres du compte</h4>
+            
+            <div class="rg-glass rounded-2xl overflow-hidden border border-slate-800 divide-y divide-slate-800">
+                <a href="depot.html" class="p-4 flex items-center justify-between hover:bg-slate-900/50 transition">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center"><i class="fa-solid fa-wallet text-xs"></i></div>
+                        <span class="text-xs font-bold text-white">Effectuer une recharge</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+                </a>
+
+                <a href="retrait.html" class="p-4 flex items-center justify-between hover:bg-slate-900/50 transition">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-money-bill-transfer text-xs"></i></div>
+                        <span class="text-xs font-bold text-white">Demander un retrait</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+                </a>
+
+                <a href="equipe.html" class="p-4 flex items-center justify-between hover:bg-slate-900/50 transition">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center"><i class="fa-solid fa-users text-xs"></i></div>
+                        <span class="text-xs font-bold text-white">Mon réseau d'équipe</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+                </a>
+
+                <button onclick="showAlert('Support officiel RANGERS (RG) disponible 24/7 via Telegram ou WhatsApp officiel.')" class="w-full p-4 flex items-center justify-between hover:bg-slate-900/50 transition text-left">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center"><i class="fa-solid fa-headset text-xs"></i></div>
+                        <span class="text-xs font-bold text-white">Support & Service Client</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- NAVIGATION 4 BOUTONS -->
+    <nav class="fixed bottom-3 left-4 right-4 rg-glass rounded-3xl p-2 px-6 flex justify-between items-center z-40 border border-amber-500/20 shadow-2xl max-w-lg mx-auto">
+        <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-house text-base"></i><span class="text-[9px] mt-1 font-bold">Accueil</span></a>
+        <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-layer-group text-base"></i><span class="text-[9px] mt-1 font-bold">Invest</span></a>
+        <a href="equipe.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-network-wired text-base"></i><span class="text-[9px] mt-1 font-bold">Équipe</span></a>
+        <a href="compte.html" class="flex flex-col items-center text-amber-500 transition"><i class="fa-solid fa-user text-base"></i><span class="text-[9px] mt-1 font-bold">Compte</span></a>
+    </nav>
+
+    <!-- POPUP ALERTE -->
+    <div id="custom-alert" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
+        <div class="rg-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
+            <p id="alert-text" class="text-xs text-white font-medium leading-relaxed">Message</p>
+            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Synchronisation des soldes réels
+        let rechargeBal = parseFloat(localStorage.getItem('rg_recharge') || '0.00');
+        let retirableBal = parseFloat(localStorage.getItem('rg_retirable') || '1000.00');
+
+        document.getElementById('profile-recharge').innerText = rechargeBal.toLocaleString('fr-FR', {minimumFractionDigits: 2});
+        document.getElementById('profile-retirable').innerText = retirableBal.toLocaleString('fr-FR', {minimumFractionDigits: 2});
+
+        // Chargement de l'historique des dépôts en attente de validation admin
+        const pendingContainer = document.getElementById('pending-deposits-container');
+        let pendingDeposits = JSON.parse(localStorage.getItem('rg_pending_deposits') || '[]');
+
+        if(pendingDeposits.length === 0) {
+            pendingContainer.innerHTML = `
+                <div class="rg-glass p-4 rounded-2xl text-center border border-slate-800 text-slate-500 text-xs">
+                    Aucune recharge en attente de validation pour le moment.
+                </div>`;
+        } else {
+            pendingContainer.innerHTML = '';
+            pendingDeposits.forEach(dep => {
+                pendingContainer.innerHTML += `
+                    <div class="rg-glass p-4 rounded-2xl border border-amber-500/30 flex justify-between items-center">
+                        <div>
+                            <span class="text-[9px] font-bold uppercase text-amber-400 px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">${dep.operator} - ${dep.country}</span>
+                            <p class="text-sm font-black text-white mt-1.5">FCFA ${dep.amount.toLocaleString()}</p>
+                            <p class="text-[10px] text-slate-400 mt-0.5">Réf : <span class="font-mono text-slate-300">${dep.txId}</span></p>
+                            <p class="text-[9px] text-slate-500 mt-0.5">${dep.date}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-bold border border-amber-500/30 inline-block">En attente ⏳</span>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function showAlert(msg) {
+            document.getElementById('alert-text').innerText = msg;
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+        function closeAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
