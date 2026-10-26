@@ -76,12 +76,12 @@
             <button onclick="handleLogin()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse">Se connecter →</button>
         </div>
 
-        <!-- FORMULAIRE D'INSCRIPTION AVEC 4 PAYS OFFICIELS -->
+        <!-- FORMULAIRE D'INSCRIPTION -->
         <div id="form-register" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/30 shadow-xl">
             <h3 class="text-sm font-bold text-white uppercase tracking-wider">// Inscription officielle</h3>
             
             <div class="space-y-3">
-                <!-- SÉLECTION DU PAYS (4 PAYS UNIQUEMENT) -->
+                <!-- SÉLECTION DU PAYS (4 PAYS OFFICIELS) -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Sélectionner le pays</label>
                     <select id="reg-country" onchange="updateCountryPrefix()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-amber-500 font-bold focus:outline-none focus:border-amber-500">
@@ -119,11 +119,11 @@
                     <input type="text" id="reg-ref" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: RG2026">
                 </div>
 
-                <!-- CODE SMS AUTOMATIQUE 3 SECONDES -->
+                <!-- CODE SMS ALÉATOIRE (3 SECONDES) -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Code SMS de vérification</label>
                     <div class="flex space-x-2">
-                        <input type="text" id="reg-sms" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-amber-400 font-bold focus:outline-none focus:border-amber-500" placeholder="Code automatique">
+                        <input type="text" id="reg-sms" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-amber-400 font-bold focus:outline-none focus:border-amber-500 font-mono" placeholder="Code automatique">
                         <button id="btn-send-sms" onclick="sendSmsCode()" class="px-4 py-3 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold whitespace-nowrap hover:bg-amber-500/30 transition">Envoyer</button>
                     </div>
                 </div>
@@ -152,6 +152,8 @@
     </div>
 
     <script>
+        let generatedRandomSms = '';
+
         function switchTab(tab) {
             const btnLogin = document.getElementById('tab-login');
             const btnRegister = document.getElementById('tab-register');
@@ -176,7 +178,7 @@
             document.getElementById('reg-prefix').innerText = sel;
         }
 
-        // Fonction SMS avec compte à rebours de 3 secondes et saisie automatique
+        // Fonction SMS avec génération aléatoire (ex: 3858, 8799, 1196...) et compte à rebours de 3 secondes
         function sendSmsCode() {
             const phone = document.getElementById('reg-phone').value;
             if(!phone || phone.length < 7) {
@@ -198,9 +200,12 @@
                     btn.innerText = 'Envoyé ✓';
                     btn.className = 'px-4 py-3 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold whitespace-nowrap';
                     
-                    // Saisie automatique du code SMS dans le champ
-                    document.getElementById('reg-sms').value = '2026';
-                    showAlert("Code SMS envoyé et saisi automatiquement !");
+                    // Génération aléatoire d'un code à 4 chiffres (entre 1000 et 9999)
+                    generatedRandomSms = Math.floor(1000 + Math.random() * 9000).toString();
+                    
+                    // Saisie automatique dans le champ
+                    document.getElementById('reg-sms').value = generatedRandomSms;
+                    showAlert(`Code SMS (${generatedRandomSms}) généré et saisi automatiquement !`);
                 }
             }, 1000);
         }
@@ -225,8 +230,8 @@
                 return;
             }
 
-            if(sms !== '2026') {
-                showAlert("Erreur : Code SMS invalide.");
+            if(sms !== generatedRandomSms) {
+                showAlert("Erreur : Code SMS invalide ou non généré. Veuillez cliquer sur 'Envoyer'.");
                 return;
             }
 
