@@ -70,8 +70,8 @@
                 </div>
 
                 <div>
-                    <h3 class="text-base font-black text-white">Partenaire RANGERS</h3>
-                    <p class="text-xs text-slate-400 font-mono mt-0.5">ID Compte : #RG-884920</p>
+                    <h3 class="text-base font-black text-white" id="profile-name">Partenaire RANGERS</h3>
+                    <p class="text-xs text-slate-400 font-mono mt-0.5">Téléphone : <span id="profile-phone">--</span></p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3 pt-3 border-t border-slate-800 text-center">
@@ -128,7 +128,7 @@
                     <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
                 </a>
 
-                <button onclick="showAlert('Support officiel RANGERS (RG) disponible 24/7 via Telegram ou WhatsApp officiel.')" class="w-full p-4 flex items-center justify-between hover:bg-slate-900/50 transition text-left">
+                <button onclick="showAlert('Support officiel RANGERS (RG) disponible 24/7 via le service client.')" class="w-full p-4 flex items-center justify-between hover:bg-slate-900/50 transition text-left">
                     <div class="flex items-center space-x-3">
                         <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center"><i class="fa-solid fa-headset text-xs"></i></div>
                         <span class="text-xs font-bold text-white">Support & Service Client</span>
@@ -136,6 +136,14 @@
                     <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
                 </button>
             </div>
+        </div>
+
+        <!-- BOUTON DE DÉCONNEXION -->
+        <div class="pt-2">
+            <button onclick="handleLogout()" class="w-full py-3.5 rounded-2xl bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold text-xs border border-red-500/30 flex items-center justify-center space-x-2 transition shadow-lg">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Se déconnecter de la session</span>
+            </button>
         </div>
     </main>
 
@@ -156,6 +164,17 @@
     </div>
 
     <script>
+        // Vérification de connexion
+        if(localStorage.getItem('rg_logged_in') !== 'true') {
+            location.href = 'login.html';
+        }
+
+        // Affichage des informations utilisateur
+        const userName = localStorage.getItem('rg_user_name') || 'Partenaire RANGERS';
+        const userPhone = localStorage.getItem('rg_user_phone') || '+221 •••••••';
+        document.getElementById('profile-name').innerText = userName;
+        document.getElementById('profile-phone').innerText = userPhone;
+
         // Synchronisation des soldes réels
         let rechargeBal = parseFloat(localStorage.getItem('rg_recharge') || '0.00');
         let retirableBal = parseFloat(localStorage.getItem('rg_retirable') || '1000.00');
@@ -188,6 +207,12 @@
                         </div>
                     </div>`;
             });
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('rg_logged_in');
+            showAlert("Déconnexion réussie. À bientôt !");
+            setTimeout(() => { location.href = 'login.html'; }, 1500);
         }
 
         function showAlert(msg) {
