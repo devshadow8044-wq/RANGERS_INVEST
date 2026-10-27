@@ -10,6 +10,7 @@
         body { background-color: #f8f9fa; color: #111827; font-family: 'Inter', sans-serif; }
         .text-brand { color: #0db14b; }
         .bg-brand { background-color: #0db14b; }
+        .border-brand { border-color: #0db14b; }
         
         @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .pop-in { animation: popIn 0.3s ease-out; }
@@ -17,7 +18,7 @@
 </head>
 <body class="min-h-screen flex flex-col pb-10">
 
-    <!-- 1. ÉCRAN DE CONNEXION -->
+    <!-- ÉCRAN DE CONNEXION -->
     <div id="admin-login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-100 p-4">
         <div class="bg-white max-w-sm w-full p-8 rounded-3xl shadow-xl space-y-5 text-center">
             <div class="w-16 h-16 rounded-2xl bg-black mx-auto flex items-center justify-center text-white text-2xl shadow-lg">
@@ -37,7 +38,7 @@
         </div>
     </div>
 
-    <!-- 2. TABLEAU DE BORD (Caché au début avec style="display: none;") -->
+    <!-- TABLEAU DE BORD (Caché au début) -->
     <div id="admin-dashboard" style="display: none;" class="w-full">
         
         <header class="bg-white sticky top-0 z-40 px-4 py-3 border-b border-gray-200 flex items-center justify-between shadow-sm">
@@ -67,6 +68,7 @@
                 </div>
             </div>
 
+            <!-- DÉPÔTS -->
             <div class="space-y-3">
                 <div class="flex justify-between items-center px-1">
                     <h3 class="text-sm font-bold text-gray-800">Dépôts en attente</h3>
@@ -75,6 +77,7 @@
                 <div id="deposits-list" class="space-y-2"></div>
             </div>
 
+            <!-- RETRAITS -->
             <div class="space-y-3">
                 <div class="flex justify-between items-center px-1">
                     <h3 class="text-sm font-bold text-gray-800">Retraits en attente</h3>
@@ -98,37 +101,37 @@
     </div>
 
     <script>
-        // ====== LOGIQUE DE CONNEXION CORRIGÉE ======
-        
-        // 1. Au chargement de la page, on vérifie si on est déjà connecté
+        // ====== LOGIQUE DE CONNEXION ======
+
+        // Vérifier si déjà connecté au chargement
         window.onload = function() {
             if(localStorage.getItem('rg_admin_logged') === 'true') {
                 ouvrirDashboard();
             }
         }
 
-        // 2. Fonction pour cacher l'écran de login et afficher le dashboard
+        // Fonction pour afficher le tableau de bord
         function ouvrirDashboard() {
             document.getElementById('admin-login-screen').style.display = 'none';
             document.getElementById('admin-dashboard').style.display = 'block';
-            loadAdminData(); // Charger les données
+            loadAdminData(); 
         }
 
-        // 3. Fonction de connexion
+        // Fonction de connexion avec le NOUVEAU CODE
         function loginAdmin() {
             const pinInput = document.getElementById('admin-pin').value;
-            const pin = pinInput.trim(); // Enlève les espaces invisibles
+            const pin = pinInput.trim(); 
             
-            // Vérification du mot de passe (admin221 ou 2026)
-            if(pin === 'admin221' || pin === '2026') {
+            // 👉 LE CODE SECRET EST ICI : 26102008
+            if(pin === '26102008') {
                 localStorage.setItem('rg_admin_logged', 'true');
                 ouvrirDashboard();
             } else {
-                showPopup('Erreur', 'Code incorrect. Le code est "admin221".', 'fa-triangle-exclamation', 'error');
+                showPopup('Erreur', 'Code incorrect. Veuillez réessayer.', 'fa-triangle-exclamation', 'error');
             }
         }
 
-        // Permettre de valider avec la touche "Entrée"
+        // Touche Entrée pour valider
         document.getElementById('admin-pin').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') loginAdmin();
         });
@@ -143,7 +146,7 @@
             let totalValidated = parseFloat(localStorage.getItem('rg_total_validated_deposits') || '0');
             document.getElementById('stat-validated').innerText = totalValidated.toLocaleString() + ' F';
 
-            // DÉPÔTS
+            // 1. DÉPÔTS
             let pendingDeposits = JSON.parse(localStorage.getItem('rg_pending_deposits') || '[]');
             const depositsContainer = document.getElementById('deposits-list');
             document.getElementById('stat-pending').innerText = pendingDeposits.length;
@@ -169,7 +172,7 @@
                 });
             }
 
-            // RETRAITS
+            // 2. RETRAITS
             let withdrawals = JSON.parse(localStorage.getItem('rg_withdraw_history') || '[]');
             let pendingWithdrawals = withdrawals.map((w, i) => ({...w, originalIndex: i})).filter(w => w.status === 'En attente');
             const withdrawalsContainer = document.getElementById('withdrawals-list');
