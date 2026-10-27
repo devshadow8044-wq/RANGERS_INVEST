@@ -8,16 +8,9 @@
     <script>
         tailwind.config = {
             darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        rgBg: '#030509',
-                        rgCard: '#0d111a',
-                        rgGold: '#f59e0b',
-                        rgBorder: '#1e2638'
-                    }
-                }
-            }
+            theme: { extend: { colors: {
+                rgBg: '#030509', rgCard: '#0d111a', rgGold: '#f59e0b', rgBorder: '#1e2638'
+            }}}
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -31,6 +24,72 @@
         }
         .btn-pulse { animation: pulseGlow 2s infinite; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* ===== CLIGNOTANTS AJOUTÉS ===== */
+
+        /* 1. Sécurisé header */
+        @keyframes softPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .secure-blink { animation: softPulse 2s infinite; }
+
+        /* 2. Bordure bannière confiance */
+        @keyframes borderGlow {
+            0%, 100% { border-color: rgba(245, 158, 11, 0.3); }
+            50% { border-color: rgba(245, 158, 11, 0.7); }
+        }
+        .trust-border { animation: borderGlow 2.5s infinite; }
+
+        /* 3. Sélection pays/opérateur active clignote */
+        @keyframes selectedPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 12px 2px rgba(245, 158, 11, 0.6); }
+        }
+        .selected-blink { animation: selectedPulse 1.8s infinite; }
+
+        /* 4. Numéro officiel clignote */
+        @keyframes phoneGlow {
+            0%, 100% { text-shadow: 0 0 0 rgba(245, 158, 11, 0); }
+            50% { text-shadow: 0 0 10px rgba(245, 158, 11, 0.9); }
+        }
+        .phone-blink { animation: phoneGlow 1.6s infinite; }
+
+        /* 5. Input focus bordure pulse */
+        @keyframes borderFocus {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+            50% { box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25); }
+        }
+        input:focus { animation: borderFocus 1.6s infinite; }
+
+        /* 6. Bannière "Transférez" info critique */
+        @keyframes warnBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.65; }
+        }
+        .warn-blink { animation: warnBlink 1.5s infinite; }
+
+        /* 7. Solde qui change */
+        @keyframes valueFlash {
+            0%, 100% { color: inherit; }
+            50% { color: #fbbf24; transform: scale(1.05); }
+        }
+        .value-flash { animation: valueFlash 0.8s ease; }
+
+        /* 8. Bouton validation renforcé */
+        @keyframes strongPulse {
+            0%, 100% { box-shadow: 0 0 12px rgba(245, 158, 11, 0.5); transform: scale(1); }
+            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.9); transform: scale(1.02); }
+        }
+        .strong-pulse { animation: strongPulse 1.8s infinite; }
+
+        /* 9. Message d'erreur shake */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .error-shake { animation: shake 0.4s ease-in-out 2; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased pb-28">
@@ -41,15 +100,15 @@
             <a href="index.html" class="w-8 h-8 rounded-xl rg-glass flex items-center justify-center text-amber-500 hover:text-white border border-slate-800"><i class="fa-solid fa-arrow-left text-xs"></i></a>
             <span class="font-black text-sm text-white tracking-wide">RANGERS (RG) - Recharge</span>
         </div>
-        <div class="flex items-center space-x-1 text-emerald-400 text-xs font-bold">
-            <i class="fa-solid fa-shield-check"></i><span>Sécurisé</span>
+        <div class="flex items-center space-x-1 text-emerald-400 text-xs font-bold secure-blink">
+            <i class="fa-solid fa-shield-halved"></i><span>Sécurisé</span>
         </div>
     </header>
 
     <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-5">
-        
-        <!-- BANNIÈRE DE CONFIANCE -->
-        <div class="rg-glass p-4 rounded-3xl border border-amber-500/30 flex items-center space-x-4 bg-gradient-to-r from-amber-500/10 via-transparent to-slate-950">
+
+        <!-- BANNIÈRE CONFIANCE -->
+        <div class="rg-glass p-4 rounded-3xl border border-amber-500/30 trust-border flex items-center space-x-4 bg-gradient-to-r from-amber-500/10 via-transparent to-slate-950">
             <div class="w-12 h-12 rounded-2xl gold-gradient flex items-center justify-center text-slate-950 text-xl font-black shrink-0 shadow-lg">
                 <i class="fa-solid fa-vault"></i>
             </div>
@@ -59,22 +118,22 @@
             </div>
         </div>
 
-        <!-- SOLDE ACTUEL -->
+        <!-- SOLDE -->
         <div class="rg-glass p-4 rounded-3xl border border-amber-500/20 flex justify-between items-center">
             <div>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Solde de recharge actuel</p>
-                <h2 class="text-xl font-black text-white mt-0.5">FCFA <span id="current-recharge">0.00</span></h2>
+                <h2 class="text-xl font-black text-white mt-0.5">FCFA <span id="current-recharge" class="inline-block">0.00</span></h2>
             </div>
             <div class="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center border border-amber-500/20">
                 <i class="fa-solid fa-wallet text-sm"></i>
             </div>
         </div>
 
-        <!-- ÉTAPE 1 : SÉLECTIONNER VOTRE PAYS -->
+        <!-- ÉTAPE 1 : PAYS -->
         <div class="space-y-2">
             <label class="text-slate-400 font-bold uppercase tracking-wider text-[10px] px-1">1. Sélectionner votre pays</label>
             <div class="grid grid-cols-2 gap-2">
-                <button onclick="selectCountry('Sénégal', '+221')" id="c-Sénégal" class="p-3 rounded-2xl rg-glass border border-amber-500 text-left transition flex items-center space-x-3 shadow">
+                <button onclick="selectCountry('Sénégal', '+221')" id="c-Sénégal" class="p-3 rounded-2xl rg-glass border border-amber-500 selected-blink text-left transition flex items-center space-x-3 shadow">
                     <span class="text-base">🇸🇳</span>
                     <div><p class="text-xs font-bold text-white">Sénégal</p><p class="text-[9px] text-amber-400">+221</p></div>
                 </button>
@@ -93,11 +152,11 @@
             </div>
         </div>
 
-        <!-- ÉTAPE 2 : CHOISIR LE SERVICE (WAVE OU OM) -->
+        <!-- ÉTAPE 2 : OPÉRATEUR -->
         <div class="space-y-2">
             <label class="text-slate-400 font-bold uppercase tracking-wider text-[10px] px-1">2. Choisir le moyen de paiement</label>
             <div class="grid grid-cols-2 gap-2">
-                <button onclick="selectOperator('WAVE')" id="op-WAVE" class="p-3 rounded-2xl rg-glass border border-amber-500 text-left transition flex items-center space-x-3 shadow">
+                <button onclick="selectOperator('WAVE')" id="op-WAVE" class="p-3 rounded-2xl rg-glass border border-amber-500 selected-blink text-left transition flex items-center space-x-3 shadow">
                     <div class="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xs"><i class="fa-solid fa-water"></i></div>
                     <div><p class="text-xs font-bold text-white">WAVE</p><p class="text-[9px] text-cyan-400">Paiement Rapide</p></div>
                 </button>
@@ -108,18 +167,16 @@
             </div>
         </div>
 
-        <!-- ÉTAPE 3 : MONTANT (MINIMUM 2000 FCFA) -->
+        <!-- ÉTAPE 3 : MONTANT -->
         <div class="space-y-3">
             <div class="flex justify-between items-center text-xs px-1">
                 <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">3. Montant de la recharge (Min 2,000 FCFA)</span>
             </div>
-
             <div class="rg-glass p-4 rounded-3xl border border-amber-500/30 space-y-4">
                 <div class="flex items-center justify-between bg-slate-950 px-4 py-3 rounded-2xl border border-slate-800">
                     <span class="text-xs font-bold text-slate-400">FCFA</span>
                     <input type="number" id="custom-amount-input" oninput="onCustomAmountInput(this.value)" class="w-full bg-transparent text-right text-2xl font-black text-white focus:outline-none ml-2" value="2000" min="2000">
                 </div>
-                
                 <div class="grid grid-cols-4 gap-2">
                     <button onclick="setAmount(2000)" id="btn-amt-2000" class="py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 shadow">2000</button>
                     <button onclick="setAmount(5000)" id="btn-amt-5000" class="py-2.5 rounded-xl text-xs font-bold rg-glass text-slate-300 border border-slate-800">5000</button>
@@ -134,30 +191,27 @@
         </div>
     </main>
 
-    <!-- BOUTON FIXE DE VALIDATION -->
+    <!-- BOUTON FIXE -->
     <div class="fixed bottom-0 left-0 right-0 rg-glass p-4 border-t border-amber-500/20 max-w-lg mx-auto flex items-center justify-between z-40">
         <div>
             <p class="text-[9px] uppercase text-slate-400 font-bold">Total à payer</p>
             <p class="text-base font-black text-white">FCFA <span id="footer-amount">2,000.00</span></p>
         </div>
-        <button onclick="openPaymentModal()" class="px-6 py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg flex items-center space-x-2 btn-pulse">
+        <button onclick="openPaymentModal()" class="px-6 py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg flex items-center space-x-2 strong-pulse">
             <i class="fa-solid fa-circle-check"></i><span>Confirmer & Payer</span>
         </button>
     </div>
 
-    <!-- MODAL DE PAIEMENT REFAIT À NEUF AVEC PHOTO DE COUVERTURE ET LOGO SERVICE -->
+    <!-- MODAL PAIEMENT -->
     <div id="payment-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md hidden p-4">
-        <div class="rg-glass max-w-md w-full rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl relative">
+        <div class="rg-glass max-w-md w-full rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl relative max-h-[92vh] overflow-y-auto no-scrollbar">
             <button onclick="closePaymentModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-950/80 text-white z-10 flex items-center justify-center hover:bg-slate-900"><i class="fa-solid fa-xmark"></i></button>
-            
-            <!-- PHOTO DE COUVERTURE DU MODAL -->
+
             <div class="h-32 w-full relative">
-                <img id="modal-cover-img" src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80">
+                <img id="modal-cover-img" src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80" alt="cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-transparent to-transparent"></div>
-                
-                <!-- LOGO DU SERVICE SÉLECTIONNÉ PAR DESSUS LA COUVERTURE -->
                 <div class="absolute -bottom-6 left-6 w-14 h-14 rounded-2xl bg-slate-900 border-2 border-amber-500 shadow-xl flex items-center justify-center overflow-hidden">
-                    <img id="modal-service-logo" src="https://files.catbox.moe/b5j6bw.jpg" class="w-full h-full object-cover">
+                    <img id="modal-service-logo" src="https://files.catbox.moe/b5j6bw.jpg" class="w-full h-full object-cover" alt="logo">
                 </div>
             </div>
 
@@ -169,14 +223,14 @@
                     </div>
                     <div class="text-right">
                         <span class="text-[10px] uppercase text-slate-400 block font-bold">Montant exact</span>
-                        <span class="text-sm font-black text-amber-400" id="modal-xof-display">XOF 2000</span>
+                        <span class="text-sm font-black text-amber-400" id="modal-xof-display">XOF 2 000</span>
                     </div>
                 </div>
 
-                <!-- ÉTAPE NUMÉRO DE TÉLÉPHONE AVEC PAYS CORRESPONDANT -->
+                <!-- ÉTAPE TÉLÉPHONE -->
                 <div id="step-phone" class="space-y-4 pt-2">
                     <div>
-                        <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Votre numéro de téléphone (<span id="label-country-name">Sénégal</span>)</label>
+                        <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Votre numéro (<span id="label-country-name">Sénégal</span>)</label>
                         <div class="flex bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
                             <span id="phone-prefix" class="px-3 flex items-center text-amber-500 text-xs font-bold border-r border-slate-800">+221</span>
                             <input type="tel" id="user-pay-phone" class="w-full bg-transparent px-4 py-3 text-sm text-white focus:outline-none" placeholder="Ex: 771234567">
@@ -185,31 +239,38 @@
                     <button onclick="proceedToTransfer()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-md btn-pulse">Continuer vers le compte officiel →</button>
                 </div>
 
-                <!-- ÉTAPE TRANSFERT COMPTE MAMADOU GNING -->
+                <!-- ÉTAPE TRANSFERT -->
                 <div id="step-transfer" class="space-y-4 pt-2 hidden">
-                    <div class="bg-slate-950 p-4 rounded-2xl border border-amber-500/30 space-y-3">
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-amber-500/30 space-y-3 warn-blink">
                         <p class="text-[10px] uppercase text-amber-400 font-bold"><i class="fa-solid fa-circle-info mr-1"></i> Transférez sur ce compte officiel :</p>
-                        
+
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                            <div><span class="text-[9px] text-slate-400 block">Numéro officiel</span><span class="text-sm font-bold text-amber-400 font-mono">75 554 57 42</span></div>
-                            <button onclick="copyText('755545742')" class="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-400 text-xs font-bold">Copier</button>
+                            <div>
+                                <span class="text-[9px] text-slate-400 block">Numéro officiel</span>
+                                <span class="text-sm font-bold text-amber-400 font-mono phone-blink">75 554 57 42</span>
+                            </div>
+                            <button onclick="copyText('755545742', this)" class="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-400 text-xs font-bold hover:bg-amber-500/30 transition">Copier</button>
                         </div>
 
                         <div class="flex justify-between items-center pt-1">
-                            <div><span class="text-[9px] text-slate-400 block">Nom du titulaire</span><span class="text-xs font-bold text-white">MAMADOU GNING</span></div>
-                            <button onclick="copyText('MAMADOU GNING')" class="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-400 text-xs font-bold">Copier</button>
+                            <div>
+                                <span class="text-[9px] text-slate-400 block">Nom du titulaire</span>
+                                <span class="text-xs font-bold text-white">MAMADOU GNING</span>
+                            </div>
+                            <button onclick="copyText('MAMADOU GNING', this)" class="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-400 text-xs font-bold hover:bg-amber-500/30 transition">Copier</button>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Entrer l'ID de transaction / Référence SMS</label>
+                        <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">ID de transaction / Référence SMS</label>
                         <input type="text" id="tx-id-input" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: MP260312.1200.F12345">
                     </div>
 
-                    <button onclick="submitFinalDeposit()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse">Soumettre à l'administration</button>
+                    <button id="submit-btn" onclick="submitFinalDeposit()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse disabled:opacity-60 disabled:cursor-not-allowed">
+                        <span id="submit-btn-text">Soumettre à l'administration</span>
+                    </button>
                 </div>
 
-                <!-- PETIT TEXTE SÉCURISÉ EN BAS DU MODAL -->
                 <div class="text-center pt-2 border-t border-slate-800">
                     <p class="text-[10px] text-slate-500 flex items-center justify-center space-x-1">
                         <i class="fa-solid fa-lock text-amber-500"></i>
@@ -221,48 +282,83 @@
     </div>
 
     <!-- POPUP ALERTE -->
-    <div id="custom-alert" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
+    <div id="custom-alert" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
         <div class="rg-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
-            <p id="alert-text" class="text-xs text-white font-medium leading-relaxed">Message</p>
+            <p id="alert-text" class="text-xs text-white font-medium leading-relaxed whitespace-pre-line">Message</p>
             <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs">OK</button>
         </div>
     </div>
 
     <script>
+        // ==== SÉCURITÉ ====
+        if (localStorage.getItem('rg_logged_in') !== 'true') {
+            document.body.style.display = 'none';
+            location.replace('login.html');
+        }
+
+        // ==== ÉTAT ====
         let selectedAmount = 2000;
         let selectedCountry = 'Sénégal';
         let currentPrefix = '+221';
         let selectedOperator = 'WAVE';
+        let isSubmitting = false;
+        let previousRecharge = null;
 
-        let rechargeBal = parseFloat(localStorage.getItem('rg_recharge') || '0.00');
-        document.getElementById('current-recharge').innerText = rechargeBal.toLocaleString('fr-FR', {minimumFractionDigits: 2});
+        const COUNTRIES = ['Sénégal', 'Côte d\'Ivoire', 'Mali', 'Burkina Faso'];
+        const OPERATORS = ['WAVE', 'OM'];
+        const AMOUNTS = [2000, 5000, 10000, 20000, 40000, 100000, 200000, 500000];
 
+        // ==== SOLDE ====
+        function refreshBalance() {
+            const rechargeEl = document.getElementById('current-recharge');
+            const rechargeBal = parseFloat(localStorage.getItem('rg_recharge') || '0') || 0;
+            const txt = rechargeBal.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            if (previousRecharge !== null && previousRecharge !== txt) {
+                rechargeEl.classList.remove('value-flash');
+                void rechargeEl.offsetWidth;
+                rechargeEl.classList.add('value-flash');
+            }
+            rechargeEl.innerText = txt;
+            previousRecharge = txt;
+        }
+        refreshBalance();
+
+        // ==== SÉLECTION PAYS ====
         function selectCountry(country, prefix) {
             selectedCountry = country;
             currentPrefix = prefix;
-            ['Sénégal', 'Côte d\'Ivoire', 'Mali', 'Burkina Faso'].forEach(c => {
+            COUNTRIES.forEach(c => {
                 const b = document.getElementById(`c-${c}`);
-                if(b) b.className = c === country ? 'p-3 rounded-2xl rg-glass border border-amber-500 text-left transition flex items-center space-x-3 shadow' : 'p-3 rounded-2xl rg-glass border border-slate-800 text-left transition flex items-center space-x-3';
+                if (!b) return;
+                if (c === country) {
+                    b.className = 'p-3 rounded-2xl rg-glass border border-amber-500 selected-blink text-left transition flex items-center space-x-3 shadow';
+                } else {
+                    b.className = 'p-3 rounded-2xl rg-glass border border-slate-800 text-left transition flex items-center space-x-3';
+                }
             });
             document.getElementById('phone-prefix').innerText = prefix;
             document.getElementById('label-country-name').innerText = country;
             updateModalUI();
         }
 
+        // ==== SÉLECTION OPÉRATEUR ====
         function selectOperator(op) {
             selectedOperator = op;
-            ['WAVE', 'OM'].forEach(o => {
+            OPERATORS.forEach(o => {
                 const b = document.getElementById(`op-${o}`);
-                if(b) b.className = o === op ? 'p-3 rounded-2xl rg-glass border border-amber-500 text-left transition flex items-center space-x-3 shadow' : 'p-3 rounded-2xl rg-glass border border-slate-800 text-left transition flex items-center space-x-3';
+                if (!b) return;
+                if (o === op) {
+                    b.className = 'p-3 rounded-2xl rg-glass border border-amber-500 selected-blink text-left transition flex items-center space-x-3 shadow';
+                } else {
+                    b.className = 'p-3 rounded-2xl rg-glass border border-slate-800 text-left transition flex items-center space-x-3';
+                }
             });
             updateModalUI();
         }
 
         function updateModalUI() {
             document.getElementById('modal-badge').innerText = `${selectedOperator} - ${selectedCountry.toUpperCase()}`;
-            
-            // Mise à jour des photos/logos selon le service sélectionné (Wave ou OM)
-            if(selectedOperator === 'WAVE') {
+            if (selectedOperator === 'WAVE') {
                 document.getElementById('modal-service-logo').src = 'https://files.catbox.moe/b5j6bw.jpg';
                 document.getElementById('modal-cover-img').src = 'https://files.catbox.moe/9kbqzl.jpg';
             } else {
@@ -271,25 +367,152 @@
             }
         }
 
+        // ==== MONTANT ====
         function setAmount(amt) {
             selectedAmount = amt;
             document.getElementById('custom-amount-input').value = amt;
-            document.getElementById('footer-amount').innerText = amt.toLocaleString() + '.00';
-            document.getElementById('modal-xof-display').innerText = 'XOF ' + amt.toLocaleString();
+            document.getElementById('footer-amount').innerText = amt.toLocaleString('fr-FR') + '.00';
+            document.getElementById('modal-xof-display').innerText = 'XOF ' + amt.toLocaleString('fr-FR');
 
-            [2000, 5000, 10000, 20000, 40000, 100000, 200000, 500000].forEach(val => {
+            AMOUNTS.forEach(val => {
                 const b = document.getElementById(`btn-amt-${val}`);
-                if(b) b.className = val === amt ? 'py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 shadow' : 'py-2.5 rounded-xl text-xs font-bold rg-glass text-slate-300 border border-slate-800';
+                if (!b) return;
+                if (val === amt) {
+                    b.className = 'py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 shadow';
+                } else {
+                    b.className = 'py-2.5 rounded-xl text-xs font-bold rg-glass text-slate-300 border border-slate-800';
+                }
             });
         }
 
         function onCustomAmountInput(val) {
             let amt = parseFloat(val) || 0;
             selectedAmount = amt;
-            document.getElementById('footer-amount').innerText = amt.toLocaleString() + '.00';
-            document.getElementById('modal-xof-display').innerText = 'XOF ' + amt.toLocaleString();
+            document.getElementById('footer-amount').innerText = amt.toLocaleString('fr-FR') + '.00';
+            document.getElementById('modal-xof-display').innerText = 'XOF ' + amt.toLocaleString('fr-FR');
+
+            AMOUNTS.forEach(v => {
+                const b = document.getElementById(`btn-amt-${v}`);
+                if (b) b.className = 'py-2.5 rounded-xl text-xs font-bold rg-glass text-slate-300 border border-slate-800';
+            });
+            if (AMOUNTS.includes(amt)) {
+                const b = document.getElementById(`btn-amt-${amt}`);
+                if (b) b.className = 'py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 shadow';
+            }
         }
 
+        // ==== MODAL ====
+        function openPaymentModal() {
+            if (!selectedAmount || selectedAmount < 2000) {
+                showAlert("⚠️ Le montant minimum de recharge est de 2,000 FCFA.");
+                return;
+            }
+            if (selectedAmount > 5000000) {
+                showAlert("⚠️ Le montant maximum autorisé est de 5,000,000 FCFA.\nContactez le support pour un montant supérieur.");
+                return;
+            }
+            updateModalUI();
+            document.getElementById('modal-xof-display').innerText = 'XOF ' + selectedAmount.toLocaleString('fr-FR');
+            document.getElementById('step-phone').classList.remove('hidden');
+            document.getElementById('step-transfer').classList.add('hidden');
+            document.getElementById('payment-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('user-pay-phone')?.focus(), 150);
+        }
+
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.add('hidden');
+        }
+
+        function proceedToTransfer() {
+            const phone = document.getElementById('user-pay-phone').value.trim().replace(/\s+/g, '');
+            if (!phone || phone.length < 8 || phone.length > 10 || !/^\d+$/.test(phone)) {
+                showAlert("⚠️ Veuillez entrer un numéro de téléphone valide (8 à 10 chiffres).");
+                document.getElementById('user-pay-phone').focus();
+                return;
+            }
+            document.getElementById('step-phone').classList.add('hidden');
+            document.getElementById('step-transfer').classList.remove('hidden');
+            setTimeout(() => document.getElementById('tx-id-input')?.focus(), 150);
+        }
+
+        // ==== COPIE ====
+        function copyText(text, btn) {
+            const success = () => {
+                const original = btn.innerText;
+                btn.innerText = '✓ Copié';
+                btn.classList.add('bg-emerald-500/20', 'text-emerald-400');
+                setTimeout(() => {
+                    btn.innerText = original;
+                    btn.classList.remove('bg-emerald-500/20', 'text-emerald-400');
+                }, 1500);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(success).catch(() => {
+                    fallbackCopy(text, success);
+                });
+            } else {
+                fallbackCopy(text, success);
+            }
+        }
+        function fallbackCopy(text, cb) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); cb(); } catch (e) { showAlert("Impossible de copier, copiez manuellement."); }
+            document.body.removeChild(ta);
+        }
+
+        // ==== SOUMISSION ====
+        function submitFinalDeposit() {
+            if (isSubmitting) return;
+
+            const txId = document.getElementById('tx-id-input').value.trim();
+            const phone = document.getElementById('user-pay-phone').value.trim();
+
+            if (!txId || txId.length < 5) {
+                showAlert("⚠️ Veuillez entrer l'ID de transaction (min 5 caractères).");
+                document.getElementById('tx-id-input').focus();
+                return;
+            }
+            if (!selectedAmount || selectedAmount < 2000) {
+                showAlert("⚠️ Montant invalide (min 2,000 FCFA).");
+                return;
+            }
+
+            isSubmitting = true;
+            const btn = document.getElementById('submit-btn');
+            const txt = document.getElementById('submit-btn-text');
+            btn.disabled = true;
+            txt.innerText = 'Envoi en cours...';
+
+            const newDeposit = {
+                amount: selectedAmount,
+                operator: selectedOperator,
+                country: selectedCountry,
+                txId: txId,
+                phone: phone,
+                date: new Date().toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })
+            };
+
+            let pendingDeposits = JSON.parse(localStorage.getItem('rg_pending_deposits') || '[]');
+            pendingDeposits.push(newDeposit);
+            localStorage.setItem('rg_pending_deposits', JSON.stringify(pendingDeposits));
+
+            // Anti-double: reset après 2s
+            setTimeout(() => {
+                isSubmitting = false;
+                btn.disabled = false;
+                txt.innerText = "Soumettre à l'administration";
+                closePaymentModal();
+                showAlert(`✅ Recharge de ${selectedAmount.toLocaleString('fr-FR')} FCFA soumise !\n\nValidation par l'administration sous 3 à 10 minutes.\n\nRéf: ${txId}`);
+                setTimeout(() => { location.href = 'compte.html'; }, 2000);
+            }, 800);
+        }
+
+        // ==== POPUPS ====
         function showAlert(msg) {
             document.getElementById('alert-text').innerText = msg;
             document.getElementById('custom-alert').classList.remove('hidden');
@@ -298,57 +521,37 @@
             document.getElementById('custom-alert').classList.add('hidden');
         }
 
-        function openPaymentModal() {
-            if(selectedAmount < 2000) {
-                showAlert("Erreur : Le montant minimum de dépôt est de 2 000 FCFA.");
-                return;
-            }
-            updateModalUI();
-            document.getElementById('payment-modal').classList.remove('hidden');
-            document.getElementById('step-phone').classList.remove('hidden');
-            document.getElementById('step-transfer').classList.add('hidden');
-        }
-
-        function closePaymentModal() {
-            document.getElementById('payment-modal').classList.add('hidden');
-        }
-
-        function proceedToTransfer() {
-            const phone = document.getElementById('user-pay-phone').value;
-            if(!phone || phone.length < 8) {
-                showAlert("Erreur : Veuillez entrer un numéro de téléphone valide.");
-                return;
-            }
-            document.getElementById('step-phone').classList.add('hidden');
-            document.getElementById('step-transfer').classList.remove('hidden');
-        }
-
-        function copyText(txt) {
-            navigator.clipboard.writeText(txt);
-            showAlert("Copié dans le presse-papier !");
-        }
-
-        function submitFinalDeposit() {
-            const txId = document.getElementById('tx-id-input').value;
-            if(!txId) {
-                showAlert("Erreur : Veuillez saisir l'ID de transaction ou la référence SMS.");
-                return;
-            }
-            
-            let pendingDeposits = JSON.parse(localStorage.getItem('rg_pending_deposits') || '[]');
-            pendingDeposits.push({
-                amount: selectedAmount,
-                country: selectedCountry,
-                operator: selectedOperator,
-                txId: txId,
-                date: new Date().toLocaleString(),
-                status: 'En attente de validation admin'
+        // ==== EVENTS ====
+        document.addEventListener('DOMContentLoaded', () => {
+            // Enter sur inputs du modal
+            ['user-pay-phone', 'tx-id-input'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (id === 'user-pay-phone') proceedToTransfer();
+                        else submitFinalDeposit();
+                    }
+                });
             });
-            localStorage.setItem('rg_pending_deposits', JSON.stringify(pendingDeposits));
-            
-            showAlert(`Demande de recharge de ${selectedAmount.toLocaleString()} FCFA soumise avec succès (MAMADOU GNING). En attente de validation admin.`);
-            setTimeout(() => { location.href = 'index.html'; }, 3000);
-        }
+
+            // Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (!document.getElementById('custom-alert').classList.contains('hidden')) {
+                        closeAlert();
+                    } else if (!document.getElementById('payment-modal').classList.contains('hidden')) {
+                        closePaymentModal();
+                    }
+                }
+            });
+
+            // Clic extérieur alerte
+            document.getElementById('custom-alert').addEventListener('click', (e) => {
+                if (e.target.id === 'custom-alert') closeAlert();
+            });
+        });
     </script>
 </body>
 </html>
