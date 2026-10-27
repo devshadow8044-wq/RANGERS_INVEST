@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RANGERS - Centre de tâches</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; color: #111827; font-family: 'Inter', sans-serif; }
+        .text-brand { color: #0db14b; }
+        .bg-brand { background-color: #0db14b; }
+        
+        @keyframes claimPulse { 
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(13, 177, 75, 0); } 
+            50% { transform: scale(1.05); box-shadow: 0 0 15px rgba(13, 177, 75, 0.4); } 
+        }
+        .btn-claim { animation: claimPulse 2s infinite; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-20">
+
+    <header class="bg-white sticky top-0 z-40 px-4 py-3 border-b border-gray-200 flex items-center justify-between shadow-sm">
+        <div class="flex items-center space-x-3">
+            <a href="compte.html" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-700">
+                <i class="fa-solid fa-arrow-left text-sm"></i>
+            </a>
+            <span class="font-bold text-base text-gray-800">Centre de tâches</span>
+        </div>
+        <div class="text-sm font-bold text-brand">
+            FCFA <span id="task-balance">0</span>
+        </div>
+    </header>
+
+    <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-4">
+        
+        <!-- BANNIÈRE -->
+        <div class="bg-brand rounded-xl p-5 text-white text-center shadow-md">
+            <h2 class="text-lg font-black mb-1">Gagnez des bonus gratuits</h2>
+            <p class="text-xs opacity-90">Accomplissez des tâches simples chaque jour et recevez de l'argent sur votre solde de recharge.</p>
+        </div>
+
+        <!-- LISTE DES TÂCHES -->
+        <div class="space-y-3">
+            <!-- Tâche 1 -->
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center">
+                        <i class="fa-solid fa-video"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-gray-800">Regarder une vidéo</p>
+                        <p class="text-xs text-brand font-bold">+ 50 FCFA</p>
+                    </div>
+                </div>
+                <button onclick="doTask('video', 50, this)" class="bg-brand text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm btn-claim">Faire</button>
+            </div>
+
+            <!-- Tâche 2 -->
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-gray-800">Partager le lien</p>
+                        <p class="text-xs text-brand font-bold">+ 100 FCFA</p>
+                    </div>
+                </div>
+                <button onclick="doTask('share', 100, this)" class="bg-brand text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm btn-claim">Faire</button>
+            </div>
+
+            <!-- Tâche 3 -->
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-gray-800">Pointage quotidien</p>
+                        <p class="text-xs text-brand font-bold">+ 200 FCFA</p>
+                    </div>
+                </div>
+                <button onclick="doTask('checkin', 200, this)" class="bg-brand text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm btn-claim">Faire</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialisation
+        let balance = parseFloat(localStorage.getItem('rg_recharge') || '0');
+        document.getElementById('task-balance').innerText = balance.toLocaleString();
+
+        // Vérifier si les tâches ont déjà été faites aujourd'hui (optionnel, ici on le fait à chaque fois pour tester)
+        function doTask(taskId, reward, btn) {
+            if (btn.innerText === 'Fait ✓') return;
+
+            // Ajouter l'argent au solde de recharge
+            balance += reward;
+            localStorage.setItem('rg_recharge', balance.toFixed(2));
+            document.getElementById('task-balance').innerText = balance.toLocaleString();
+
+            // Changer le bouton
+            btn.innerText = 'Fait ✓';
+            btn.className = 'bg-gray-200 text-gray-500 text-xs font-bold px-4 py-2 rounded-lg pointer-events-none';
+            
+            alert(`Bravo ! Vous avez gagné ${reward} FCFA.\nVotre nouveau solde est de ${balance} FCFA.`);
+        }
+    </script>
+</body>
+</html>
