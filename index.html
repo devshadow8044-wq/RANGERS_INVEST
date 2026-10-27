@@ -3,165 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil - Mon Site</title>
-    
-    <style>
-        /* =========================================
-           STYLE DU POPUP TELEGRAM
-        ========================================= */
-        
-        /* Fond sombre semi-transparent derrière le popup */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7); /* Assombrit le site derrière */
-            display: none; /* Caché par défaut, le JS l'affichera */
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        /* La boîte du popup */
-        .popup-content {
-            /* --- MODIFIEZ ICI POUR LE FOND VERT OU L'IMAGE RANGERS --- */
-            /* Option 1 : Fond Vert */
-            /* background-color: #28a745; */ 
-            
-            /* Option 2 : Image de Rangers */
-            background-color: #ffffff; /* Enlevez cette ligne si vous utilisez l'image */
-            /* background-image: url('rangers-vert.jpg'); */
-            /* background-size: cover; */
-            /* background-position: center; */
-            
-            width: 85%;
-            max-width: 350px;
-            padding: 30px 20px;
-            border-radius: 15px;
-            text-align: center;
-            position: relative;
-            font-family: Arial, sans-serif;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
-
-        /* Bouton de fermeture (X) en haut à droite */
-        .close-btn {
-            position: absolute;
-            top: -15px;
-            right: -15px;
-            background: #666;
-            color: white;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        .close-btn:hover {
-            background: #444;
-        }
-
-        /* Icône Telegram Bleue */
-        .telegram-icon {
-            background-color: #3b9cff;
-            width: 75px;
-            height: 75px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 20px auto;
-            box-shadow: 0 4px 10px rgba(59, 156, 255, 0.4);
-        }
-
-        /* Titre */
-        .popup-content h2 {
-            font-size: 20px;
-            /* Si vous mettez un fond vert foncé, changez cette couleur par #ffffff */
-            color: #333333; 
-            margin-bottom: 10px;
-            margin-top: 0;
-        }
-
-        /* Texte descriptif */
-        .popup-content p {
-            font-size: 14px;
-            /* Si vous mettez un fond vert foncé, changez cette couleur par #f0f0f0 */
-            color: #666666; 
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-
-        /* Bouton "Follow Now" */
-        .follow-btn {
-            display: block;
-            background-color: #3b9cff;
-            color: white;
-            text-decoration: none;
-            padding: 15px 0;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 16px;
-            width: 100%;
-            box-sizing: border-box;
-            transition: background 0.3s;
-        }
-        .follow-btn:hover {
-            background-color: #2b7cd3;
-        }
-    </style>
+    <title>Rangers Invest</title>
+    <!-- On relie le fichier CSS ici -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- CONTENU DE VOTRE SITE (Accueil) -->
-    <h1 style="text-align: center; margin-top: 50px;">Bienvenue sur mon site</h1>
-    <p style="text-align: center;">Votre contenu d'accueil ici...</p>
+    <!-- METTEZ TOUT LE CONTENU DE VOTRE SITE ICI -->
+    <div class="site-content">
+        <h1>Bienvenue sur Rangers Invest</h1>
+        <p>Mettez vos textes, vos images et vos boutons ici.</p>
+    </div>
 
-
-    <!-- =========================================
-         CODE HTML DU POPUP TELEGRAM
-    ========================================= -->
+    <!-- ========================================== -->
+    <!-- CODE DU POPUP TELEGRAM (NE PAS TOUCHER)    -->
+    <!-- ========================================== -->
     <div id="telegramPopup" class="popup-overlay">
         <div class="popup-content">
             <button class="close-btn" onclick="fermerPopup()">&times;</button>
             
-            <!-- Icône Telegram SVG -->
             <div class="telegram-icon">
                 <svg viewBox="0 0 24 24" width="45" height="45" fill="white">
                     <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.832.942z"></path>
                 </svg>
             </div>
 
-            <!-- Textes -->
             <h2>Official Information Release</h2>
             <p>Follow our official telegram channel to get the latest news and welfare information</p>
             
-            <!-- REMPLACEZ LE LIEN CI-DESSOUS PAR VOTRE LIEN TELEGRAM -->
-            <a href="https://t.me/votre_lien_ici" target="_blank" class="follow-btn">Follow Now</a>
+            <!-- METTEZ VOTRE LIEN TELEGRAM ICI -->
+            <a href="https://t.me/votre_lien" target="_blank" class="follow-btn">Follow Now</a>
         </div>
     </div>
 
-
-    <!-- =========================================
-         CODE JAVASCRIPT (Fait apparaître le popup)
-    ========================================= -->
+    <!-- SCRIPT POUR LE POPUP -->
     <script>
-        // Afficher le popup automatiquement au chargement de la page
         window.onload = function() {
-            // On utilise setTimeout pour laisser 1 seconde à la page pour charger, puis on affiche
             setTimeout(function() {
                 document.getElementById('telegramPopup').style.display = 'flex';
             }, 1000); 
         };
 
-        // Fonction pour fermer le popup quand on clique sur le X
         function fermerPopup() {
             document.getElementById('telegramPopup').style.display = 'none';
         }
