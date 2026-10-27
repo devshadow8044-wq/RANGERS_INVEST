@@ -1,83 +1,81 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RANGERS (RG) - Produits</title>
+    <title>RANGERS - Produits</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { rgBg: '#030509', rgCard: '#0d111a', rgGold: '#f59e0b', rgBorder: '#1e2638' } } } }
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
-        .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
-        .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        body { background-color: #f8f9fa; color: #111827; font-family: 'Inter', sans-serif; }
+        .bg-brand { background-color: #0db14b; }
+        .text-brand { color: #0db14b; }
         
-        @keyframes buyPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); box-shadow: 0 0 15px rgba(16, 185, 129, 0.6); } }
-        .buy-pulse { animation: buyPulse 1.8s infinite; }
+        @keyframes buyPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        .buy-pulse { animation: buyPulse 1.5s infinite; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased pb-24 bg-[#030509]">
+<body class="min-h-screen flex flex-col pb-20">
 
     <!-- HEADER NOIR -->
-    <header class="bg-black text-white p-4 flex justify-between items-center border-b border-slate-800">
-        <div class="text-center">
-            <h2 class="text-2xl font-black" id="my-products-count">0</h2>
-            <p class="text-xs text-emerald-500 font-bold">Mes produits ></p>
+    <header class="bg-black text-white py-4 px-6 flex justify-between items-center">
+        <div class="text-center w-1/2 border-r border-gray-700">
+            <h2 class="text-3xl font-black" id="my-products-count">0</h2>
+            <p class="text-xs text-brand font-bold mt-1">Mes produits ></p>
         </div>
-        <div class="text-center">
-            <h2 class="text-2xl font-black" id="my-revenue-amount">FCFA 0</h2>
-            <p class="text-xs text-emerald-500 font-bold">Mes revenus ></p>
+        <div class="text-center w-1/2">
+            <h2 class="text-3xl font-black" id="my-revenue-amount">FCFA 0</h2>
+            <p class="text-xs text-brand font-bold mt-1">Mes revenus ></p>
         </div>
     </header>
 
-    <main class="max-w-lg mx-auto w-full space-y-2">
-        <div id="products-container" class="space-y-2"></div>
+    <main class="max-w-lg mx-auto w-full py-4 space-y-4 px-2">
+        <div id="products-container" class="space-y-4"></div>
     </main>
 
-    <!-- NAVIGATION BAS -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-slate-950 border-t border-slate-800 flex justify-around py-3 z-40">
-        <a href="index.html" class="flex flex-col items-center text-slate-500 hover:text-white"><i class="fa-solid fa-house text-lg"></i><span class="text-[10px] font-bold mt-1">Accueil</span></a>
-        <a href="produits.html" class="flex flex-col items-center text-amber-500"><i class="fa-solid fa-bicycle text-lg"></i><span class="text-[10px] font-bold mt-1">Produit</span></a>
-        <a href="equipe.html" class="flex flex-col items-center text-slate-500 hover:text-white"><i class="fa-solid fa-users text-lg"></i><span class="text-[10px] font-bold mt-1">Équipe</span></a>
-        <a href="compte.html" class="flex flex-col items-center text-slate-500 hover:text-white"><i class="fa-solid fa-user text-lg"></i><span class="text-[10px] font-bold mt-1">Mon compte</span></a>
+    <!-- NAV BAS -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 z-40">
+        <a href="index.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1">Accueil</span></a>
+        <a href="produits.html" class="flex flex-col items-center text-brand"><i class="fa-solid fa-bicycle text-xl"></i><span class="text-[10px] mt-1">Produit</span></a>
+        <a href="equipe.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-users text-xl"></i><span class="text-[10px] mt-1">Équipe</span></a>
+        <a href="compte.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-user text-xl"></i><span class="text-[10px] mt-1">Mon compte</span></a>
     </nav>
 
     <script>
-        // CONFIGURATION DES PRODUITS
         const products = [
-            { id: 1, name: 'VIP1 Lime Bike', price: 2000, duration: 200, daily: 400, total: 80000 },
-            { id: 2, name: 'VIP2 Lime Bike', price: 8000, duration: 200, daily: 1680, total: 336000 },
-            { id: 3, name: 'VIP3 Lime Bike', price: 20000, duration: 200, daily: 4400, total: 880000 }
+            { id: 1, name: 'VIP1 Lime Bike', price: 2000, duration: 200, daily: 400, total: 80000, img: 'https://files.catbox.moe/9kbqzl.jpg' },
+            { id: 2, name: 'VIP2 Lime Bike', price: 8000, duration: 200, daily: 1680, total: 336000, img: 'https://files.catbox.moe/499w19.jpg' },
+            { id: 3, name: 'VIP3 Lime Bike', price: 20000, duration: 200, daily: 4400, total: 880000, img: 'https://files.catbox.moe/78dszw.jpg' }
         ];
 
         const container = document.getElementById('products-container');
         
-        // AFFICHAGE
         products.forEach(p => {
             container.innerHTML += `
-                <div class="relative bg-slate-800 rounded-lg overflow-hidden m-2 shadow-lg">
-                    <img src="https://files.catbox.moe/78dszw.jpg" class="w-full h-48 object-cover opacity-60" alt="Bike">
-                    <div class="absolute inset-0 p-4 flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-xl font-black text-white mb-2">${p.name}</h3>
-                            <div class="bg-black/60 backdrop-blur-sm p-3 rounded-lg text-xs space-y-1 w-2/3 text-white">
-                                <div class="flex justify-between"><span class="text-slate-300">Prix :</span> <span class="font-bold">FCFA ${p.price.toLocaleString()}</span></div>
-                                <div class="flex justify-between"><span class="text-slate-300">Durée :</span> <span class="font-bold">${p.duration} jours</span></div>
-                                <div class="flex justify-between"><span class="text-slate-300">Revenu quotidien :</span> <span class="font-bold text-emerald-400">FCFA ${p.daily.toLocaleString()}</span></div>
-                                <div class="flex justify-between"><span class="text-slate-300">Revenu total :</span> <span class="font-bold text-amber-400">FCFA ${p.total.toLocaleString()}</span></div>
+                <div class="bg-gray-500 rounded-lg overflow-hidden shadow-md">
+                    <div class="flex h-44">
+                        <!-- Texte -->
+                        <div class="w-3/5 p-4 flex flex-col justify-center bg-gray-400/90 text-white">
+                            <h3 class="text-xl font-black mb-2 text-white">${p.name}</h3>
+                            <div class="bg-gray-700/50 p-2.5 rounded text-[11px] space-y-1.5 w-full">
+                                <div class="flex justify-between"><span>Prix :</span> <span class="font-bold">FCFA ${p.price.toLocaleString()}</span></div>
+                                <div class="flex justify-between"><span>Durée :</span> <span class="font-bold">${p.duration} jours</span></div>
+                                <div class="flex justify-between"><span>Revenu / jour :</span> <span class="font-bold">FCFA ${p.daily.toLocaleString()}</span></div>
+                                <div class="flex justify-between"><span>Revenu total :</span> <span class="font-bold text-white">FCFA ${p.total.toLocaleString()}</span></div>
                             </div>
                         </div>
-                        <button onclick="buyProduct(${p.id}, ${p.price}, '${p.name}')" class="w-full bg-[#10b981] text-slate-950 font-black text-sm py-2.5 rounded-lg mt-3 buy-pulse">
-                            ACHETER
-                        </button>
+                        <!-- Image -->
+                        <div class="w-2/5 h-full">
+                            <img src="${p.img}" class="w-full h-full object-cover" alt="Bike">
+                        </div>
                     </div>
+                    <button onclick="buyProduct(${p.id}, ${p.price}, '${p.name}')" class="w-full bg-[#00ff00] text-black font-black text-sm py-3 buy-pulse">
+                        ACHETER
+                    </button>
                 </div>
             `;
         });
 
-        // MISE A JOUR DU HAUT
         function updateHeader() {
             const myProds = JSON.parse(localStorage.getItem('rg_my_products') || '[]');
             let rev = parseFloat(localStorage.getItem('rg_revenue') || '0');
@@ -86,30 +84,19 @@
         }
         updateHeader();
 
-        // LOGIQUE D'ACHAT
         function buyProduct(id, price, name) {
             let balance = parseFloat(localStorage.getItem('rg_recharge') || '0');
-            
-            if (balance < price) {
-                alert("⛔ Solde insuffisant. Veuillez recharger votre compte.");
-                return;
-            }
+            if (balance < price) { alert("⛔ Solde insuffisant."); return; }
+            if (!confirm(`Acheter ${name} pour ${price} FCFA ?`)) return;
 
-            if (!confirm(`Confirmer l'achat de ${name} pour ${price.toLocaleString()} FCFA ?`)) return;
-
-            // Déduire le solde
             balance -= price;
             localStorage.setItem('rg_recharge', balance.toFixed(2));
 
-            // Ajouter le produit
             let myProds = JSON.parse(localStorage.getItem('rg_my_products') || '[]');
             myProds.push({ id, name, price, date: new Date().toISOString() });
             localStorage.setItem('rg_my_products', JSON.stringify(myProds));
 
-            // Marquer comme investisseur
-            localStorage.setItem('rg_has_invested', 'true');
-
-            alert(`✅ Félicitations ! Vous avez acheté ${name}.\nVos revenus quotidiens commencent demain.`);
+            alert(`✅ Achat réussi !`);
             updateHeader();
         }
     </script>
