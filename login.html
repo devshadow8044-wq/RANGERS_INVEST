@@ -1,334 +1,61 @@
-<!DOCTYPE html>
-<html lang="fr" class="dark">
+<!doctype html>
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RANGERS (RG) - Connexion & Inscription</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        rgBg: '#030509',
-                        rgCard: '#0d111a',
-                        rgGold: '#f59e0b',
-                        rgBorder: '#1e2638'
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
-        .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.2); }
-        .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        
-        /* ===== CLIGNOTANTS ===== */
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
-            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.8); }
-        }
-        .btn-pulse { animation: pulseGlow 2s infinite; }
-
-        @keyframes inputGlow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-            50% { box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2); }
-        }
-        .input-focus:focus { animation: inputGlow 1.5s infinite; }
-
-        @keyframes inviteBlink {
-            0%, 100% { border-color: rgba(245, 158, 11, 0.3); }
-            50% { border-color: rgba(245, 158, 11, 0.8); }
-        }
-        .invite-blink { animation: inviteBlink 1.8s infinite; }
-
-        @keyframes errorShake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        .error-shake { animation: errorShake 0.4s ease-in-out 2; border-color: #ef4444 !important; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16a832">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="theme-reference.css">
+<title>Connexion – RANGERS</title>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4 antialiased py-10">
+<body data-page="login">
+<div class="bg" aria-hidden="true">
+  <video autoplay muted loop playsinline preload="metadata"><source src="videos/connexion.mp4" type="video/mp4"></video>
+</div>
+<main class="wrap auth">
+  <header class="hero">
+    <a class="brand" href="login.html">RANGERS</a>
+    <h1 style="margin-top:22px">Content de te revoir</h1>
+    <p>Connecte-toi avec ton numéro et ton mot de passe.</p>
+  </header>
 
-    <div class="max-w-md w-full space-y-4">
-        
-        <!-- IMAGE DE COUVERTURE (Comme sur ton image) -->
-        <div class="rounded-3xl overflow-hidden shadow-2xl border border-amber-500/30 relative h-40">
-            <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80" alt="Bannière">
-            <div class="absolute inset-0 bg-gradient-to-t from-[#030509] to-transparent"></div>
-        </div>
+  <form id="form" class="card stack" novalidate>
+    <nav class="seg" aria-label="Connexion ou inscription">
+      <a href="login.html" aria-current="page">Connexion</a>
+      <a href="register.html">Inscription</a>
+    </nav>
 
-        <!-- CONTENEUR PRINCIPAL (Le "Register" de ton image) -->
-        <div class="rg-glass p-6 rounded-3xl border border-amber-500/30 shadow-2xl space-y-4">
-            
-            <!-- TITRE DYNAMIQUE -->
-            <h1 id="form-title" class="text-2xl font-black text-center text-white tracking-widest uppercase">INSCRIPTION</h1>
+    <div id="error" class="error" role="alert"></div>
 
-            <!-- ================= FORMULAIRE INSCRIPTION ================= -->
-            <div id="register-form" class="space-y-3">
-                
-                <!-- Numéro de téléphone avec sélecteur de pays -->
-                <div class="flex bg-white rounded-xl overflow-hidden shadow-sm">
-                    <select id="reg-country" class="bg-white text-slate-900 text-sm font-bold px-2 border-r border-gray-200 focus:outline-none">
-                        <option value="+221">🇸🇳 +221</option>
-                        <option value="+225">🇨🇮 +225</option>
-                        <option value="+223">🇲🇱 +223</option>
-                        <option value="+226">🇧🇫 +226</option>
-                        <option value="+229">🇧🇯 +229</option>
-                    </select>
-                    <input type="tel" id="reg-phone" placeholder="Numéro de téléphone" class="w-full bg-white text-slate-900 px-4 py-3.5 text-sm focus:outline-none input-focus">
-                </div>
-
-                <!-- Mot de passe -->
-                <div class="flex bg-white rounded-xl overflow-hidden shadow-sm">
-                    <div class="flex items-center pl-4 pr-2 text-emerald-500"><i class="fa-solid fa-lock"></i></div>
-                    <input type="password" id="reg-pass" placeholder="Mot de passe" class="w-full bg-white text-slate-900 px-2 py-3.5 text-sm focus:outline-none input-focus">
-                </div>
-
-                <!-- Confirmez le mot de passe -->
-                <div class="flex bg-white rounded-xl overflow-hidden shadow-sm">
-                    <div class="flex items-center pl-4 pr-2 text-emerald-500"><i class="fa-solid fa-lock"></i></div>
-                    <input type="password" id="reg-pass-confirm" placeholder="Confirmez le mot de passe" class="w-full bg-white text-slate-900 px-2 py-3.5 text-sm focus:outline-none input-focus">
-                </div>
-
-                <!-- Code d'invitation -->
-                <div class="flex bg-white rounded-xl overflow-hidden shadow-sm invite-blink border border-transparent">
-                    <div class="flex items-center pl-4 pr-2 text-slate-500"><i class="fa-solid fa-code"></i></div>
-                    <input type="text" id="reg-invite" placeholder="Code d'invitation (optionnel)" class="w-full bg-white text-slate-900 px-2 py-3.5 text-sm focus:outline-none">
-                </div>
-
-                <!-- Lien Connexion -->
-                <div class="text-right pt-1">
-                    <button onclick="toggleForm('login')" class="text-xs text-slate-400 hover:text-amber-400 underline">Se connecter ></button>
-                </div>
-
-                <!-- Bouton S'inscrire -->
-                <button id="btn-register" onclick="handleRegister()" class="w-full py-4 rounded-2xl bg-white text-slate-900 font-black text-sm shadow-lg btn-pulse transition hover:bg-gray-100">
-                    S'inscrire
-                </button>
-            </div>
-
-            <!-- ================= FORMULAIRE CONNEXION ================= -->
-            <div id="login-form" class="space-y-3 hidden">
-                
-                <!-- Numéro de téléphone -->
-                <div class="flex bg-white rounded-xl overflow-hidden shadow-sm">
-                    <select id="login-country" class="bg-white text-slate-900 text-sm font-bold px-2 border-r border-gray-200 focus:outline-none">
-                        <option value="+221">🇸🇳 +221</option>
-                        <option value="+225">🇨🇮 +225</option>
-                        <option value="+223">🇲🇱 +223</option>
-                        <option value="+226">🇧🇫 +226</option>
-                        <option value="+229">🇧🇯 +229</option>
-                    </select>
-                    <input type="tel" id="login-phone" placeholder="Numéro de téléphone" class="w-full bg-white text-slate-900 px-4 py-3.5 text-sm focus:outline-none input-focus">
-                </div>
-
-                <!-- Mot de passe -->
-                <div class="flex bg-white rounded-xl overflow-hidden shadow-sm">
-                    <div class="flex items-center pl-4 pr-2 text-emerald-500"><i class="fa-solid fa-lock"></i></div>
-                    <input type="password" id="login-pass" placeholder="Mot de passe" class="w-full bg-white text-slate-900 px-2 py-3.5 text-sm focus:outline-none input-focus">
-                </div>
-
-                <!-- Lien Inscription -->
-                <div class="text-right pt-1">
-                    <button onclick="toggleForm('register')" class="text-xs text-slate-400 hover:text-amber-400 underline">Pas de compte ? S'inscrire ></button>
-                </div>
-
-                <!-- Bouton Se connecter -->
-                <button id="btn-login" onclick="handleLogin()" class="w-full py-4 rounded-2xl bg-white text-slate-900 font-black text-sm shadow-lg btn-pulse transition hover:bg-gray-100">
-                    Se connecter
-                </button>
-            </div>
-
-        </div>
+    <div>
+      <label for="country">Pays</label>
+      <select id="country" class="field" required><option value="">Chargement…</option></select>
     </div>
 
-    <!-- POPUP ALERTE -->
-    <div id="custom-alert" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
-        <div class="rg-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
-            <p id="alert-text" class="text-xs text-white font-medium leading-relaxed whitespace-pre-line">Message</p>
-            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs">OK</button>
-        </div>
+    <div>
+      <label for="phone">Numéro de téléphone</label>
+      <div class="phone">
+        <span id="prefix" class="prefix">+</span>
+        <input id="phone" class="field" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="77 123 45 67" required>
+      </div>
     </div>
 
-    <script>
-        // ====== INITIALISATION ======
-        window.onload = () => {
-            // Récupération du code parrain depuis l'URL (ex: ?ref=RG123456)
-            const urlParams = new URLSearchParams(window.location.search);
-            const refCode = urlParams.get('ref') || urlParams.get('code');
-            if(refCode) {
-                document.getElementById('reg-invite').value = refCode;
-            }
-        };
+    <div>
+      <label for="password">Mot de passe</label>
+      <div class="pw">
+        <input id="password" class="field" type="password" autocomplete="current-password" required>
+        <button class="toggle" type="button" aria-pressed="false">Afficher</button>
+      </div>
+    </div>
 
-        // ====== BASCULER ENTRE LES FORMULAIRES ======
-        function toggleForm(type) {
-            const title = document.getElementById('form-title');
-            const regForm = document.getElementById('register-form');
-            const logForm = document.getElementById('login-form');
+    <button id="submit" class="btn" type="submit">Se connecter</button>
+  </form>
 
-            if(type === 'login') {
-                title.innerText = 'CONNEXION';
-                regForm.classList.add('hidden');
-                logForm.classList.remove('hidden');
-            } else {
-                title.innerText = 'INSCRIPTION';
-                logForm.classList.add('hidden');
-                regForm.classList.remove('hidden');
-            }
-        }
-
-        // ====== ALERTE ======
-        function showAlert(msg) {
-            document.getElementById('alert-text').innerText = msg;
-            document.getElementById('custom-alert').classList.remove('hidden');
-        }
-        function closeAlert() {
-            document.getElementById('custom-alert').classList.add('hidden');
-        }
-
-        function shakeField(el) {
-            el.classList.add('error-shake');
-            setTimeout(() => el.classList.remove('error-shake'), 900);
-        }
-
-        // ====== INSCRIPTION ======
-        function handleRegister() {
-            const country = document.getElementById('reg-country').value;
-            const phoneEl = document.getElementById('reg-phone');
-            const passEl = document.getElementById('reg-pass');
-            const confirmEl = document.getElementById('reg-pass-confirm');
-            const invite = document.getElementById('reg-invite').value.trim();
-
-            const phone = phoneEl.value.trim().replace(/\s+/g, '');
-            const pass = passEl.value;
-            const confirm = confirmEl.value;
-
-            // Validations
-            if(!phone || phone.length < 8 || !/^\d+$/.test(phone)) {
-                showAlert("⚠️ Numéro invalide (8 à 10 chiffres).");
-                shakeField(phoneEl);
-                return;
-            }
-            if(!pass || pass.length < 6) {
-                showAlert("⚠️ Mot de passe trop court (min 6 caractères).");
-                shakeField(passEl);
-                return;
-            }
-            if(pass !== confirm) {
-                showAlert("⚠️ Les mots de passe ne correspondent pas.");
-                shakeField(confirmEl);
-                return;
-            }
-
-            // Vérification si le numéro existe déjà
-            const existingPhone = localStorage.getItem('rg_user_phone');
-            if(existingPhone && existingPhone === country + ' ' + phone) {
-                showAlert("⚠️ Ce numéro est déjà enregistré. Connectez-vous.");
-                return;
-            }
-
-            // Sauvegarde
-            localStorage.setItem('rg_user_name', 'Membre RANGERS');
-            localStorage.setItem('rg_user_phone', country + ' ' + phone);
-            localStorage.setItem('rg_user_pass', pass);
-            
-            if(invite) localStorage.setItem('rg_referrer', invite);
-
-            // Initialisation des soldes pour un nouveau compte
-            if(localStorage.getItem('rg_retirable') === null) {
-                localStorage.setItem('rg_recharge', '0.00');
-                localStorage.setItem('rg_retirable', '1000.00'); // Bonus bienvenue
-                localStorage.setItem('rg_has_invested', 'false');
-            }
-
-            localStorage.setItem('rg_logged_in', 'true');
-            
-            showAlert("🎉 Inscription réussie !\nVotre bonus de 1,000 FCFA a été crédité.\nRedirection...");
-            setTimeout(() => { location.href = 'index.html'; }, 2000);
-        }
-
-        // ====== CONNEXION ======
-        function handleLogin() {
-            const country = document.getElementById('login-country').value;
-            const phoneEl = document.getElementById('login-phone');
-            const passEl = document.getElementById('login-pass');
-
-            const phone = phoneEl.value.trim().replace(/\s+/g, '');
-            const pass = passEl.value;
-
-            if(!phone || phone.length < 8 || !/^\d+$/.test(phone)) {
-                showAlert("⚠️ Numéro invalide.");
-                shakeField(phoneEl);
-                return;
-            }
-            if(!pass) {
-                showAlert("⚠️ Entrez votre mot de passe.");
-                shakeField(passEl);
-                return;
-            }
-
-            // Vérification (Optionnel : on vérifie si le mot de passe correspond)
-            const savedPhone = localStorage.getItem('rg_user_phone');
-            const savedPass = localStorage.getItem('rg_user_pass');
-
-            // Si un compte existe avec ce numéro, on vérifie le mot de passe
-            if(savedPhone === country + ' ' + phone) {
-                if(savedPass && savedPass !== pass) {
-                    showAlert("❌ Mot de passe incorrect.");
-                    shakeField(passEl);
-                    return;
-                }
-            } else {
-                // Si c'est un nouveau numéro, on le connecte et on initialise
-                localStorage.setItem('rg_user_phone', country + ' ' + phone);
-                localStorage.setItem('rg_user_pass', pass);
-                localStorage.setItem('rg_user_name', 'Membre RANGERS');
-                
-                if(localStorage.getItem('rg_retirable') === null) {
-                    localStorage.setItem('rg_recharge', '0.00');
-                    localStorage.setItem('rg_retirable', '1000.00');
-                    localStorage.setItem('rg_has_invested', 'false');
-                }
-            }
-
-            localStorage.setItem('rg_logged_in', 'true');
-            showAlert("✅ Connexion réussie !\nRedirection...");
-            setTimeout(() => { location.href = 'index.html'; }, 1500);
-        }
-
-        // ====== RACCOURCIS CLAVIER (ENTRÉE) ======
-        document.addEventListener('DOMContentLoaded', () => {
-            const fieldsReg = ['reg-phone', 'reg-pass', 'reg-pass-confirm', 'reg-invite'];
-            const fieldsLog = ['login-phone', 'login-pass'];
-
-            fieldsReg.forEach(id => {
-                document.getElementById(id).addEventListener('keydown', (e) => {
-                    if(e.key === 'Enter') { e.preventDefault(); handleRegister(); }
-                });
-            });
-
-            fieldsLog.forEach(id => {
-                document.getElementById(id).addEventListener('keydown', (e) => {
-                    if(e.key === 'Enter') { e.preventDefault(); handleLogin(); }
-                });
-            });
-
-            // Fermeture alerte avec Entrée / Echap
-            document.addEventListener('keydown', (e) => {
-                if(e.key === 'Enter' || e.key === 'Escape') {
-                    if(!document.getElementById('custom-alert').classList.contains('hidden')) {
-                        closeAlert();
-                    }
-                }
-            });
-        });
-    </script>
+  <p class="alt">Pas encore de compte ? <a href="register.html">Créer un compte</a></p>
+</main>
+<script src="config.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
