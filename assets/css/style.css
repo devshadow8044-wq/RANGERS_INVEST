@@ -1,22 +1,37 @@
-/* Fond sombre semi-transparent derrière le popup */
+/* --- STYLE DE BASE DE VOTRE SITE --- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    /* C'est ici que vous mettrez votre fond vert ou votre image de rangers */
+    background-color: #333333; 
+    color: white;
+}
+
+.site-content {
+    padding: 20px;
+    text-align: center;
+}
+
+/* --- STYLE DU POPUP TELEGRAM --- */
 .popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
+    background: rgba(0, 0, 0, 0.8); /* Fond sombre derrière le popup */
+    display: none; 
     justify-content: center;
     align-items: center;
     z-index: 9999;
 }
 
-/* La boîte blanche du popup */
 .popup-content {
+    /* --- MODIFIEZ ICI POUR LE FOND VERT OU L'IMAGE RANGERS --- */
+    /* background-image: url('votre-image-rangers.jpg'); */
+    /* background-size: cover; */
     background-color: #ffffff; 
-    /* POUR METTRE LE FOND VERT, REMPLACEZ LA LIGNE DU DESSUS PAR : */
-    /* background-color: #28a745; (ou mettez une image : background-image: url('rangers-vert.jpg'); background-size: cover;) */
     
     width: 85%;
     max-width: 350px;
@@ -24,11 +39,9 @@
     border-radius: 15px;
     text-align: center;
     position: relative;
-    font-family: Arial, sans-serif;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
 }
 
-/* Bouton de fermeture (X) */
 .close-btn {
     position: absolute;
     top: -15px;
@@ -36,8 +49,8 @@
     background: #666;
     color: white;
     border: none;
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     font-size: 20px;
     cursor: pointer;
@@ -46,32 +59,36 @@
     align-items: center;
 }
 
-/* Icône Telegram Bleue */
+.close-btn:hover {
+    background: #444;
+}
+
 .telegram-icon {
     background-color: #3b9cff;
-    width: 70px;
-    height: 70px;
+    width: 75px;
+    height: 75px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0 auto 20px auto;
+    box-shadow: 0 4px 10px rgba(59, 156, 255, 0.4);
 }
 
 .popup-content h2 {
     font-size: 20px;
-    color: #333; /* Si fond vert, changez en #fff */
+    color: #333333; 
     margin-bottom: 10px;
+    margin-top: 0;
 }
 
 .popup-content p {
     font-size: 14px;
-    color: #666; /* Si fond vert, changez en #f0f0f0 */
+    color: #666666; 
     margin-bottom: 25px;
     line-height: 1.5;
 }
 
-/* Bouton Follow Now */
 .follow-btn {
     display: block;
     background-color: #3b9cff;
@@ -82,4 +99,10 @@
     font-weight: bold;
     font-size: 16px;
     width: 100%;
+    box-sizing: border-box;
+    transition: background 0.3s;
+}
+
+.follow-btn:hover {
+    background-color: #2b7cd3;
 }
