@@ -26,11 +26,91 @@
         .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
         .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* ===== CLIGNOTANTS AJOUTÉS ===== */
+
+        /* 1. Point vert pulse "Mode Superviseur Actif" */
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.3); }
+        }
+        .live-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            background: #10b981;
+            border-radius: 50%;
+            margin-right: 5px;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+            animation: pulseDot 1.2s infinite;
+        }
+
+        /* 2. Badge "En Attente" clignote si > 0 */
+        @keyframes blinkPending {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+        .pending-active { animation: blinkPending 1.4s infinite; }
+
+        /* 3. Bouton actualiser qui tourne en auto si en attente */
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .refresh-auto i { animation: spinSlow 3s linear infinite; }
+
+        /* 4. Bandeau d'alerte dépôts en attente */
+        @keyframes alertBar {
+            0%, 100% { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); }
+            50% { background: rgba(245, 158, 11, 0.3); border-color: rgba(245, 158, 11, 0.8); }
+        }
+        .alert-pending {
+            animation: alertBar 1.8s infinite;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        /* 5. Message erreur PIN clignotant */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .error-shake { animation: shake 0.4s ease-in-out 2, blinkPending 0.8s 1; }
+
+        /* 6. Curseur clignotant sur PIN focus */
+        @keyframes cursorBlink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+        input:focus { box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3); }
+
+        /* 7. Pastille rouge notification sur l'onglet dépôts */
+        @keyframes ping {
+            0% { transform: scale(1); opacity: 1; }
+            75%, 100% { transform: scale(2); opacity: 0; }
+        }
+        .notif-dot {
+            position: relative;
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            margin-left: 6px;
+        }
+        .notif-dot::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: #ef4444;
+            border-radius: 50%;
+            animation: ping 1.4s infinite;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased pb-28">
 
-    <!-- ÉCRAN DE CONNEXION ADMIN (MOT DE PASSE admin221) -->
+    <!-- ÉCRAN DE CONNEXION ADMIN -->
     <div id="admin-login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4">
         <div class="rg-glass max-w-sm w-full p-6 rounded-3xl space-y-5 border border-amber-500/30 shadow-2xl text-center">
             <div class="w-14 h-14 rounded-2xl gold-gradient mx-auto flex items-center justify-center text-slate-950 text-2xl font-black shadow-lg">
@@ -41,9 +121,14 @@
                 <p class="text-xs text-slate-400 mt-1">Entrez le mot de passe administrateur</p>
             </div>
             <div>
-                <input type="password" id="admin-pin-input" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-center text-sm text-amber-500 font-bold focus:outline-none focus:border-amber-500" placeholder="admin221">
+                <input type="password" id="admin-pin-input" autocomplete="off"
+                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-center text-sm text-amber-500 font-bold focus:outline-none focus:border-amber-500"
+                    placeholder="••••••••">
             </div>
-            <button onclick="checkAdminPin()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-md">Se connecter au Dashboard →</button>
+            <button id="login-pin-btn" onclick="checkAdminPin()"
+                class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-md disabled:opacity-60 disabled:cursor-not-allowed">
+                <span id="login-pin-text">Se connecter au Dashboard →</span>
+            </button>
             <a href="index.html" class="block text-[11px] text-slate-500 hover:text-white pt-2">← Retourner sur le site principal</a>
         </div>
     </div>
@@ -56,18 +141,26 @@
             </div>
             <div>
                 <h1 class="font-black text-sm text-white">ADMINISTRATION RANGERS</h1>
-                <span class="text-[9px] text-emerald-400 font-bold"><i class="fa-solid fa-circle text-[7px] mr-1"></i> Mode Superviseur Actif</span>
+                <span class="text-[9px] text-emerald-400 font-bold flex items-center">
+                    <span class="live-dot"></span> Mode Superviseur Actif
+                </span>
             </div>
         </div>
-        <button onclick="logoutAdmin()" class="px-3 py-1.5 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-bold">Déconnexion</button>
+        <button onclick="logoutAdmin()" class="px-3 py-1.5 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-bold hover:bg-red-500/20 transition">Déconnexion</button>
     </header>
 
     <main class="max-w-2xl mx-auto w-full px-4 py-5 space-y-6">
-        
-        <!-- BANNIÈRE DE COUVERTURE & STATISTIQUES EN DIRECT -->
+
+        <!-- BANDEAU D'ALERTE (caché si 0 dépôt en attente) -->
+        <div id="pending-alert-bar" class="alert-pending rounded-2xl p-3 text-center text-[11px] font-bold text-amber-400 hidden">
+            <i class="fa-solid fa-bell mr-1"></i>
+            <span id="pending-alert-text">0 dépôt(s) en attente de validation</span>
+        </div>
+
+        <!-- BANNIÈRE DE COUVERTURE & STATISTIQUES -->
         <div class="rg-glass rounded-3xl overflow-hidden border border-amber-500/30 shadow-xl relative">
             <div class="h-32 w-full relative">
-                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80">
+                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80" alt="banner">
                 <div class="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-slate-950/50 to-transparent"></div>
                 <div class="absolute top-3 right-3 px-3 py-1 rounded-full bg-slate-950/80 border border-amber-500/40 text-[10px] font-bold text-amber-400">
                     MAMADOU GNING (755545742)
@@ -81,21 +174,27 @@
                     </div>
                     <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
                         <p class="text-[9px] uppercase text-slate-400 font-bold">Total Validé (FCFA)</p>
-                        <p class="text-sm font-black text-emerald-400 mt-1 truncate" id="stat-validated">0 FCFA</p>
+                        <p class="text-sm font-black text-emerald-400 mt-1 truncate" id="stat-validated">0 F</p>
                     </div>
                     <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
                         <p class="text-[9px] uppercase text-slate-400 font-bold">En Attente</p>
-                        <p class="text-base font-black text-amber-400 mt-1" id="stat-pending">0</p>
+                        <p id="stat-pending" class="text-base font-black text-amber-400 mt-1">0</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- GESTION DES DÉPÔTS EN ATTENTE -->
+        <!-- GESTION DES DÉPÔTS -->
         <div class="space-y-3">
             <div class="flex justify-between items-center px-1">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300">// Recharges en attente de validation</h3>
-                <button onclick="loadAdminData()" class="text-xs text-amber-500 font-bold"><i class="fa-solid fa-rotate-right"></i> Actualiser</button>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center">
+                    // Recharges en attente de validation
+                    <span id="pending-tab-notif" class="notif-dot hidden"></span>
+                </h3>
+                <button id="refresh-btn" onclick="loadAdminData(true)"
+                    class="text-xs text-amber-500 font-bold hover:text-amber-400 transition flex items-center">
+                    <i class="fa-solid fa-rotate-right mr-1"></i> Actualiser
+                </button>
             </div>
 
             <div id="admin-deposits-list" class="space-y-3">
@@ -112,54 +211,150 @@
         </div>
     </div>
 
-    <script>
-        // Vérification de la session admin au chargement
-        if(localStorage.getItem('rg_admin_logged') === 'true') {
-            document.getElementById('admin-login-screen').classList.add('hidden');
-            loadAdminData();
-        }
+    <!-- POPUP CONFIRMATION -->
+    <div id="confirm-popup" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
+        <div class="rg-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
+            <p id="confirm-text" class="text-xs text-white font-medium leading-relaxed">Confirmer ?</p>
+            <div class="flex gap-2">
+                <button onclick="confirmNo()" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-white font-bold text-xs">Annuler</button>
+                <button onclick="confirmYes()" class="flex-1 py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs">Confirmer</button>
+            </div>
+        </div>
+    </div>
 
-        function checkAdminPin() {
-            const pin = document.getElementById('admin-pin-input').value.trim();
-            if(pin === 'admin221' || pin === '2026') {
-                localStorage.setItem('rg_admin_logged', 'true');
+    <script>
+        // ====== ÉTAT ======
+        let isLogging = false;
+        let isLoading = false;
+        let autoRefreshInterval = null;
+        let pendingAction = null;
+
+        // ====== VÉRIFICATION SESSION ======
+        window.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('admin-pin-input');
+            if (input) {
+                input.focus();
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') { e.preventDefault(); checkAdminPin(); }
+                });
+            }
+
+            if (localStorage.getItem('rg_admin_logged') === 'true') {
                 document.getElementById('admin-login-screen').classList.add('hidden');
                 loadAdminData();
+                startAutoRefresh();
+            }
+
+            // Entrée/Echap pour popups
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' || e.key === 'Enter') {
+                    if (!document.getElementById('custom-alert').classList.contains('hidden')) {
+                        e.preventDefault(); closeAlert();
+                    } else if (!document.getElementById('confirm-popup').classList.contains('hidden')) {
+                        e.preventDefault(); confirmNo();
+                    }
+                }
+            });
+        });
+
+        // ====== LOGIN ======
+        function checkAdminPin() {
+            if (isLogging) return;
+            const input = document.getElementById('admin-pin-input');
+            const btn = document.getElementById('login-pin-btn');
+            const txt = document.getElementById('login-pin-text');
+            const pin = input.value.trim();
+
+            if (!pin) { shakeInput(input); return; }
+
+            if (pin === 'admin221' || pin === '2026') {
+                isLogging = true;
+                localStorage.setItem('rg_admin_logged', 'true');
+                btn.disabled = true;
+                txt.innerText = 'Connexion...';
+                setTimeout(() => {
+                    document.getElementById('admin-login-screen').classList.add('hidden');
+                    loadAdminData();
+                    startAutoRefresh();
+                }, 400);
             } else {
-                showAlert("Mot de passe administrateur incorrect (Utilisez admin221).");
+                shakeInput(input);
+                showAlert("Mot de passe administrateur incorrect.", true);
+                input.value = '';
+                input.focus();
             }
         }
 
+        function shakeInput(el) {
+            el.classList.add('error-shake');
+            setTimeout(() => el.classList.remove('error-shake'), 900);
+        }
+
         function logoutAdmin() {
+            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
             localStorage.removeItem('rg_admin_logged');
             location.reload();
         }
 
-        function loadAdminData() {
-            // 1. Calcul du total des utilisateurs (basé sur le stockage ou minimum 1)
-            let totalUsers = localStorage.getItem('rg_total_users') ? parseInt(localStorage.getItem('rg_total_users')) : 1;
-            if(localStorage.getItem('rg_user_phone')) { totalUsers = Math.max(totalUsers, 1); }
+        // ====== AUTO REFRESH ======
+        function startAutoRefresh() {
+            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+            autoRefreshInterval = setInterval(() => loadAdminData(), 10000);
+        }
+
+        // ====== CHARGEMENT DONNÉES ======
+        function loadAdminData(manual = false) {
+            if (isLoading && !manual) return;
+            isLoading = true;
+
+            // 1. Utilisateurs
+            let totalUsers = parseInt(localStorage.getItem('rg_total_users') || '1');
+            if (localStorage.getItem('rg_user_phone')) totalUsers = Math.max(totalUsers, 1);
             document.getElementById('stat-users').innerText = totalUsers;
 
-            // 2. Total validé des dépôts
+            // 2. Total validé
             let totalValidated = parseFloat(localStorage.getItem('rg_total_validated_deposits') || '0');
-            document.getElementById('stat-validated').innerText = totalValidated.toLocaleString() + ' F';
+            document.getElementById('stat-validated').innerText = totalValidated.toLocaleString('fr-FR') + ' F';
 
             // 3. Recharges en attente
             let pendingDeposits = JSON.parse(localStorage.getItem('rg_pending_deposits') || '[]');
             const container = document.getElementById('admin-deposits-list');
-            document.getElementById('stat-pending').innerText = pendingDeposits.length;
+            const statPending = document.getElementById('stat-pending');
+            const alertBar = document.getElementById('pending-alert-bar');
+            const alertText = document.getElementById('pending-alert-text');
+            const notifDot = document.getElementById('pending-tab-notif');
+            const refreshBtn = document.getElementById('refresh-btn');
 
-            if(pendingDeposits.length === 0) {
+            statPending.innerText = pendingDeposits.length;
+
+            // === CLIGNOTANTS DYNAMIQUES ===
+            if (pendingDeposits.length > 0) {
+                statPending.classList.add('pending-active');
+                alertBar.classList.remove('hidden');
+                alertText.innerText = `${pendingDeposits.length} dépôt(s) en attente de validation`;
+                notifDot.classList.remove('hidden');
+                refreshBtn.classList.add('refresh-auto');
+            } else {
+                statPending.classList.remove('pending-active');
+                alertBar.classList.add('hidden');
+                notifDot.classList.add('hidden');
+                refreshBtn.classList.remove('refresh-auto');
+            }
+
+            // Liste
+            if (pendingDeposits.length === 0) {
                 container.innerHTML = `
                     <div class="rg-glass p-6 rounded-3xl text-center text-slate-500 text-xs border border-slate-800">
+                        <i class="fa-solid fa-inbox text-2xl mb-2 opacity-40"></i><br>
                         Aucune demande de recharge en attente pour le moment.
                     </div>`;
+                isLoading = false;
                 return;
             }
 
             container.innerHTML = '';
             pendingDeposits.forEach((dep, index) => {
+                const amt = typeof dep.amount === 'number' ? dep.amount : parseFloat(dep.amount || 0);
                 container.innerHTML += `
                     <div class="rg-glass p-5 rounded-3xl border border-amber-500/30 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-xl">
                         <div class="space-y-1">
@@ -167,36 +362,72 @@
                                 <span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-black border border-amber-500/30">${dep.operator || 'Mobile'} - ${dep.country || 'Sénégal'}</span>
                                 <span class="text-[10px] text-slate-400">${dep.date || 'Aujourd\'hui'}</span>
                             </div>
-                            <h4 class="text-lg font-black text-white mt-1">FCFA ${dep.amount.toLocaleString()}</h4>
-                            <p class="text-xs text-slate-300">Réf / Transaction : <span class="font-mono text-amber-400 font-bold">${dep.txId}</span></p>
+                            <h4 class="text-lg font-black text-white mt-1">${amt.toLocaleString('fr-FR')} FCFA</h4>
+                            <p class="text-xs text-slate-300">Réf : <span class="font-mono text-amber-400 font-bold">${dep.txId || 'N/A'}</span></p>
                         </div>
                         <div class="flex items-center space-x-2 w-full md:w-auto">
-                            <button onclick="approveDeposit(${index})" class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs shadow transition">Valider</button>
-                            <button onclick="rejectDeposit(${index})" class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 font-bold text-xs transition">Rejeter</button>
+                            <button onclick="askApprove(${index})" class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs shadow transition">Valider</button>
+                            <button onclick="askReject(${index})" class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 font-bold text-xs transition">Rejeter</button>
                         </div>
                     </div>`;
             });
+
+            isLoading = false;
+            if (manual) showAlert("Liste actualisée ✓");
         }
 
+        // ====== CONFIRMATION ======
+        function askApprove(index) {
+            let pendingDeposits = JSON.parse(localStorage.getItem('rg_pending_deposits') || '[]');
+            const dep = pendingDeposits[index];
+            if (!dep) return;
+            pendingAction = { type: 'approve', index };
+            document.getElementById('confirm-text').innerText =
+                `Valider le dépôt de ${parseFloat(dep.amount).toLocaleString('fr-FR')} FCFA ?\n\nRéf : ${dep.txId || 'N/A'}`;
+            document.getElementById('confirm-popup').classList.remove('hidden');
+        }
+
+        function askReject(index) {
+            pendingAction = { type: 'reject', index };
+            document.getElementById('confirm-text').innerText = "Rejeter cette demande de recharge ? Cette action est irréversible.";
+            document.getElementById('confirm-popup').classList.remove('hidden');
+        }
+
+        function confirmNo() {
+            pendingAction = null;
+            document.getElementById('confirm-popup').classList.add('hidden');
+        }
+
+        function confirmYes() {
+            document.getElementById('confirm-popup').classList.add('hidden');
+            if (!pendingAction) return;
+            const { type, index } = pendingAction;
+            pendingAction = null;
+
+            if (type === 'approve') approveDeposit(index);
+            else rejectDeposit(index);
+        }
+
+        // ====== VALIDATION / REJET ======
         function approveDeposit(index) {
             let pendingDeposits = JSON.parse(localStorage.getItem('rg_pending_deposits') || '[]');
             let dep = pendingDeposits[index];
+            if (!dep) return;
 
-            // Créditer le solde de recharge de l'utilisateur
-            let currentRecharge = parseFloat(localStorage.getItem('rg_recharge') || '0.00');
-            currentRecharge += dep.amount;
-            localStorage.setItem('rg_recharge', currentRecharge);
+            const amt = typeof dep.amount === 'number' ? dep.amount : parseFloat(dep.amount || 0);
 
-            // Mettre à jour le montant total validé global sur le dashboard admin
+            let currentRecharge = parseFloat(localStorage.getItem('rg_recharge') || '0');
+            currentRecharge += amt;
+            localStorage.setItem('rg_recharge', currentRecharge.toFixed(2));
+
             let totalValidated = parseFloat(localStorage.getItem('rg_total_validated_deposits') || '0');
-            totalValidated += dep.amount;
-            localStorage.setItem('rg_total_validated_deposits', totalValidated);
+            totalValidated += amt;
+            localStorage.setItem('rg_total_validated_deposits', totalValidated.toFixed(2));
 
-            // Supprimer de la liste des en attente
             pendingDeposits.splice(index, 1);
             localStorage.setItem('rg_pending_deposits', JSON.stringify(pendingDeposits));
 
-            showAlert(`Succès : Dépôt de ${dep.amount.toLocaleString()} FCFA validé et crédité !`);
+            showAlert(`✅ Succès : Dépôt de ${amt.toLocaleString('fr-FR')} FCFA validé et crédité !`);
             loadAdminData();
         }
 
@@ -204,17 +435,20 @@
             let pendingDeposits = JSON.parse(localStorage.getItem('rg_pending_deposits') || '[]');
             pendingDeposits.splice(index, 1);
             localStorage.setItem('rg_pending_deposits', JSON.stringify(pendingDeposits));
-
-            showAlert("Demande de recharge rejetée.");
+            showAlert("❌ Demande de recharge rejetée.");
             loadAdminData();
         }
 
-        function showAlert(msg) {
-            document.getElementById('alert-text').innerText = msg;
+        // ====== ALERTES ======
+        function showAlert(msg, isError = false) {
+            const t = document.getElementById('alert-text');
+            t.innerText = msg;
+            t.classList.toggle('error-shake', isError);
             document.getElementById('custom-alert').classList.remove('hidden');
         }
         function closeAlert() {
             document.getElementById('custom-alert').classList.add('hidden');
+            document.getElementById('alert-text').classList.remove('error-shake');
         }
     </script>
 </body>
