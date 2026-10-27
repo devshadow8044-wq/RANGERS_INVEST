@@ -3,347 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RANGERS (RG) - Plateforme d'Investissement</title>
+    <title>RANGERS (RG) - Accueil</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: { colors: {
-                rgBg: '#030509', rgCard: '#0d111a', rgGold: '#f59e0b', rgBorder: '#1e2638'
-            }}}
-        }
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { rgBg: '#030509', rgCard: '#0d111a', rgGold: '#f59e0b', rgBorder: '#1e2638' } } } }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
         .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
         .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        
+        /* --- CLIGNOTANTS --- */
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        @keyframes pulseGold { 0%, 100% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); } 50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.8); } }
+        .btn-pulse { animation: pulseGold 2s infinite; }
+        
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* ===== CLIGNOTANTS AJOUTÉS ===== */
-
-        /* Ticker marquee (déjà en Tailwind, on garde) */
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-
-        /* Badge VIP pulse */
-        @keyframes vipPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.3); opacity: 1; }
-            50% { box-shadow: 0 0 8px 1px rgba(245, 158, 11, 0.7); opacity: 0.85; }
-        }
-        .vip-blink { animation: vipPulse 2s infinite; }
-
-        /* Bonus bloqué : clignote ambré */
-        @keyframes bonusLocked {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .bonus-locked { animation: bonusLocked 1.6s infinite; }
-
-        /* Bonus débloqué : clignote vert */
-        @keyframes bonusUnlocked {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            50% { box-shadow: 0 0 10px 2px rgba(16, 185, 129, 0.7); }
-        }
-        .bonus-unlocked { animation: bonusUnlocked 1.8s infinite; }
-
-        /* Bouton Dépôt pulse */
-        @keyframes goldPulse {
-            0%, 100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
-            50% { box-shadow: 0 0 22px rgba(245, 158, 11, 0.9); }
-        }
-        .depot-pulse { animation: goldPulse 2s infinite; }
-
-        /* Cloche notification pulse */
-        @keyframes bellPulse {
-            0%, 100% { transform: rotate(0); }
-            10%, 30% { transform: rotate(-10deg); }
-            20%, 40% { transform: rotate(10deg); }
-            50%, 100% { transform: rotate(0); }
-        }
-        .bell-pulse { animation: bellPulse 3s ease-in-out infinite; }
-
-        /* Badge "VIP X" sur produit pulse */
-        @keyframes vipProductBlink {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-            50% { opacity: 0.75; box-shadow: 0 0 8px 1px rgba(245, 158, 11, 0.6); }
-        }
-        .vip-product-blink { animation: vipProductBlink 1.8s infinite; }
-
-        /* Bouton souscrire pulse */
-        @keyframes subscribePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.04); }
-        }
-        .subscribe-pulse { animation: subscribePulse 1.6s ease infinite; }
-
-        /* Solde total halo */
-        @keyframes totalHalo {
-            0%, 100% { text-shadow: 0 0 0 rgba(245, 158, 11, 0); }
-            50% { text-shadow: 0 0 10px rgba(245, 158, 11, 0.6); }
-        }
-        .total-halo { animation: totalHalo 2.4s infinite; }
-
-        /* Alerte erreur shake */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        .error-shake { animation: shake 0.4s ease-in-out 2; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased pb-28">
-
-    <!-- TICKER -->
-    <div class="bg-amber-500/10 border-b border-amber-500/20 text-amber-400 text-[11px] py-1.5 px-4 overflow-hidden whitespace-nowrap flex items-center">
-        <i class="fa-solid fa-shield-halved mr-2 text-amber-500"></i>
-        <div class="inline-block animate-[marquee_25s_linear_infinite]">
-            <span>RANGERS (RG) SÉCURITÉ OFFICIELLE • Validation des transactions en temps réel • Portefeuille multi-devises XOF/USDT actif •</span>
-        </div>
-    </div>
+<body class="min-h-screen flex flex-col antialiased pb-24">
 
     <!-- HEADER -->
-    <header class="rg-glass sticky top-0 z-40 px-4 py-3 border-b border-amber-500/10 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 rounded-xl gold-gradient flex items-center justify-center text-slate-950 font-black shadow-md">
-                <i class="fa-solid fa-chart-line text-sm"></i>
-            </div>
-            <div>
-                <h1 class="font-black text-sm tracking-wider text-white">RANGERS (RG)</h1>
-                <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[9px] font-bold border border-amber-500/30 vip-blink" id="user-vip-badge">VIP 0</span>
-            </div>
-        </div>
+    <header class="rg-glass sticky top-0 z-40 px-4 py-3 flex justify-between items-center border-b border-amber-500/10">
         <div class="flex items-center space-x-2">
-            <button onclick="showAlert('Aucun message système non lu.')" class="w-9 h-9 rounded-xl rg-glass text-slate-300 flex items-center justify-center hover:text-white border border-slate-800">
-                <i class="fa-regular fa-bell text-xs bell-pulse"></i>
-            </button>
-            <a href="compte.html" class="w-9 h-9 rounded-xl rg-glass text-amber-500 flex items-center justify-center hover:text-white border border-slate-800"><i class="fa-solid fa-user text-xs"></i></a>
+            <div class="w-8 h-8 rounded-xl gold-gradient flex items-center justify-center text-slate-950 font-black">
+                <i class="fa-solid fa-chart-line text-xs"></i>
+            </div>
+            <h1 class="font-black text-sm text-white tracking-wider">RANGERS</h1>
+        </div>
+        <div class="flex items-center space-x-3">
+            <i class="fa-regular fa-bell text-slate-400 text-lg"></i>
+            <a href="compte.html" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700">
+                <i class="fa-solid fa-user text-xs text-amber-500"></i>
+            </a>
         </div>
     </header>
 
-    <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-5">
+    <!-- BANNIÈRE -->
+    <div class="h-40 w-full relative">
+        <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-90" alt="Banner">
+        <div class="absolute inset-0 bg-gradient-to-t from-[#030509] to-transparent"></div>
+    </div>
+
+    <main class="max-w-lg mx-auto w-full px-3 -mt-8 space-y-4 relative z-10">
+        
+        <!-- 4 ACTIONS RAPIDES -->
+        <div class="rg-glass p-4 rounded-2xl border border-slate-800 flex justify-between text-center shadow-xl">
+            <a href="depot.html" class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-slate-950 flex items-center justify-center mb-1 btn-pulse">
+                    <i class="fa-solid fa-dollar-sign text-amber-500"></i>
+                </div>
+                <span class="text-[10px] font-bold text-white">Recharge</span>
+            </a>
+            <a href="retrait.html" class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-slate-950 flex items-center justify-center mb-1">
+                    <i class="fa-solid fa-money-bill-transfer text-emerald-500"></i>
+                </div>
+                <span class="text-[10px] font-bold text-white">Retrait</span>
+            </a>
+            <button onclick="showAlert('Service client disponible 24/7')" class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-slate-950 flex items-center justify-center mb-1">
+                    <i class="fa-solid fa-comments text-cyan-500"></i>
+                </div>
+                <span class="text-[10px] font-bold text-white">Aide</span>
+            </button>
+            <button onclick="showAlert('Pointage effectué ! Revenus ajoutés.')" class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-slate-950 flex items-center justify-center mb-1">
+                    <i class="fa-solid fa-calendar-check text-purple-500"></i>
+                </div>
+                <span class="text-[10px] font-bold text-white">Pointage</span>
+            </button>
+        </div>
+
+        <!-- TICKER SCROLLING -->
+        <div class="rg-glass p-3 rounded-2xl border border-slate-800 flex items-center overflow-hidden text-xs whitespace-nowrap">
+            <i class="fa-solid fa-bell text-emerald-500 mr-2"></i>
+            <div class="inline-block animate-[marquee_15s_linear_infinite] text-slate-400">
+                <span>*****3175 a rechargé 2,000 FCFA • *****4371 a rechargé 5,000 FCFA • *****1234 a investi dans VIP 3 •</span>
+            </div>
+        </div>
 
         <!-- SOLDES -->
-        <div class="rg-glass p-6 rounded-3xl relative overflow-hidden shadow-2xl border-amber-500/30">
-            <div class="flex justify-between items-start mb-4">
-                <div>
-                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold"><i class="fa-solid fa-wallet text-amber-500 mr-1"></i> Actifs totaux</p>
-                    <h2 class="text-3xl font-black text-white mt-1 total-halo">FCFA <span id="total-balance">1,000.00</span></h2>
-                </div>
-                <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold border border-emerald-500/30 bonus-locked" id="bonus-status-tag">Bonus bloqué</span>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="rg-glass p-4 rounded-2xl border border-slate-800 text-center">
+                <p class="text-xs font-bold text-slate-400 mb-1">Solde du compte</p>
+                <p class="text-lg font-black text-amber-500">FCFA <span id="home-balance">0</span></p>
             </div>
-
-            <div class="grid grid-cols-3 gap-2 pt-3 border-t border-slate-800 text-center mb-5">
-                <div>
-                    <p class="text-[9px] text-slate-400 uppercase font-bold">Recharge</p>
-                    <p class="text-xs font-black text-amber-400 mt-0.5">FCFA <span id="recharge-balance">0.00</span></p>
-                </div>
-                <div>
-                    <p class="text-[9px] text-slate-400 uppercase font-bold">Retirable</p>
-                    <p class="text-xs font-black text-emerald-400 mt-0.5">FCFA <span id="retirable-balance">1,000.00</span></p>
-                </div>
-                <div>
-                    <p class="text-[9px] text-slate-400 uppercase font-bold">Revenus</p>
-                    <p class="text-xs font-black text-cyan-400 mt-0.5">FCFA <span id="revenues-balance">0.00</span></p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <a href="depot.html" class="py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs text-center shadow-lg flex items-center justify-center space-x-2 transition hover:opacity-90 depot-pulse">
-                    <i class="fa-solid fa-arrow-down-long"></i><span>Dépôt</span>
-                </a>
-                <a href="retrait.html" class="py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs text-center border border-slate-800 flex items-center justify-center space-x-2 transition">
-                    <i class="fa-solid fa-arrow-up-long"></i><span>Retirer</span>
-                </a>
+            <div class="rg-glass p-4 rounded-2xl border border-slate-800 text-center">
+                <p class="text-xs font-bold text-slate-400 mb-1">Revenus cumulés</p>
+                <p class="text-lg font-black text-emerald-400">FCFA <span id="home-revenue">0</span></p>
             </div>
         </div>
 
-        <!-- 4 ACTIONS -->
-        <div class="grid grid-cols-4 gap-2 text-center">
-            <a href="depot.html" class="flex flex-col items-center justify-center p-3 rounded-2xl rg-glass hover:border-amber-500/40 transition">
-                <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-wallet"></i></div>
-                <span class="text-[10px] font-semibold text-slate-300">Dépôt</span>
-            </a>
-            <a href="retrait.html" class="flex flex-col items-center justify-center p-3 rounded-2xl rg-glass hover:border-amber-500/40 transition">
-                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-money-bill-transfer"></i></div>
-                <span class="text-[10px] font-semibold text-slate-300">Retrait</span>
-            </a>
-            <a href="equipe.html" class="flex flex-col items-center justify-center p-3 rounded-2xl rg-glass hover:border-amber-500/40 transition">
-                <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-users"></i></div>
-                <span class="text-[10px] font-semibold text-slate-300">Équipe</span>
-            </a>
-            <a href="compte.html" class="flex flex-col items-center justify-center p-3 rounded-2xl rg-glass hover:border-amber-500/40 transition">
-                <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-1 text-sm"><i class="fa-solid fa-user-gear"></i></div>
-                <span class="text-[10px] font-semibold text-slate-300">Compte</span>
-            </a>
-        </div>
-
-        <!-- CATALOGUE -->
-        <div class="space-y-3">
-            <h3 class="text-sm font-black text-white tracking-wide">Fonds d'Investissement RANGERS (RG)</h3>
-            <div id="products-list" class="space-y-4"></div>
+        <!-- IMPLANTATIONS -->
+        <div class="text-center pt-4">
+            <h2 class="text-base font-black text-amber-500 mb-1">Implantations</h2>
+            <p class="text-xs text-slate-400 mb-3">Notre ville</p>
+            <div class="grid grid-cols-4 gap-2">
+                <img src="https://files.catbox.moe/499w19.jpg" class="w-full h-16 object-cover rounded-lg">
+                <img src="https://files.catbox.moe/78dszw.jpg" class="w-full h-16 object-cover rounded-lg">
+                <img src="https://files.catbox.moe/tn5jfj.jpg" class="w-full h-16 object-cover rounded-lg">
+                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-16 object-cover rounded-lg">
+            </div>
         </div>
     </main>
 
-    <!-- NAV -->
-    <nav class="fixed bottom-3 left-4 right-4 rg-glass rounded-3xl p-2 px-6 flex justify-between items-center z-40 border border-amber-500/20 shadow-2xl max-w-lg mx-auto">
-        <a href="index.html" class="flex flex-col items-center text-amber-500 transition"><i class="fa-solid fa-house text-base"></i><span class="text-[9px] mt-1 font-bold">Accueil</span></a>
-        <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-layer-group text-base"></i><span class="text-[9px] mt-1 font-bold">Invest</span></a>
-        <a href="equipe.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-network-wired text-base"></i><span class="text-[9px] mt-1 font-bold">Équipe</span></a>
-        <a href="compte.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-user text-base"></i><span class="text-[9px] mt-1 font-bold">Compte</span></a>
+    <!-- NAVIGATION BAS -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-slate-950 border-t border-slate-800 flex justify-around py-3 z-40">
+        <a href="index.html" class="flex flex-col items-center text-amber-500"><i class="fa-solid fa-house text-lg"></i><span class="text-[10px] font-bold mt-1">Accueil</span></a>
+        <a href="produits.html" class="flex flex-col items-center text-slate-500 hover:text-white"><i class="fa-solid fa-bicycle text-lg"></i><span class="text-[10px] font-bold mt-1">Produit</span></a>
+        <a href="equipe.html" class="flex flex-col items-center text-slate-500 hover:text-white"><i class="fa-solid fa-users text-lg"></i><span class="text-[10px] font-bold mt-1">Équipe</span></a>
+        <a href="compte.html" class="flex flex-col items-center text-slate-500 hover:text-white"><i class="fa-solid fa-user text-lg"></i><span class="text-[10px] font-bold mt-1">Mon compte</span></a>
     </nav>
 
-    <!-- POPUP ALERTE -->
-    <div id="custom-alert" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
-        <div class="rg-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
-            <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-500 mx-auto flex items-center justify-center text-xl font-bold"><i class="fa-solid fa-triangle-exclamation"></i></div>
-            <p id="alert-text" class="text-xs text-white font-medium leading-relaxed whitespace-pre-line">Message</p>
-            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-md">Compris</button>
-        </div>
-    </div>
-
     <script>
-        // ==== SÉCURITÉ ====
-        if (localStorage.getItem('rg_logged_in') !== 'true') {
-            document.body.style.display = 'none';
-            location.replace('login.html');
+        // INITIALISATION
+        if(localStorage.getItem('rg_recharge') === null) {
+            localStorage.setItem('rg_recharge', '1000.00');
+            localStorage.setItem('rg_retirable', '0.00');
+            localStorage.setItem('rg_revenue', '1000.00');
         }
+        document.getElementById('home-balance').innerText = parseFloat(localStorage.getItem('rg_recharge')).toLocaleString();
+        document.getElementById('home-revenue').innerText = parseFloat(localStorage.getItem('rg_revenue')).toLocaleString();
 
-        // ==== INIT DONNÉES ====
-        if (localStorage.getItem('rg_recharge') === null) {
-            localStorage.setItem('rg_recharge', '0.00');
-            localStorage.setItem('rg_retirable', '1000.00');
-            localStorage.setItem('rg_has_invested', 'false');
-        }
-
-        let rechargeBal = parseFloat(localStorage.getItem('rg_recharge') || '0') || 0;
-        let retirableBal = parseFloat(localStorage.getItem('rg_retirable') || '0') || 0;
-        let totalBal = rechargeBal + retirableBal;
-        let hasInvested = localStorage.getItem('rg_has_invested') === 'true';
-
-        document.getElementById('total-balance').innerText = totalBal.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        document.getElementById('recharge-balance').innerText = rechargeBal.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        document.getElementById('retirable-balance').innerText = retirableBal.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-        // ==== BADGE VIP + BONUS (CLIGNOTANTS dynamiques) ====
-        const badgeVip = document.getElementById('user-vip-badge');
-        const bonusTag = document.getElementById('bonus-status-tag');
-
-        if (hasInvested) {
-            badgeVip.innerText = 'VIP 1';
-            bonusTag.innerText = '✓ Bonus débloqué';
-            bonusTag.className = 'px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold border border-emerald-500/30 bonus-unlocked';
-        } else {
-            badgeVip.innerText = 'VIP 0';
-            bonusTag.innerText = '🔒 Bonus bloqué';
-            bonusTag.className = 'px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400 text-[10px] font-bold border border-amber-500/30 bonus-locked';
-        }
-
-        // ==== PRODUITS ====
-        const catboxImages = [
-            "https://files.catbox.moe/9kbqzl.jpg",
-            "https://files.catbox.moe/499w19.jpg",
-            "https://files.catbox.moe/78dszw.jpg",
-            "https://files.catbox.moe/tn5jfj.jpg"
-        ];
-
-        let products = [];
-        for (let i = 1; i <= 4; i++) {
-            let price = i * 5000;
-            products.push({
-                id: i,
-                name: `Fonds RANGERS #${i}`,
-                price: price,
-                daily: Math.round(price * 0.25),
-                total: Math.round(price * 0.25 * 180),
-                duration: 180,
-                image: catboxImages[(i - 1) % catboxImages.length]
-            });
-        }
-
-        const list = document.getElementById('products-list');
-        products.forEach(p => {
-            list.innerHTML += `
-                <div class="rg-glass rounded-3xl overflow-hidden border border-slate-800 shadow-xl">
-                    <div class="h-32 w-full relative">
-                        <img src="${p.image}" class="w-full h-full object-cover" alt="${p.name}">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent"></div>
-                        <div class="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-slate-950/80 border border-amber-500/30 text-[9px] font-bold text-amber-500 vip-product-blink">VIP ${p.id}</div>
-                        <div class="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-slate-950/80 border border-slate-700 text-[9px] font-bold text-slate-300">${p.duration} Jours</div>
-                        <div class="absolute bottom-3 left-4"><span class="text-sm font-black text-white">${p.name}</span></div>
-                    </div>
-                    <div class="p-4 space-y-3">
-                        <div class="grid grid-cols-2 gap-2 text-center bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
-                            <div><p class="text-[9px] uppercase text-slate-400 font-bold">Revenu quotidien</p><p class="text-xs font-black text-emerald-400">FCFA ${p.daily.toLocaleString('fr-FR')}</p></div>
-                            <div><p class="text-[9px] uppercase text-slate-400 font-bold">Rendement total</p><p class="text-xs font-black text-amber-500">FCFA ${p.total.toLocaleString('fr-FR')}</p></div>
-                        </div>
-                        <div class="flex items-center justify-between pt-1">
-                            <span class="text-sm font-black text-white">FCFA ${p.price.toLocaleString('fr-FR')}</span>
-                            <button onclick="buyProduct(${p.price}, '${p.name}')" class="px-5 py-2.5 rounded-xl gold-gradient text-slate-950 text-xs font-black shadow-md hover:opacity-90 subscribe-pulse">Souscrire</button>
-                        </div>
-                    </div>
-                </div>`;
-        });
-
-        // ==== POPUP ====
-        function showAlert(msg) {
-            const t = document.getElementById('alert-text');
-            t.innerText = msg;
-            document.getElementById('custom-alert').classList.remove('hidden');
-        }
-        function closeAlert() {
-            document.getElementById('custom-alert').classList.add('hidden');
-        }
-
-        // ==== ACHAT ====
-        function buyProduct(price, name) {
-            let totalAvailable = rechargeBal + retirableBal;
-            if (totalAvailable < price) {
-                showAlert(`⛔ Erreur financière :\n\nSolde disponible : ${totalAvailable.toLocaleString('fr-FR')} FCFA\nRequis : ${price.toLocaleString('fr-FR')} FCFA\n\nVeuillez effectuer un dépôt.`);
-                return;
-            }
-
-            if (!confirm(`Confirmer l'investissement dans "${name}" pour ${price.toLocaleString('fr-FR')} FCFA ?`)) return;
-
-            if (rechargeBal >= price) {
-                rechargeBal -= price;
-            } else {
-                let diff = price - rechargeBal;
-                rechargeBal = 0;
-                retirableBal -= diff;
-            }
-
-            localStorage.setItem('rg_recharge', rechargeBal.toFixed(2));
-            localStorage.setItem('rg_retirable', retirableBal.toFixed(2));
-            localStorage.setItem('rg_has_invested', 'true');
-
-            // Historique investissements
-            const investments = JSON.parse(localStorage.getItem('rg_investments') || '[]');
-            investments.push({ name, price, date: new Date().toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) });
-            localStorage.setItem('rg_investments', JSON.stringify(investments));
-
-            showAlert(`✅ Investissement validé dans ${name} !\n\nVotre bonus d'inscription est désormais débloqué.`);
-            setTimeout(() => location.reload(), 2000);
-        }
-
-        // ==== EVENTS ====
-        document.addEventListener('DOMContentLoaded', () => {
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' || e.key === 'Enter') {
-                    if (!document.getElementById('custom-alert').classList.contains('hidden')) {
-                        e.preventDefault(); closeAlert();
-                    }
-                }
-            });
-            document.getElementById('custom-alert').addEventListener('click', (e) => {
-                if (e.target.id === 'custom-alert') closeAlert();
-            });
-        });
+        function showAlert(msg) { alert(msg); }
     </script>
 </body>
 </html>
