@@ -1,20 +1,33 @@
+/* RANGERS (RG) - Feuille de style globale
+   Ce fichier centralise les styles partagés.
+   Les styles spécifiques restent inline dans chaque page. */
+
 body {
-    background-color: #05070d;
-    color: #f8fafc;
+    background-color: #030509;
+    color: #f1f5f9;
     font-family: 'Inter', sans-serif;
 }
+
 .olam-glass {
     background: rgba(13, 17, 28, 0.92);
     backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.07);
 }
+
 .olam-gradient {
     background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899);
 }
+
 .olam-gradient-text {
     background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Reset utile */
+* { -webkit-tap-highlight-color: transparent; }
+button, a { -webkit-user-select: none; user-select: none; }
+input, select, textarea { font-family: inherit; }
