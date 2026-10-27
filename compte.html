@@ -1,425 +1,104 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RANGERS (RG) - Mon Compte & Profil</title>
+    <title>RANGERS - Mon Compte</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: { colors: {
-                rgBg: '#030509', rgCard: '#0d111a', rgGold: '#f59e0b', rgBorder: '#1e2638'
-            }}}
-        }
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
-        .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
-        .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
-            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.5); }
-        }
-        .glow-effect { animation: pulseGlow 3s infinite; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-
-        /* ===== CLIGNOTANTS AJOUTÉS ===== */
-
-        /* 1. Badge VIP ACTIF - pulse ambré */
-        @keyframes vipPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); opacity: 1; }
-            50% { box-shadow: 0 0 12px 2px rgba(245, 158, 11, 0.7); opacity: 0.85; }
-        }
-        .vip-blink { animation: vipPulse 2s infinite; }
-
-        /* 2. Badge Vérifié - pulse vert doux */
-        @keyframes verifiedPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-        .verified-pulse { animation: verifiedPulse 2.2s infinite; }
-
-        /* 3. Statut "En attente" clignote */
-        @keyframes blinkPending {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-        .pending-blink { animation: blinkPending 1.4s infinite; }
-
-        /* 4. Solde Recharge pulse si pending */
-        @keyframes balancePulse {
-            0%, 100% { text-shadow: 0 0 0 rgba(245, 158, 11, 0); }
-            50% { text-shadow: 0 0 10px rgba(245, 158, 11, 0.8); }
-        }
-        .balance-pulse { animation: balancePulse 1.6s infinite; }
-
-        /* 5. "Validation Admin" clignote */
-        @keyframes adminBlink {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.05); }
-        }
-        .admin-blink { animation: adminBlink 1.6s infinite; display: inline-block; }
-
-        /* 6. Point rouge notif sur nav */
-        @keyframes ping {
-            0% { transform: scale(1); opacity: 1; }
-            75%, 100% { transform: scale(2.2); opacity: 0; }
-        }
-        .nav-notif {
-            position: absolute;
-            top: 2px; right: 14px;
-            width: 8px; height: 8px;
-            background: #ef4444;
-            border-radius: 50%;
-        }
-        .nav-notif::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: #ef4444;
-            border-radius: 50%;
-            animation: ping 1.4s infinite;
-        }
-
-        /* 7. Animation montant change */
-        @keyframes valueFlash {
-            0%, 100% { color: inherit; }
-            50% { color: #fbbf24; transform: scale(1.08); }
-        }
-        .value-flash { animation: valueFlash 0.8s ease; }
-
-        /* 8. Bouton logout hover shake subtile */
-        @keyframes softShake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-2px); }
-            75% { transform: translateX(2px); }
-        }
-        .logout-confirm-warn { animation: softShake 0.5s; }
+        body { background-color: #f8f9fa; color: #111827; font-family: 'Inter', sans-serif; }
+        .text-brand { color: #0db14b; }
+        .bg-brand { background-color: #0db14b; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased pb-28">
+<body class="min-h-screen flex flex-col pb-20">
 
-    <!-- HEADER -->
-    <header class="rg-glass sticky top-0 z-40 px-4 py-3 border-b border-amber-500/10 flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-            <a href="index.html" class="w-8 h-8 rounded-xl rg-glass flex items-center justify-center text-amber-500 hover:text-white border border-slate-800"><i class="fa-solid fa-arrow-left text-xs"></i></a>
-            <span class="font-black text-sm text-white tracking-wide">RANGERS (RG) - Espace Membre</span>
+    <main class="max-w-lg mx-auto w-full p-4 space-y-4 pt-6">
+        
+        <!-- SOLDES -->
+        <div class="bg-white rounded-xl shadow-sm p-4 flex divide-x divide-gray-200 text-center border border-gray-100">
+            <div class="w-1/2">
+                <p class="text-lg font-bold text-brand mb-1">FCFA <span id="balance">1,000</span></p>
+                <p class="text-xs text-gray-500">Solde du compte</p>
+            </div>
+            <div class="w-1/2">
+                <p class="text-lg font-bold text-brand mb-1">FCFA <span id="revenue">0</span></p>
+                <p class="text-xs text-gray-500">Revenus cumulés</p>
+            </div>
         </div>
-        <div class="flex items-center space-x-1 text-amber-400 text-xs font-bold">
-            <i class="fa-solid fa-shield-halved"></i><span>Sécurisé</span>
-        </div>
-    </header>
 
-    <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-5">
-
-        <!-- PROFIL UTILISATEUR -->
-        <div class="rg-glass rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl relative glow-effect">
-            <div class="h-36 w-full relative">
-                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80" alt="banner">
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-slate-950/40 to-transparent"></div>
-                <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-slate-950/80 border border-amber-500/40 text-[10px] font-bold text-amber-400 vip-blink">
-                    <i class="fa-solid fa-crown mr-1"></i> VIP ACTIF
+        <!-- 4 ACTIONS -->
+        <div class="bg-white rounded-xl shadow-sm p-4 flex justify-between text-center border border-gray-100">
+            <a href="depot.html" class="flex flex-col items-center">
+                <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2">
+                    <i class="fa-solid fa-dollar-sign text-white text-lg"></i>
                 </div>
-            </div>
-
-            <div class="p-6 pt-0 relative -mt-10 space-y-4">
-                <div class="flex items-end justify-between">
-                    <div class="w-20 h-20 rounded-2xl gold-gradient p-1 shadow-2xl">
-                        <div class="w-full h-full bg-slate-950 rounded-xl flex items-center justify-center text-amber-500 text-2xl font-black">
-                            <i class="fa-solid fa-user-shield"></i>
-                        </div>
-                    </div>
-                    <span class="px-3 py-1 rounded-xl bg-emerald-500/15 text-emerald-400 text-xs font-bold border border-emerald-500/30 verified-pulse">
-                        <i class="fa-solid fa-circle-check mr-1"></i>Vérifié & Certifié
-                    </span>
+                <span class="text-xs font-medium text-gray-700">Recharge</span>
+            </a>
+            <a href="retrait.html" class="flex flex-col items-center">
+                <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2">
+                    <i class="fa-solid fa-money-bill-transfer text-white text-lg"></i>
                 </div>
-
-                <div>
-                    <h3 class="text-base font-black text-white" id="profile-name">Partenaire RANGERS</h3>
-                    <p class="text-xs text-slate-400 font-mono mt-0.5">Téléphone : <span id="profile-phone">--</span></p>
+                <span class="text-xs font-medium text-gray-700">Retrait</span>
+            </a>
+            <button onclick="alert('Aide')" class="flex flex-col items-center">
+                <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2">
+                    <i class="fa-solid fa-comments text-white text-lg"></i>
                 </div>
-
-                <div class="grid grid-cols-2 gap-3 pt-3 border-t border-slate-800 text-center">
-                    <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                        <p class="text-[9px] uppercase text-slate-400 font-bold">Solde Recharge</p>
-                        <p class="text-sm font-black text-amber-400 mt-1">
-                            FCFA <span id="profile-recharge" class="inline-block">0.00</span>
-                        </p>
-                    </div>
-                    <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                        <p class="text-[9px] uppercase text-slate-400 font-bold">Solde Retirable</p>
-                        <p class="text-sm font-black text-emerald-400 mt-1">
-                            FCFA <span id="profile-retirable" class="inline-block">1,000.00</span>
-                        </p>
-                    </div>
+                <span class="text-xs font-medium text-gray-700">Aide</span>
+            </button>
+            <button onclick="alert('Pointage')" class="flex flex-col items-center">
+                <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2">
+                    <i class="fa-solid fa-calendar-check text-white text-lg"></i>
                 </div>
-            </div>
-        </div>
-
-        <!-- HISTORIQUE DÉPÔTS EN ATTENTE -->
-        <div class="space-y-3">
-            <div class="flex justify-between items-center px-1">
-                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">// Suivi des recharges en attente</h4>
-                <span id="admin-validation-label" class="text-[10px] text-amber-500 font-bold">
-                    <i class="fa-solid fa-hourglass-half mr-1"></i>Validation Admin
-                </span>
-            </div>
-
-            <div id="pending-deposits-container" class="space-y-2">
-                <!-- dynamique -->
-            </div>
-        </div>
-
-        <!-- PARAMÈTRES -->
-        <div class="space-y-3">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">// Paramètres du compte</h4>
-
-            <div class="rg-glass rounded-2xl overflow-hidden border border-slate-800 divide-y divide-slate-800">
-                <a href="depot.html" class="p-4 flex items-center justify-between hover:bg-slate-900/50 transition">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center"><i class="fa-solid fa-wallet text-xs"></i></div>
-                        <span class="text-xs font-bold text-white">Effectuer une recharge</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
-                </a>
-
-                <a href="retrait.html" class="p-4 flex items-center justify-between hover:bg-slate-900/50 transition">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-money-bill-transfer text-xs"></i></div>
-                        <span class="text-xs font-bold text-white">Demander un retrait</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
-                </a>
-
-                <a href="equipe.html" class="p-4 flex items-center justify-between hover:bg-slate-900/50 transition">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center"><i class="fa-solid fa-users text-xs"></i></div>
-                        <span class="text-xs font-bold text-white">Mon réseau d'équipe</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
-                </a>
-
-                <button onclick="showAlert('Support officiel RANGERS (RG) disponible 24/7 via le service client.')" class="w-full p-4 flex items-center justify-between hover:bg-slate-900/50 transition text-left">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center"><i class="fa-solid fa-headset text-xs"></i></div>
-                        <span class="text-xs font-bold text-white">Support & Service Client</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- DÉCONNEXION -->
-        <div class="pt-2">
-            <button id="logout-btn" onclick="askLogout()" class="w-full py-3.5 rounded-2xl bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold text-xs border border-red-500/30 flex items-center justify-center space-x-2 transition shadow-lg">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span>Se déconnecter de la session</span>
+                <span class="text-xs font-medium text-gray-700">Pointage</span>
             </button>
         </div>
-    </main>
 
-    <!-- NAVIGATION -->
-    <nav class="fixed bottom-3 left-4 right-4 rg-glass rounded-3xl p-2 px-6 flex justify-between items-center z-40 border border-amber-500/20 shadow-2xl max-w-lg mx-auto">
-        <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-house text-base"></i><span class="text-[9px] mt-1 font-bold">Accueil</span></a>
-        <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-layer-group text-base"></i><span class="text-[9px] mt-1 font-bold">Invest</span></a>
-        <a href="equipe.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-network-wired text-base"></i><span class="text-[9px] mt-1 font-bold">Équipe</span></a>
-        <a href="compte.html" class="relative flex flex-col items-center text-amber-500 transition">
-            <i class="fa-solid fa-user text-base"></i>
-            <span class="text-[9px] mt-1 font-bold">Compte</span>
-            <span id="nav-compte-notif" class="nav-notif hidden"></span>
-        </a>
-    </nav>
-
-    <!-- POPUP ALERTE -->
-    <div id="custom-alert" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
-        <div class="rg-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
-            <p id="alert-text" class="text-xs text-white font-medium leading-relaxed whitespace-pre-line">Message</p>
-            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs">OK</button>
-        </div>
-    </div>
-
-    <!-- POPUP CONFIRMATION -->
-    <div id="confirm-popup" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
-        <div class="rg-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
-            <p id="confirm-text" class="text-xs text-white font-medium leading-relaxed">Confirmer ?</p>
-            <div class="flex gap-2">
-                <button onclick="confirmNo()" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-white font-bold text-xs">Annuler</button>
-                <button onclick="confirmYes()" class="flex-1 py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs">Confirmer</button>
+        <!-- CENTRE DE TÂCHES -->
+        <div class="relative rounded-xl overflow-hidden h-36 shadow-sm">
+            <img src="https://files.catbox.moe/78dszw.jpg" class="w-full h-full object-cover" alt="Task">
+            <div class="absolute inset-0 bg-black/50 p-4 flex flex-col justify-center items-end">
+                <h3 class="text-white font-bold text-xl text-right leading-tight">Centre de tâches</h3>
+                <p class="text-[11px] text-white text-right w-2/3 mt-1">Accomplissez des tâches et obtenez de généreux bonus</p>
+                <button onclick="alert('Bientôt disponible')" class="mt-2 bg-brand text-white text-xs font-bold px-5 py-1.5 rounded-full">Aller</button>
             </div>
         </div>
-    </div>
+
+        <!-- SECTION PLUS -->
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <h4 class="text-base font-medium text-gray-800 mb-4 ml-1">Plus</h4>
+            <div class="grid grid-cols-4 gap-y-6 text-center">
+                <button class="flex flex-col items-center"><i class="fa-solid fa-circle-info text-2xl text-black mb-1"></i><span class="text-[10px] text-gray-700 leading-tight">À propos de<br>nous</span></button>
+                <button class="flex flex-col items-center"><i class="fa-solid fa-bookmark text-2xl text-black mb-1"></i><span class="text-[10px] text-gray-700">Réglementation</span></button>
+                <button class="flex flex-col items-center"><i class="fa-solid fa-file-lines text-2xl text-black mb-1"></i><span class="text-[10px] text-gray-700">Historique</span></button>
+                <button onclick="alert('Service Client')" class="flex flex-col items-center"><i class="fa-solid fa-comments text-2xl text-black mb-1"></i><span class="text-[10px] text-gray-700">Service client</span></button>
+                
+                <button class="flex flex-col items-center"><i class="fa-solid fa-download text-2xl text-black mb-1"></i><span class="text-[10px] text-gray-700 leading-tight">Télécharger<br>l'appli</span></button>
+                <button class="flex flex-col items-center"><i class="fa-regular fa-credit-card text-2xl text-black mb-1"></i><span class="text-[10px] text-gray-700">Lier une carte</span></button>
+                <button onclick="alert('Changer le MDP')" class="flex flex-col items-center"><i class="fa-solid fa-pen-to-square text-2xl text-black mb-1"></i><span class="text-[10px] text-gray-700 leading-tight">Modifier le<br>MDP</span></button>
+                <button class="flex flex-col items-center"><i class="fa-solid fa-gift text-2xl text-black mb-1"></i><span class="text-[10px] text-gray-700">Code cadeau</span></button>
+            </div>
+        </div>
+
+        <!-- DECONNEXION -->
+        <button onclick="if(confirm('Se déconnecter ?')){localStorage.clear(); location.href='login.html';}" class="w-full mt-4 py-3 rounded-xl bg-red-50 text-red-500 font-bold text-sm border border-red-100">
+            Se déconnecter
+        </button>
+    </main>
+
+    <!-- NAV BAS -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 z-40">
+        <a href="index.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1">Accueil</span></a>
+        <a href="produits.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-bicycle text-xl"></i><span class="text-[10px] mt-1">Produit</span></a>
+        <a href="equipe.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-users text-xl"></i><span class="text-[10px] mt-1">Équipe</span></a>
+        <a href="compte.html" class="flex flex-col items-center text-brand"><i class="fa-solid fa-user text-xl"></i><span class="text-[10px] mt-1">Mon compte</span></a>
+    </nav>
 
     <script>
-        // ==== SÉCURITÉ : vérif immédiate avant affichage ====
-        if (localStorage.getItem('rg_logged_in') !== 'true') {
-            document.body.style.display = 'none';
-            location.replace('login.html');
-        }
-
-        // ==== VARIABLES ====
-        let previousRecharge = null;
-        let previousRetirable = null;
-        let refreshInterval = null;
-        let pendingConfirm = null;
-
-        // ==== INIT PROFIL ====
-        function loadProfile() {
-            const userName = localStorage.getItem('rg_user_name') || 'Partenaire RANGERS';
-            const userPhone = localStorage.getItem('rg_user_phone') || '+221 •••••••';
-            document.getElementById('profile-name').innerText = userName;
-            document.getElementById('profile-phone').innerText = userPhone;
-
-            const rechargeEl = document.getElementById('profile-recharge');
-            const retirableEl = document.getElementById('profile-retirable');
-            const rechargeBal = parseFloat(localStorage.getItem('rg_recharge') || '0') || 0;
-            const retirableBal = parseFloat(localStorage.getItem('rg_retirable') || '1000') || 0;
-
-            const newRechargeText = rechargeBal.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            const newRetirableText = retirableBal.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-            // Flash si changement
-            if (previousRecharge !== null && previousRecharge !== newRechargeText) {
-                flashElement(rechargeEl);
-            }
-            if (previousRetirable !== null && previousRetirable !== newRetirableText) {
-                flashElement(retirableEl);
-            }
-
-            rechargeEl.innerText = newRechargeText;
-            retirableEl.innerText = newRetirableText;
-            previousRecharge = newRechargeText;
-            previousRetirable = newRetirableText;
-        }
-
-        function flashElement(el) {
-            el.classList.remove('value-flash');
-            void el.offsetWidth;
-            el.classList.add('value-flash');
-        }
-
-        // ==== DÉPÔTS EN ATTENTE ====
-        function loadPendingDeposits() {
-            const container = document.getElementById('pending-deposits-container');
-            const validationLabel = document.getElementById('admin-validation-label');
-            const navNotif = document.getElementById('nav-compte-notif');
-            const rechargeBalance = document.getElementById('profile-recharge');
-
-            const pendingDeposits = JSON.parse(localStorage.getItem('rg_pending_deposits') || '[]');
-
-            // === CLIGNOTANTS dynamiques ===
-            if (pendingDeposits.length > 0) {
-                validationLabel.classList.add('admin-blink');
-                navNotif.classList.remove('hidden');
-                rechargeBalance.classList.add('balance-pulse');
-            } else {
-                validationLabel.classList.remove('admin-blink');
-                navNotif.classList.add('hidden');
-                rechargeBalance.classList.remove('balance-pulse');
-            }
-
-            // === LISTE ===
-            if (pendingDeposits.length === 0) {
-                container.innerHTML = `
-                    <div class="rg-glass p-4 rounded-2xl text-center border border-slate-800 text-slate-500 text-xs">
-                        <i class="fa-solid fa-inbox text-lg mb-1 opacity-40 block"></i>
-                        Aucune recharge en attente de validation pour le moment.
-                    </div>`;
-                return;
-            }
-
-            container.innerHTML = '';
-            pendingDeposits.forEach(dep => {
-                const amt = typeof dep.amount === 'number' ? dep.amount : parseFloat(dep.amount || 0);
-                container.innerHTML += `
-                    <div class="rg-glass p-4 rounded-2xl border border-amber-500/30 flex justify-between items-center">
-                        <div>
-                            <span class="text-[9px] font-bold uppercase text-amber-400 px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">${dep.operator || 'Mobile'} - ${dep.country || 'Sénégal'}</span>
-                            <p class="text-sm font-black text-white mt-1.5">${amt.toLocaleString('fr-FR')} FCFA</p>
-                            <p class="text-[10px] text-slate-400 mt-0.5">Réf : <span class="font-mono text-slate-300">${dep.txId || 'N/A'}</span></p>
-                            <p class="text-[9px] text-slate-500 mt-0.5">${dep.date || ''}</p>
-                        </div>
-                        <div class="text-right">
-                            <span class="pending-blink px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-bold border border-amber-500/30 inline-block">
-                                <i class="fa-solid fa-hourglass-half mr-1"></i>En attente
-                            </span>
-                        </div>
-                    </div>`;
-            });
-        }
-
-        // ==== REFRESH AUTO ====
-        function startAutoRefresh() {
-            if (refreshInterval) clearInterval(refreshInterval);
-            refreshInterval = setInterval(() => {
-                loadProfile();
-                loadPendingDeposits();
-            }, 5000);
-        }
-
-        // ==== DÉCONNEXION ====
-        function askLogout() {
-            pendingConfirm = 'logout';
-            document.getElementById('confirm-text').innerText = "Confirmer la déconnexion de votre session ?";
-            document.getElementById('confirm-popup').classList.remove('hidden');
-            document.getElementById('logout-btn').classList.add('logout-confirm-warn');
-            setTimeout(() => document.getElementById('logout-btn').classList.remove('logout-confirm-warn'), 600);
-        }
-
-        function confirmNo() {
-            pendingConfirm = null;
-            document.getElementById('confirm-popup').classList.add('hidden');
-        }
-
-        function confirmYes() {
-            document.getElementById('confirm-popup').classList.add('hidden');
-            if (pendingConfirm === 'logout') {
-                if (refreshInterval) clearInterval(refreshInterval);
-                localStorage.removeItem('rg_logged_in');
-                showAlert("Déconnexion réussie. À bientôt !");
-                setTimeout(() => { location.href = 'login.html'; }, 1500);
-            }
-            pendingConfirm = null;
-        }
-
-        // ==== POPUPS ====
-        function showAlert(msg) {
-            document.getElementById('alert-text').innerText = msg;
-            document.getElementById('custom-alert').classList.remove('hidden');
-        }
-        function closeAlert() {
-            document.getElementById('custom-alert').classList.add('hidden');
-        }
-
-        // ==== INIT ====
-        document.addEventListener('DOMContentLoaded', () => {
-            loadProfile();
-            loadPendingDeposits();
-            startAutoRefresh();
-
-            // Enter / Echap
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === 'Escape') {
-                    if (!document.getElementById('custom-alert').classList.contains('hidden')) {
-                        e.preventDefault(); closeAlert();
-                    } else if (!document.getElementById('confirm-popup').classList.contains('hidden')) {
-                        e.preventDefault(); confirmNo();
-                    }
-                }
-            });
-
-            // Clic extérieur
-            ['custom-alert', 'confirm-popup'].forEach(id => {
-                const el = document.getElementById(id);
-                el.addEventListener('click', (e) => {
-                    if (e.target.id === id) {
-                        if (id === 'custom-alert') closeAlert();
-                        else confirmNo();
-                    }
-                });
-            });
-        });
+        document.getElementById('balance').innerText = parseFloat(localStorage.getItem('rg_recharge') || 0).toLocaleString();
+        document.getElementById('revenue').innerText = parseFloat(localStorage.getItem('rg_revenue') || 0).toLocaleString();
     </script>
 </body>
 </html>
