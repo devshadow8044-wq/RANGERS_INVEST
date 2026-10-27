@@ -1,292 +1,264 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RANGERS (RG) - Retrait de Fonds Sécurisé 24h/24</title>
+    <title>RANGERS - Retrait</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: { colors: {
-                rgBg: '#030509', rgCard: '#0d111a', rgGold: '#f59e0b', rgBorder: '#1e2638'
-            }}}
-        }
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
-        .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
-        .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
-            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.8); }
+        body { background-color: #f8f9fa; color: #111827; font-family: 'Inter', sans-serif; }
+        .text-brand { color: #0db14b; }
+        .bg-brand { background-color: #0db14b; }
+        .border-brand { border-color: #0db14b; }
+        
+        /* Clignotant pour le bouton de validation */
+        @keyframes pulseGreen { 
+            0%, 100% { box-shadow: 0 0 0 rgba(13, 177, 75, 0); transform: scale(1); } 
+            50% { box-shadow: 0 0 12px rgba(13, 177, 75, 0.4); transform: scale(1.02); } 
         }
-        .btn-pulse { animation: pulseGlow 2s infinite; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-
-        /* ===== CLIGNOTANTS AJOUTÉS ===== */
-
-        /* 1. "24h/24 Actif" pulse vert */
-        @keyframes liveGreen {
-            0%, 100% { opacity: 1; text-shadow: 0 0 0 rgba(16, 185, 129, 0); }
-            50% { opacity: 0.6; text-shadow: 0 0 8px rgba(16, 185, 129, 0.9); }
-        }
-        .live-24h { animation: liveGreen 1.8s infinite; }
-
-        /* 2. Badge "Retraits ouverts" clignote */
-        @keyframes badgeBlink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.55; }
-        }
-        .badge-blink { animation: badgeBlink 2s infinite; }
-
-        /* 3. Solde disponible pulse */
-        @keyframes balancePulse {
-            0%, 100% { text-shadow: 0 0 0 rgba(16, 185, 129, 0); }
-            50% { text-shadow: 0 0 12px rgba(16, 185, 129, 0.8); }
-        }
-        .balance-pulse { animation: balancePulse 2s infinite; }
-
-        /* 4. Frais 15% clignote si > 0 */
-        @keyframes feeBlink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .fee-active { animation: feeBlink 1.4s infinite; }
-
-        /* 5. Net à recevoir pulse si > 0 */
-        @keyframes netPulse {
-            0%, 100% { color: #10b981; transform: scale(1); }
-            50% { color: #34d399; transform: scale(1.03); }
-        }
-        .net-active { animation: netPulse 1.6s ease infinite; display: inline-block; }
-
-        /* 6. Bouton "Lier un compte" clignote si non lié */
-        @keyframes linkBlink {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
-            50% { box-shadow: 0 0 10px 2px rgba(245, 158, 11, 0.7); }
-        }
-        .link-attention { animation: linkBlink 1.6s infinite; }
-
-        /* 7. Bouton "TOUT" clignote si solde > 0 */
-        @keyframes allBlink {
-            0%, 100% { background: rgba(245, 158, 11, 0.1); }
-            50% { background: rgba(245, 158, 11, 0.3); }
-        }
-        .all-active { animation: allBlink 1.8s infinite; }
-
-        /* 8. Bouton validation renforcé */
-        @keyframes strongPulse {
-            0%, 100% { box-shadow: 0 0 12px rgba(245, 158, 11, 0.5); }
-            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.9); }
-        }
-        .strong-pulse { animation: strongPulse 1.8s infinite; }
-
-        /* 9. Input focus pulse */
-        @keyframes borderFocus {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-            50% { box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2); }
-        }
-        input:focus, select:focus { animation: borderFocus 1.6s infinite; }
-
-        /* 10. Erreur shake */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        .error-shake { animation: shake 0.4s ease-in-out 2; border-color: #ef4444 !important; }
-
-        /* 11. Warning alerte bloquée */
-        @keyframes warningBlink {
-            0%, 100% { border-color: rgba(239, 68, 68, 0.4); }
-            50% { border-color: rgba(239, 68, 68, 0.9); }
-        }
-        .warning-border { animation: warningBlink 1.2s infinite; }
+        .btn-pulse { animation: pulseGreen 2s infinite; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased pb-28">
+<body class="min-h-screen flex flex-col pb-24">
 
     <!-- HEADER -->
-    <header class="rg-glass sticky top-0 z-40 px-4 py-3 border-b border-amber-500/10 flex items-center justify-between">
+    <header class="bg-white sticky top-0 z-40 px-4 py-3 border-b border-gray-200 flex items-center justify-between shadow-sm">
         <div class="flex items-center space-x-3">
-            <a href="index.html" class="w-8 h-8 rounded-xl rg-glass flex items-center justify-center text-amber-500 hover:text-white border border-slate-800"><i class="fa-solid fa-arrow-left text-xs"></i></a>
-            <span class="font-black text-sm text-white tracking-wide">RANGERS (RG) - Retrait</span>
+            <a href="compte.html" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 hover:bg-gray-200">
+                <i class="fa-solid fa-arrow-left text-sm"></i>
+            </a>
+            <span class="font-bold text-base text-gray-800">Retrait</span>
         </div>
-        <div class="flex items-center space-x-1 text-emerald-400 text-xs font-bold live-24h">
-            <i class="fa-solid fa-clock"></i><span>24h/24 Actif</span>
+        <div class="flex items-center space-x-1 text-brand text-xs font-bold">
+            <i class="fa-solid fa-clock"></i><span>24h/24</span>
         </div>
     </header>
 
-    <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-5">
-
-        <!-- BANNIÈRE -->
-        <div class="rg-glass rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl relative">
-            <div class="h-32 w-full relative">
-                <img src="https://files.catbox.moe/499w19.jpg" class="w-full h-full object-cover opacity-85" alt="banner">
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-slate-950/40 to-transparent"></div>
-                <div class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-slate-950/80 border border-amber-500/30 text-[9px] font-bold text-amber-400 badge-blink">
-                    <i class="fa-solid fa-bolt mr-1"></i> Retraits ouverts 24h/24 • Frais 15%
-                </div>
-            </div>
-            <div class="p-5 pt-0 relative -mt-6">
-                <div class="flex justify-between items-end">
-                    <div>
-                        <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Disponible au retrait</p>
-                        <h2 class="text-2xl font-black text-emerald-400 mt-0.5 balance-pulse">FCFA <span id="retirable-display">1,000.00</span></h2>
-                    </div>
-                    <span class="px-2.5 py-1 rounded-full bg-slate-900 text-slate-400 text-[10px] font-bold border border-slate-800">Service 24/7</span>
-                </div>
-                <p class="text-[10px] text-slate-500 mt-2">Total du compte : FCFA <span id="total-display">1,000.00</span></p>
-            </div>
+    <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-4">
+        
+        <!-- SOLDE RETIRABLE -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 text-center">
+            <p class="text-xs text-gray-500 font-medium mb-1">Solde retirable disponible</p>
+            <h2 class="text-3xl font-black text-brand">FCFA <span id="current-balance">0</span></h2>
         </div>
 
-        <!-- FORMULAIRE -->
-        <div class="rg-glass p-5 rounded-3xl space-y-4 border border-amber-500/20">
+        <!-- FORMULAIRE DE RETRAIT -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 space-y-4">
             <div class="flex justify-between items-center">
-                <label class="text-[10px] font-bold uppercase text-slate-400">Montant du retrait (Min FCFA 1,000)</label>
-                <button id="btn-all" onclick="setMaxAmount()" class="text-[10px] text-amber-500 font-bold px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 transition">TOUT</button>
+                <label class="text-xs font-bold text-gray-600">Montant (Min 1,000 FCFA)</label>
+                <button onclick="setMax()" class="text-[10px] text-brand font-bold bg-green-50 px-3 py-1 rounded-md border border-green-100">TOUT</button>
+            </div>
+            
+            <div class="flex items-center border-2 border-gray-200 rounded-xl px-4 py-3 focus-within:border-brand transition">
+                <span class="text-gray-500 font-bold text-sm">FCFA</span>
+                <input type="number" id="withdraw-amt" oninput="calcFees()" class="w-full bg-transparent text-right text-xl font-black text-gray-900 focus:outline-none" placeholder="0">
             </div>
 
-            <div class="relative">
-                <span class="absolute left-4 top-3.5 text-xs text-slate-400 font-bold">FCFA</span>
-                <input type="number" id="withdraw-amt" oninput="calculateFees()" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-14 pr-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="0.00" min="1000">
-            </div>
-
-            <!-- FRAIS -->
-            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 space-y-2 text-xs">
-                <div class="flex justify-between text-slate-400">
-                    <span>Taux de frais (15%)</span>
-                    <span id="fee-display" class="text-red-400 font-bold">FCFA 0.00</span>
+            <!-- CALCUL DES FRAIS -->
+            <div class="bg-gray-50 rounded-xl p-4 space-y-2 text-sm border border-gray-100">
+                <div class="flex justify-between text-gray-500">
+                    <span>Frais de service (15%)</span>
+                    <span id="fee-display" class="text-red-500 font-bold">FCFA 0</span>
                 </div>
-                <div class="flex justify-between text-white font-bold pt-2 border-t border-slate-800">
-                    <span>Net reçu sur votre compte</span>
-                    <span id="receive-display" class="text-emerald-400">FCFA 0.00</span>
+                <div class="flex justify-between text-gray-900 font-bold pt-2 border-t border-gray-200">
+                    <span>Net à recevoir</span>
+                    <span id="receive-display" class="text-brand">FCFA 0</span>
                 </div>
             </div>
         </div>
 
         <!-- COMPTE DE RÉCEPTION -->
-        <div class="space-y-2">
-            <span class="text-[10px] font-bold uppercase text-slate-400 px-1">Compte de réception officiel</span>
-            <div class="rg-glass p-4 rounded-2xl flex items-center justify-between border border-slate-800">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-wallet"></i></div>
-                    <div>
-                        <p class="text-xs font-bold text-white" id="account-name">Compte Mobile Money</p>
-                        <p class="text-[10px] text-slate-400" id="account-number">Non configuré</p>
-                    </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-green-50 text-brand flex items-center justify-center border border-green-100">
+                    <i class="fa-solid fa-wallet text-lg"></i>
                 </div>
-                <button onclick="openCardModal()" id="btn-link-account" class="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-500 text-xs font-bold border border-amber-500/30 link-attention">Lier un compte</button>
+                <div>
+                    <p class="text-sm font-bold text-gray-800" id="acc-name">Compte Mobile Money</p>
+                    <p class="text-xs text-gray-500" id="acc-phone">Non configuré</p>
+                </div>
             </div>
+            <button onclick="openAccountModal()" class="text-xs text-brand font-bold bg-green-50 px-3 py-1.5 rounded-lg border border-green-100 hover:bg-green-100 transition">Modifier</button>
         </div>
     </main>
 
-    <!-- BOUTON FIXE -->
-    <div class="fixed bottom-0 left-0 right-0 rg-glass p-4 border-t border-amber-500/20 max-w-lg mx-auto flex items-center justify-between z-40">
+    <!-- BOUTON FIXE EN BAS -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 max-w-lg mx-auto flex items-center justify-between z-40">
         <div>
-            <p class="text-[9px] uppercase text-slate-400 font-bold">Net à recevoir</p>
-            <p class="text-base font-black text-emerald-400">FCFA <span id="footer-receive" class="inline-block">0.00</span></p>
+            <p class="text-[10px] text-gray-500 font-bold uppercase">Net à recevoir</p>
+            <p class="text-lg font-black text-brand">FCFA <span id="footer-receive">0</span></p>
         </div>
-        <button id="withdraw-btn" onclick="askWithdraw()" class="px-6 py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg flex items-center space-x-2 strong-pulse disabled:opacity-60 disabled:cursor-not-allowed">
-            <i class="fa-solid fa-paper-plane"></i><span id="withdraw-btn-text">Valider le retrait 24/24</span>
+        <button onclick="submitWithdraw()" class="px-6 py-3 rounded-xl bg-gray-900 text-white font-bold text-sm shadow-md hover:bg-black transition btn-pulse">
+            Valider le retrait
         </button>
     </div>
 
-    <!-- MODAL COMPTE -->
-    <div id="card-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md hidden p-4">
-        <div class="rg-glass max-w-md w-full p-6 rounded-3xl space-y-4 border border-amber-500/30 shadow-2xl relative">
-            <button onclick="closeCardModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-900 text-slate-400 hover:text-white flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="text-sm font-bold text-white">Associer un compte Mobile Money</h3>
-
+    <!-- MODAL LIAISON DE COMPTE -->
+    <div id="account-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden p-4 backdrop-blur-sm">
+        <div class="bg-white max-w-sm w-full rounded-2xl p-6 shadow-2xl relative">
+            <button onclick="closeAccountModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="text-base font-bold text-gray-800 mb-4">Lier un compte Mobile Money</h3>
+            
             <div class="space-y-3">
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Opérateur</label>
-                    <select id="operator-select" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-amber-500 font-bold focus:outline-none">
-                        <option value="Wave">Wave (Sénégal / CI)</option>
-                        <option value="Orange Money">Orange Money (Mali / Burkina)</option>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Opérateur</label>
+                    <select id="operator-select" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-brand">
+                        <option value="Wave">Wave</option>
+                        <option value="Orange Money">Orange Money</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Numéro de téléphone</label>
-                    <input type="tel" id="card-phone-input" inputmode="numeric" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Ex: 770000000">
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Numéro de téléphone</label>
+                    <input type="tel" id="account-phone" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-brand" placeholder="Ex: 770000000">
                 </div>
-                <button onclick="saveCardAccount()" class="w-full py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-md">Enregistrer le compte</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- POPUP CONFIRMATION RETRAIT -->
-    <div id="confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
-        <div class="rg-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
-            <p id="confirm-text" class="text-xs text-white font-medium leading-relaxed whitespace-pre-line">Confirmer ?</p>
-            <div class="flex gap-2">
-                <button onclick="confirmWithdrawNo()" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-white font-bold text-xs">Annuler</button>
-                <button onclick="confirmWithdrawYes()" class="flex-1 py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs">Confirmer</button>
+                <button onclick="saveAccount()" class="w-full py-3 rounded-xl bg-brand text-white font-bold text-sm shadow-md mt-2">Enregistrer</button>
             </div>
         </div>
     </div>
 
     <!-- POPUP ALERTE -->
-    <div id="custom-alert" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
-        <div class="rg-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
-            <p id="alert-text" class="text-xs text-white font-medium leading-relaxed whitespace-pre-line">Message</p>
-            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs">OK</button>
+    <div id="custom-alert" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden p-4">
+        <div class="bg-white max-w-xs w-full p-6 rounded-2xl text-center space-y-4 shadow-2xl">
+            <p id="alert-text" class="text-sm text-gray-700 font-medium leading-relaxed whitespace-pre-line">Message</p>
+            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl bg-brand text-white font-bold text-sm">OK</button>
         </div>
     </div>
 
     <script>
-        // ==== SÉCURITÉ ====
-        if (localStorage.getItem('rg_logged_in') !== 'true') {
-            document.body.style.display = 'none';
-            location.replace('login.html');
+        // ====== INITIALISATION ======
+        let balance = parseFloat(localStorage.getItem('rg_retirable') || '0');
+        // Si c'est un nouveau compte, on met 1000 par défaut pour tester
+        if(!localStorage.getItem('rg_retirable')) {
+            balance = 1000;
+            localStorage.setItem('rg_retirable', '1000');
         }
+        document.getElementById('current-balance').innerText = balance.toLocaleString('fr-FR');
 
-        // ==== ÉTAT ====
-        let retirableBal = parseFloat(localStorage.getItem('rg_retirable') || '1000.00') || 0;
-        let totalBal = (parseFloat(localStorage.getItem('rg_recharge') || '0.00') || 0) + retirableBal;
-        let isSubmitting = false;
-        let pendingWithdraw = null;
-
-        // ==== INIT UI ====
-        function refreshBalanceUI() {
-            retirableBal = parseFloat(localStorage.getItem('rg_retirable') || '0') || 0;
-            totalBal = (parseFloat(localStorage.getItem('rg_recharge') || '0.00') || 0) + retirableBal;
-
-            document.getElementById('retirable-display').innerText = retirableBal.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById('total-display').innerText = totalBal.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-            // Clignotant "TOUT" si solde > 0
-            const btnAll = document.getElementById('btn-all');
-            if (retirableBal > 0) btnAll.classList.add('all-active');
-            else btnAll.classList.remove('all-active');
-        }
-        refreshBalanceUI();
-
-        // ==== CHARGEMENT COMPTE ====
-        let savedOperator = localStorage.getItem('rg_withdraw_operator');
+        // Chargement du compte lié
+        let savedOp = localStorage.getItem('rg_withdraw_operator');
         let savedPhone = localStorage.getItem('rg_withdraw_phone');
+        updateAccountUI();
 
-        function refreshAccountUI() {
-            savedOperator = localStorage.getItem('rg_withdraw_operator');
-            savedPhone = localStorage.getItem('rg_withdraw_phone');
-            const btn = document.getElementById('btn-link-account');
+        function updateAccountUI() {
             if (savedPhone) {
-                document.getElementById('account-name').innerText = savedOperator || 'Mobile Money';
-                document.getElementById('account-number').innerText = savedPhone;
-                btn.innerText = 'Modifier';
-                btn.classList.remove('link-attention');
+                document.getElementById('acc-name').innerText = savedOp;
+                document.getElementById('acc-phone').innerText = savedPhone;
             } else {
-                document.getElementById('account-name').innerText = 'Compte Mobile Money';
-                document.getElementById('account-number').innerText = 'Non configuré';
-                btn.innerText = 'Lier un compte';
-                btn.classList.add('link-attention');
+                document.getElementById('acc-name').innerText = 'Compte Mobile Money';
+                document.getElementById('acc-phone').innerText = 'Non configuré';
             }
         }
-        refreshAccountUI();
 
-        // ==== POPUPS ====
+        // ====== CALCUL DES FRAIS ======
+        function calcFees() {
+            let amt = parseFloat(document.getElementById('withdraw-amt').value) || 0;
+            let fee = amt * 0.15;
+            let receive = amt - fee;
+            
+            document.getElementById('fee-display').innerText = 'FCFA ' + fee.toLocaleString('fr-FR');
+            document.getElementById('receive-display').innerText = 'FCFA ' + receive.toLocaleString('fr-FR');
+            document.getElementById('footer-receive').innerText = receive.toLocaleString('fr-FR');
+        }
+
+        function setMax() {
+            if (balance <= 0) {
+                showAlert("Vous n'avez pas de solde disponible.");
+                return;
+            }
+            document.getElementById('withdraw-amt').value = balance;
+            calcFees();
+        }
+
+        // ====== GESTION DU COMPTE ======
+        function openAccountModal() {
+            if (savedPhone) {
+                document.getElementById('operator-select').value = savedOp;
+                document.getElementById('account-phone').value = savedPhone;
+            }
+            document.getElementById('account-modal').classList.remove('hidden');
+        }
+        function closeAccountModal() {
+            document.getElementById('account-modal').classList.add('hidden');
+        }
+
+        function saveAccount() {
+            let op = document.getElementById('operator-select').value;
+            let phone = document.getElementById('account-phone').value.trim().replace(/\s+/g, '');
+
+            if (phone.length < 8 || isNaN(phone)) {
+                alert("Veuillez entrer un numéro de téléphone valide.");
+                return;
+            }
+
+            localStorage.setItem('rg_withdraw_operator', op);
+            localStorage.setItem('rg_withdraw_phone', phone);
+            
+            savedOp = op;
+            savedPhone = phone;
+            
+            updateAccountUI();
+            closeAccountModal();
+            showAlert("✅ Compte de retrait enregistré avec succès !");
+        }
+
+        // ====== SOUMISSION DU RETRAIT ======
+        function submitWithdraw() {
+            let amt = parseFloat(document.getElementById('withdraw-amt').value) || 0;
+
+            // Vérifications
+            if (!savedPhone) {
+                showAlert("⚠️ Veuillez lier un compte Mobile Money avant de faire un retrait.");
+                openAccountModal();
+                return;
+            }
+            if (amt < 1000) {
+                showAlert("⚠️ Le montant minimum de retrait est de 1,000 FCFA.");
+                return;
+            }
+            if (amt > balance) {
+                showAlert(`⚠️ Solde insuffisant.\nSolde disponible : ${balance} FCFA`);
+                return;
+            }
+
+            // Calcul des frais
+            let fee = amt * 0.15;
+            let receive = amt - fee;
+
+            if (!confirm(`Confirmer le retrait de ${amt.toLocaleString()} FCFA ?\n\nFrais : ${fee.toLocaleString()} FCFA\nNet reçu : ${receive.toLocaleString()} FCFA`)) return;
+
+            // Déduction du solde
+            balance -= amt;
+            localStorage.setItem('rg_retirable', balance.toFixed(2));
+            document.getElementById('current-balance').innerText = balance.toLocaleString('fr-FR');
+
+            // Sauvegarde dans l'historique pour l'admin
+            let history = JSON.parse(localStorage.getItem('rg_withdraw_history') || '[]');
+            history.push({
+                amount: amt,
+                fee: fee,
+                receive: receive,
+                operator: savedOp,
+                phone: savedPhone,
+                date: new Date().toLocaleString('fr-FR'),
+                status: 'En attente'
+            });
+            localStorage.setItem('rg_withdraw_history', JSON.stringify(history));
+
+            // Reset du formulaire
+            document.getElementById('withdraw-amt').value = '';
+            calcFees();
+
+            showAlert(`✅ Demande de retrait envoyée !\n\nNet à recevoir : ${receive.toLocaleString()} FCFA\n\nTraitement en cours par l'administration.`);
+            
+            setTimeout(() => {
+                location.href = 'compte.html';
+            }, 2500);
+        }
+
+        // ====== POPUP ALERTE ======
         function showAlert(msg) {
             document.getElementById('alert-text').innerText = msg;
             document.getElementById('custom-alert').classList.remove('hidden');
@@ -294,201 +266,6 @@
         function closeAlert() {
             document.getElementById('custom-alert').classList.add('hidden');
         }
-
-        function shakeField(el) {
-            el.classList.add('error-shake');
-            setTimeout(() => el.classList.remove('error-shake'), 900);
-        }
-
-        // ==== CALCULS ====
-        function setMaxAmount() {
-            if (retirableBal <= 0) {
-                showAlert("⚠️ Aucun solde disponible au retrait.");
-                return;
-            }
-            document.getElementById('withdraw-amt').value = retirableBal;
-            calculateFees();
-        }
-
-        function calculateFees() {
-            const amt = parseFloat(document.getElementById('withdraw-amt').value) || 0;
-            const fee = amt * 0.15;
-            const receive = amt - fee;
-
-            const feeEl = document.getElementById('fee-display');
-            const receiveEl = document.getElementById('receive-display');
-            const footerEl = document.getElementById('footer-receive');
-
-            feeEl.innerText = 'FCFA ' + fee.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            receiveEl.innerText = 'FCFA ' + receive.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            footerEl.innerText = receive.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-            // Clignotants dynamiques
-            if (fee > 0) feeEl.classList.add('fee-active'); else feeEl.classList.remove('fee-active');
-            if (receive > 0) receiveEl.classList.add('net-active'); else receiveEl.classList.remove('net-active');
-        }
-
-        // ==== MODAL COMPTE ====
-        function openCardModal() {
-            // Pré-remplir si existant
-            if (savedPhone) {
-                document.getElementById('card-phone-input').value = savedPhone;
-                if (savedOperator) {
-                    const sel = document.getElementById('operator-select');
-                    [...sel.options].forEach(opt => {
-                        if (opt.value === savedOperator) sel.value = savedOperator;
-                    });
-                }
-            }
-            document.getElementById('card-modal').classList.remove('hidden');
-            setTimeout(() => document.getElementById('card-phone-input')?.focus(), 150);
-        }
-        function closeCardModal() {
-            document.getElementById('card-modal').classList.add('hidden');
-        }
-
-        function saveCardAccount() {
-            const op = document.getElementById('operator-select').value;
-            const phoneEl = document.getElementById('card-phone-input');
-            const ph = phoneEl.value.trim().replace(/\s+/g, '');
-
-            if (!ph || ph.length < 8 || ph.length > 10 || !/^\d+$/.test(ph)) {
-                showAlert("⚠️ Numéro invalide (8 à 10 chiffres).");
-                shakeField(phoneEl);
-                return;
-            }
-
-            localStorage.setItem('rg_withdraw_operator', op);
-            localStorage.setItem('rg_withdraw_phone', ph);
-
-            refreshAccountUI();
-            closeCardModal();
-            showAlert(`✅ Compte enregistré !\n\n${op} - ${ph}`);
-        }
-
-        // ==== RETRAIT ====
-        function askWithdraw() {
-            if (isSubmitting) return;
-
-            const hasInvested = localStorage.getItem('rg_has_invested') === 'true';
-            if (!hasInvested) {
-                showAlert("⛔ Action bloquée.\n\nVous devez souscrire à au moins un plan d'investissement avant de pouvoir effectuer un retrait.");
-                return;
-            }
-
-            if (!savedPhone) {
-                showAlert("⚠️ Veuillez lier un compte de réception avant de demander un retrait.");
-                openCardModal();
-                return;
-            }
-
-            const amtInput = document.getElementById('withdraw-amt');
-            const amt = parseFloat(amtInput.value) || 0;
-
-            if (amt < 1000) {
-                showAlert("⚠️ Le montant minimum de retrait est de 1,000 FCFA.");
-                shakeField(amtInput);
-                return;
-            }
-            if (amt > retirableBal) {
-                showAlert(`⚠️ Montant supérieur à votre solde.\n\nSolde disponible : ${retirableBal.toLocaleString('fr-FR')} FCFA`);
-                shakeField(amtInput);
-                return;
-            }
-
-            const fee = amt * 0.15;
-            const receive = amt - fee;
-
-            pendingWithdraw = { amt, fee, receive };
-            document.getElementById('confirm-text').innerText =
-                `Confirmer le retrait ?\n\nMontant : ${amt.toLocaleString('fr-FR')} FCFA\nFrais (15%) : ${fee.toLocaleString('fr-FR')} FCFA\nNet reçu : ${receive.toLocaleString('fr-FR')} FCFA\n\nCompte : ${savedOperator} - ${savedPhone}`;
-            document.getElementById('confirm-modal').classList.remove('hidden');
-        }
-
-        function confirmWithdrawNo() {
-            pendingWithdraw = null;
-            document.getElementById('confirm-modal').classList.add('hidden');
-        }
-
-        function confirmWithdrawYes() {
-            document.getElementById('confirm-modal').classList.add('hidden');
-            if (!pendingWithdraw) return;
-
-            if (isSubmitting) return;
-            isSubmitting = true;
-
-            const btn = document.getElementById('withdraw-btn');
-            const txt = document.getElementById('withdraw-btn-text');
-            btn.disabled = true;
-            txt.innerText = 'Traitement...';
-
-            const { amt, fee, receive } = pendingWithdraw;
-
-            // Déduire du solde
-            retirableBal -= amt;
-            localStorage.setItem('rg_retirable', retirableBal.toFixed(2));
-
-            // Historique
-            const history = JSON.parse(localStorage.getItem('rg_withdraw_history') || '[]');
-            history.push({
-                amount: amt,
-                fee: fee,
-                receive: receive,
-                operator: savedOperator,
-                phone: savedPhone,
-                date: new Date().toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }),
-                status: 'En attente'
-            });
-            localStorage.setItem('rg_withdraw_history', JSON.stringify(history));
-
-            setTimeout(() => {
-                isSubmitting = false;
-                btn.disabled = false;
-                txt.innerText = 'Valider le retrait 24/24';
-
-                showAlert(`✅ Demande de retrait transmise !\n\nMontant : ${amt.toLocaleString('fr-FR')} FCFA\nNet à recevoir : ${receive.toLocaleString('fr-FR')} FCFA\n\nTraitement par l'administration en cours.`);
-                refreshBalanceUI();
-                document.getElementById('withdraw-amt').value = '';
-                calculateFees();
-                pendingWithdraw = null;
-
-                setTimeout(() => { location.href = 'index.html'; }, 2500);
-            }, 700);
-        }
-
-        // ==== EVENTS ====
-        document.addEventListener('DOMContentLoaded', () => {
-            // Enter sur montant
-            document.getElementById('withdraw-amt').addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') { e.preventDefault(); askWithdraw(); }
-            });
-
-            // Enter sur téléphone modal
-            document.getElementById('card-phone-input').addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') { e.preventDefault(); saveCardAccount(); }
-            });
-
-            // Escape ferme modals
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    if (!document.getElementById('custom-alert').classList.contains('hidden')) closeAlert();
-                    else if (!document.getElementById('confirm-modal').classList.contains('hidden')) confirmWithdrawNo();
-                    else if (!document.getElementById('card-modal').classList.contains('hidden')) closeCardModal();
-                }
-            });
-
-            // Clic extérieur
-            ['custom-alert', 'confirm-modal', 'card-modal'].forEach(id => {
-                const el = document.getElementById(id);
-                el.addEventListener('click', (e) => {
-                    if (e.target.id === id) {
-                        if (id === 'custom-alert') closeAlert();
-                        else if (id === 'confirm-modal') confirmWithdrawNo();
-                        else closeCardModal();
-                    }
-                });
-            });
-        });
     </script>
 </body>
 </html>
