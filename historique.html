@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RANGERS - Historique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; color: #111827; font-family: 'Inter', sans-serif; }
+        .text-brand { color: #0db14b; }
+        .bg-brand { background-color: #0db14b; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-20">
+
+    <header class="bg-white sticky top-0 z-40 px-4 py-3 border-b border-gray-200 flex items-center justify-between shadow-sm">
+        <div class="flex items-center space-x-3">
+            <a href="compte.html" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-700">
+                <i class="fa-solid fa-arrow-left text-sm"></i>
+            </a>
+            <span class="font-bold text-base text-gray-800">Historique</span>
+        </div>
+    </header>
+
+    <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-4">
+        <div id="history-list" class="space-y-3">
+            <!-- Les transactions s'afficheront ici -->
+        </div>
+    </main>
+
+    <script>
+        // On récupère toutes les données
+        let deposits = JSON.parse(localStorage.getItem('rg_pending_deposits') || '[]').map(d => ({...d, type: 'deposit', status: 'En attente'}));
+        let withdrawals = JSON.parse(localStorage.getItem('rg_withdraw_history') || '[]').map(w => ({...w, type: 'withdraw', status: w.status || 'En attente'}));
+        let investments = JSON.parse(localStorage.getItem('rg_my_products') || '[]').map(i => ({...i, type: 'invest', status: 'Actif', amount: i.price, date: new Date(i.date).toLocaleString('fr-FR')}));
+
+        // On regroupe et on trie par date (du plus récent au plus ancien)
+        let allTransactions = [...deposits, ...withdrawals, ...investments];
+        // Note: Pour bien trier, on s'assure que la date est lisible. On va juste inverser l'ordre pour l'instant.
+        allTransactions.reverse();
+
+        const list = document.getElementById('history-list');
+
+        if (allTransactions.length === 0) {
+            list.innerHTML = `
+                <div class="text-center py-10">
+                    <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-3 text-gray-400">
+                        <i class="fa-solid fa-receipt text-2xl"></i>
+                    </div>
+                    <p class="text-gray-500 text-sm">Aucune transaction pour le moment.</p>
+                </div>`;
+        } else {
+            allTransactions.forEach(t => {
+                let icon, color, title, amountPrefix;
+                
+                if (t.type === 'deposit') {
+                    icon = 'fa-arrow-down'; color = 'text-green-500 bg-green-50'; title = 'Recharge'; amountPrefix = '+';
+                } else if (t.type === 'withdraw') {
+                    icon = 'fa-arrow-up'; color = 'text-red-500 bg-red-50'; title = 'Retrait'; amountPrefix = '-';
+                } else {
+                    icon = 'fa-bicycle'; color = 'text-blue-500 bg-blue-50'; title = t.name; amountPrefix = '-';
+                }
+
+                list.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full ${color} flex items-center justify-center">
+                                <i class="fa-solid ${icon}"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-800">${title}</p>
+                                <p class="text-[10px] text-gray-500">${t.date || 'Date inconnue'}</p>
+                                <p class="text-[9px] font-bold ${t.status === 'En attente' ? 'text-orange-500' : 'text-green-500'}">${t.status}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-black ${t.type === 'deposit' ? 'text-green-500' : 'text-gray-800'}">${amountPrefix} FCFA ${(t.amount || t.price || 0).toLocaleString()}</p>
+                            ${t.operator ? `<p class="text-[9px] text-gray-400">${t.operator}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>
