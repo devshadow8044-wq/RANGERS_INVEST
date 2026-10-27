@@ -32,13 +32,15 @@
                 <p class="text-[10px] text-gray-500">Partagez le code ou le lien d'invitation</p>
                 
                 <div class="flex flex-col space-y-2">
+                    <!-- Code Parrain -->
                     <div class="flex justify-between border border-brand rounded px-3 py-1 items-center">
-                        <span class="text-xs font-bold text-brand" id="ref-code">40sc69</span>
-                        <button onclick="copyText('40sc69')" class="text-[10px] text-brand font-bold bg-green-50 px-2 py-1 rounded">Copier</button>
+                        <span class="text-xs font-bold text-brand" id="ref-code">...</span>
+                        <button onclick="copyText(document.getElementById('ref-code').innerText, this)" class="text-[10px] text-brand font-bold bg-green-50 px-2 py-1 rounded">Copier</button>
                     </div>
+                    <!-- Lien d'invitation -->
                     <div class="flex justify-between border border-brand rounded px-3 py-1 items-center">
                         <span class="text-[10px] text-brand truncate w-24" id="ref-link">lien...</span>
-                        <button onclick="copyText(document.getElementById('ref-link').innerText)" class="text-[10px] text-brand font-bold bg-green-50 px-2 py-1 rounded">Copier</button>
+                        <button onclick="copyText(document.getElementById('ref-link').innerText, this)" class="text-[10px] text-brand font-bold bg-green-50 px-2 py-1 rounded">Copier</button>
                     </div>
                 </div>
             </div>
@@ -47,12 +49,12 @@
         <!-- STATS VERTES -->
         <div class="bg-brand rounded-xl p-4 flex justify-around text-center text-white shadow-md">
             <div>
-                <h2 class="text-2xl font-black">0</h2>
+                <h2 class="text-2xl font-black" id="total-users">0</h2>
                 <p class="text-xs font-medium mt-1">Total des utilisateurs ></p>
             </div>
             <div class="border-l border-green-600"></div>
             <div>
-                <h2 class="text-2xl font-black">FCFA 0</h2>
+                <h2 class="text-2xl font-black" id="total-rewards">FCFA 0</h2>
                 <p class="text-xs font-medium mt-1">Total des récompenses ></p>
             </div>
         </div>
@@ -67,22 +69,22 @@
             <div class="flex border-b border-gray-100 h-16 items-center">
                 <div class="w-1/4 bg-brand text-white h-full flex items-center justify-center font-bold text-sm">Niv.1</div>
                 <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800">35%</span><span class="text-[9px] text-gray-500">Commission</span></div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800">0</span><span class="text-[9px] text-gray-500">Utilisateurs</span></div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800">0</span><span class="text-[9px] text-gray-500">Récompenses</span></div>
+                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800" id="niv1-users">0</span><span class="text-[9px] text-gray-500">Utilisateurs</span></div>
+                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800" id="niv1-rewards">0</span><span class="text-[9px] text-gray-500">Récompenses</span></div>
             </div>
             <!-- NIV 2 -->
             <div class="flex border-b border-gray-100 h-16 items-center">
                 <div class="w-1/4 bg-brand text-white h-full flex items-center justify-center font-bold text-sm">Niv.2</div>
                 <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800">2%</span><span class="text-[9px] text-gray-500">Commission</span></div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800">0</span><span class="text-[9px] text-gray-500">Utilisateurs</span></div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800">0</span><span class="text-[9px] text-gray-500">Récompenses</span></div>
+                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800" id="niv2-users">0</span><span class="text-[9px] text-gray-500">Utilisateurs</span></div>
+                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800" id="niv2-rewards">0</span><span class="text-[9px] text-gray-500">Récompenses</span></div>
             </div>
             <!-- NIV 3 -->
             <div class="flex h-16 items-center">
                 <div class="w-1/4 bg-brand text-white h-full flex items-center justify-center font-bold text-sm">Niv.3</div>
                 <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800">1%</span><span class="text-[9px] text-gray-500">Commission</span></div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800">0</span><span class="text-[9px] text-gray-500">Utilisateurs</span></div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800">0</span><span class="text-[9px] text-gray-500">Récompenses</span></div>
+                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800" id="niv3-users">0</span><span class="text-[9px] text-gray-500">Utilisateurs</span></div>
+                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800" id="niv3-rewards">0</span><span class="text-[9px] text-gray-500">Récompenses</span></div>
             </div>
         </div>
     </main>
@@ -90,21 +92,50 @@
     <!-- NAV BAS -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 z-40">
         <a href="index.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1">Accueil</span></a>
-        <a href="produits.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-bicycle text-xl"></i><span class="text-[10px] mt-1">Produit</span></a>
+        <a href="produits.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-car text-xl"></i><span class="text-[10px] mt-1">Produit</span></a>
         <a href="equipe.html" class="flex flex-col items-center text-brand"><i class="fa-solid fa-users text-xl"></i><span class="text-[10px] mt-1">Équipe</span></a>
         <a href="compte.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-user text-xl"></i><span class="text-[10px] mt-1">Mon compte</span></a>
     </nav>
 
     <script>
-        let code = localStorage.getItem('rg_ref_code') || 'RG' + Math.floor(1000 + Math.random() * 9000);
-        localStorage.setItem('rg_ref_code', code);
-        document.getElementById('ref-code').innerText = code;
-        document.getElementById('ref-link').innerText = `lime-bikeii.com/reg?code=${code}`;
-
-        function copyText(txt) {
-            navigator.clipboard.writeText(txt);
-            alert("Copié : " + txt);
+        // 1. Génération ou récupération du code parrain
+        let code = localStorage.getItem('rg_ref_code');
+        if (!code) {
+            code = 'RG' + Math.floor(1000 + Math.random() * 9000);
+            localStorage.setItem('rg_ref_code', code);
         }
+        
+        document.getElementById('ref-code').innerText = code;
+
+        // 2. Création du LIEN EXACT que tu as demandé
+        const baseUrl = "https://rangersinvest.vercel.app/login.html?ref=";
+        const fullLink = baseUrl + code;
+        
+        document.getElementById('ref-link').innerText = fullLink;
+
+        // 3. Fonction pour copier
+        function copyText(txt, btn) {
+            navigator.clipboard.writeText(txt).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = 'Copié ✓';
+                btn.classList.add('bg-green-500', 'text-white');
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('bg-green-500', 'text-white');
+                }, 1500);
+            }).catch(() => {
+                // Fallback si le navigateur bloque la copie
+                alert("Copié : " + txt);
+            });
+        }
+
+        // 4. Chargement des stats (Exemple de lecture de données)
+        // Ici on affiche 0 car il n'y a pas encore de filleuls enregistrés en base
+        document.getElementById('total-users').innerText = "0";
+        document.getElementById('total-rewards').innerText = "FCFA 0";
+        document.getElementById('niv1-users').innerText = "0";
+        document.getElementById('niv2-users').innerText = "0";
+        document.getElementById('niv3-users').innerText = "0";
     </script>
 </body>
 </html>
