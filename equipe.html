@@ -1,141 +1,66 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RANGERS - Équipe</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { background-color: #f8f9fa; color: #111827; font-family: 'Inter', sans-serif; }
-        .bg-brand { background-color: #0db14b; }
-        .text-brand { color: #0db14b; }
-        .border-brand { border-color: #0db14b; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16a832">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="theme-reference.css">
+<title>Équipe – RANGERS</title>
 </head>
-<body class="min-h-screen flex flex-col pb-20">
+<body data-page="team">
+<div class="bg" aria-hidden="true">
+  <video autoplay muted loop playsinline preload="metadata"><source src="videos/interieur.mp4" type="video/mp4"></video>
+</div>
+<main class="wrap">
+  <div class="topbar">
+    <span class="brand">RANGERS</span>
+  </div>
+  <h1 class="page">Ton équipe</h1>
 
-    <!-- BANNIÈRE -->
-    <div class="w-full h-48">
-        <img src="https://files.catbox.moe/tn5jfj.jpg" class="w-full h-full object-cover" alt="Team Bike">
+  <section class="card" aria-label="Code d'invitation">
+    <label>Ton code d'invitation</label>
+    <div class="plate" id="code" aria-live="polite">······</div>
+    <label for="link">Ton lien d'invitation</label>
+    <input id="link" class="field" type="text" readonly value="Chargement…">
+    <div class="btn-row">
+      <button id="copy-code" class="btn btn-ghost" type="button">Copier le code</button>
+      <button id="copy-link" class="btn btn-ghost" type="button">Copier le lien</button>
     </div>
+    <a id="wa" class="btn btn-wa" style="margin-top:12px" href="#" target="_blank" rel="noopener">Partager sur WhatsApp</a>
+  </section>
 
-    <main class="max-w-lg mx-auto w-full px-4 -mt-6 relative z-10 space-y-4">
-        
-        <!-- BLOC INVITATION -->
-        <div class="bg-white p-4 rounded-xl shadow-md flex items-center space-x-4">
-            <div class="w-1/3">
-                <img src="https://files.catbox.moe/78dszw.jpg" class="w-full h-24 object-cover rounded-lg" alt="Invite">
-            </div>
-            <div class="w-2/3 space-y-2">
-                <h3 class="text-sm font-bold text-gray-800 leading-tight">Invitez vos amis dès maintenant</h3>
-                <p class="text-[10px] text-gray-500">Partagez le code ou le lien d'invitation</p>
-                
-                <div class="flex flex-col space-y-2">
-                    <!-- Code Parrain -->
-                    <div class="flex justify-between border border-brand rounded px-3 py-1 items-center">
-                        <span class="text-xs font-bold text-brand" id="ref-code">...</span>
-                        <button onclick="copyText(document.getElementById('ref-code').innerText, this)" class="text-[10px] text-brand font-bold bg-green-50 px-2 py-1 rounded">Copier</button>
-                    </div>
-                    <!-- Lien d'invitation -->
-                    <div class="flex justify-between border border-brand rounded px-3 py-1 items-center">
-                        <span class="text-[10px] text-brand truncate w-24" id="ref-link">lien...</span>
-                        <button onclick="copyText(document.getElementById('ref-link').innerText, this)" class="text-[10px] text-brand font-bold bg-green-50 px-2 py-1 rounded">Copier</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <section class="card" style="margin-top:16px">
+    <h2 style="font-size:.95rem;margin-bottom:4px">Ton réseau</h2>
+    <dl class="rows" style="margin:0">
+      <div><dt>Niveau 1<br><small style="color:var(--mute)">invités par toi</small></dt><dd id="lv1">–</dd></div>
+      <div><dt>Niveau 2<br><small style="color:var(--mute)">invités par ton niveau 1</small></dt><dd id="lv2">–</dd></div>
+      <div><dt>Niveau 3<br><small style="color:var(--mute)">invités par ton niveau 2</small></dt><dd id="lv3">–</dd></div>
+    </dl>
+  </section>
 
-        <!-- STATS VERTES -->
-        <div class="bg-brand rounded-xl p-4 flex justify-around text-center text-white shadow-md">
-            <div>
-                <h2 class="text-2xl font-black" id="total-users">0</h2>
-                <p class="text-xs font-medium mt-1">Total des utilisateurs ></p>
-            </div>
-            <div class="border-l border-green-600"></div>
-            <div>
-                <h2 class="text-2xl font-black" id="total-rewards">FCFA 0</h2>
-                <p class="text-xs font-medium mt-1">Total des récompenses ></p>
-            </div>
-        </div>
+  <section class="card" style="margin-top:16px">
+    <h2 style="font-size:1.05rem;margin-bottom:6px">Récompenses de parrainage</h2>
+    <p class="hint" style="margin:0">Les commissions seront affichées ici dès qu'elles seront définies. Une récompense ne dépend jamais du seul fait d'inviter quelqu'un à déposer.</p>
+  </section>
+</main>
 
-        <div class="text-center pt-2">
-            <h2 class="text-sm font-bold text-brand uppercase">Invitez vos amis à rejoindre l'équipe</h2>
-        </div>
-
-        <!-- TABLEAU DES NIVEAUX -->
-        <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
-            <!-- NIV 1 -->
-            <div class="flex border-b border-gray-100 h-16 items-center">
-                <div class="w-1/4 bg-brand text-white h-full flex items-center justify-center font-bold text-sm">Niv.1</div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800">35%</span><span class="text-[9px] text-gray-500">Commission</span></div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800" id="niv1-users">0</span><span class="text-[9px] text-gray-500">Utilisateurs</span></div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800" id="niv1-rewards">0</span><span class="text-[9px] text-gray-500">Récompenses</span></div>
-            </div>
-            <!-- NIV 2 -->
-            <div class="flex border-b border-gray-100 h-16 items-center">
-                <div class="w-1/4 bg-brand text-white h-full flex items-center justify-center font-bold text-sm">Niv.2</div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800">2%</span><span class="text-[9px] text-gray-500">Commission</span></div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800" id="niv2-users">0</span><span class="text-[9px] text-gray-500">Utilisateurs</span></div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800" id="niv2-rewards">0</span><span class="text-[9px] text-gray-500">Récompenses</span></div>
-            </div>
-            <!-- NIV 3 -->
-            <div class="flex h-16 items-center">
-                <div class="w-1/4 bg-brand text-white h-full flex items-center justify-center font-bold text-sm">Niv.3</div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800">1%</span><span class="text-[9px] text-gray-500">Commission</span></div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800" id="niv3-users">0</span><span class="text-[9px] text-gray-500">Utilisateurs</span></div>
-                <div class="w-1/4 text-center"><span class="block text-sm font-bold text-gray-800" id="niv3-rewards">0</span><span class="text-[9px] text-gray-500">Récompenses</span></div>
-            </div>
-        </div>
-    </main>
-
-    <!-- NAV BAS -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 z-40">
-        <a href="index.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1">Accueil</span></a>
-        <a href="produits.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-car text-xl"></i><span class="text-[10px] mt-1">Produit</span></a>
-        <a href="equipe.html" class="flex flex-col items-center text-brand"><i class="fa-solid fa-users text-xl"></i><span class="text-[10px] mt-1">Équipe</span></a>
-        <a href="compte.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-user text-xl"></i><span class="text-[10px] mt-1">Mon compte</span></a>
-    </nav>
-
-    <script>
-        // 1. Génération ou récupération du code parrain
-        let code = localStorage.getItem('rg_ref_code');
-        if (!code) {
-            code = 'RG' + Math.floor(1000 + Math.random() * 9000);
-            localStorage.setItem('rg_ref_code', code);
-        }
-        
-        document.getElementById('ref-code').innerText = code;
-
-        // 2. Création du LIEN EXACT que tu as demandé
-        const baseUrl = "https://rangersinvest.vercel.app/login.html?ref=";
-        const fullLink = baseUrl + code;
-        
-        document.getElementById('ref-link').innerText = fullLink;
-
-        // 3. Fonction pour copier
-        function copyText(txt, btn) {
-            navigator.clipboard.writeText(txt).then(() => {
-                const originalText = btn.innerText;
-                btn.innerText = 'Copié ✓';
-                btn.classList.add('bg-green-500', 'text-white');
-                setTimeout(() => {
-                    btn.innerText = originalText;
-                    btn.classList.remove('bg-green-500', 'text-white');
-                }, 1500);
-            }).catch(() => {
-                // Fallback si le navigateur bloque la copie
-                alert("Copié : " + txt);
-            });
-        }
-
-        // 4. Chargement des stats (Exemple de lecture de données)
-        // Ici on affiche 0 car il n'y a pas encore de filleuls enregistrés en base
-        document.getElementById('total-users').innerText = "0";
-        document.getElementById('total-rewards').innerText = "FCFA 0";
-        document.getElementById('niv1-users').innerText = "0";
-        document.getElementById('niv2-users').innerText = "0";
-        document.getElementById('niv3-users').innerText = "0";
-    </script>
+<nav class="tabbar" aria-label="Navigation principale">
+  <ul>
+    <li><a href="index.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>Accueil</a></li>
+    <li><a href="activites.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M3 13h18"/></svg>Activités</a></li>
+    <li><a href="equipe.html" aria-current="page">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0"/><path d="M16 4.6a3.5 3.5 0 010 6.8"/><path d="M18 14.2A6.5 6.5 0 0121.5 20"/></svg>Équipe</a></li>
+    <li><a href="compte.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>Compte</a></li>
+  </ul>
+</nav>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="config.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
