@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RANGERS (RG) - Mon Réseau d'Équipe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: {
+                rgBg: '#030509', rgCard: '#0d111a', rgGold: '#f59e0b', rgBorder: '#1e2638'
+            }}}
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
+        .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
+        .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.8); }
+        }
+        .btn-pulse { animation: pulseGlow 2s infinite; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* ==== CLIGNOTANTS ==== */
+        @keyframes codeGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+            50% { box-shadow: 0 0 12px 2px rgba(245, 158, 11, 0.5); }
+        }
+        .code-blink { animation: codeGlow 2s infinite; }
+
+        @keyframes liveDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.4); }
+        }
+        .live-dot {
+            display: inline-block; width: 7px; height: 7px;
+            background: #10b981; border-radius: 50%; margin-right: 5px;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.9);
+            animation: liveDot 1.2s infinite;
+        }
+
+        @keyframes commPulse {
+            0%, 100% { color: #f59e0b; }
+            50% { color: #fbbf24; text-shadow: 0 0 8px rgba(245, 158, 11, 0.8); }
+        }
+        .comm-pulse { animation: commPulse 2s infinite; }
+
+        @keyframes levelBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+        .level-blink { animation: levelBlink 2.2s infinite; }
+
+        @keyframes invitePulse {
+            0%, 100% { box-shadow: 0 0 12px rgba(245, 158, 11, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.9); transform: scale(1.02); }
+        }
+        .invite-pulse { animation: invitePulse 1.8s infinite; }
+
+        @keyframes copyFlash {
+            0%, 100% { background: rgba(16, 185, 129, 0.15); }
+            50% { background: rgba(16, 185, 129, 0.35); }
+        }
+        .copy-flash { animation: copyFlash 0.6s ease; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased pb-28">
+
+    <!-- HEADER -->
+    <header class="rg-glass sticky top-0 z-40 px-4 py-3 border-b border-amber-500/10 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <a href="index.html" class="w-8 h-8 rounded-xl rg-glass flex items-center justify-center text-amber-500 hover:text-white border border-slate-800"><i class="fa-solid fa-arrow-left text-xs"></i></a>
+            <div>
+                <span class="font-black text-sm text-white tracking-wide">Mon Réseau d'Équipe</span>
+                <p class="text-[9px] text-emerald-400 font-bold flex items-center mt-0.5">
+                    <span class="live-dot"></span> En direct
+                </p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-1 text-amber-400 text-xs font-bold">
+            <i class="fa-solid fa-users"></i><span>Réseau</span>
+        </div>
+    </header>
+
+    <main class="max-w-lg mx-auto w-full px-4 py-4 space-y-5">
+
+        <!-- CARTE CODE PARRAIN -->
+        <div class="rg-glass rounded-3xl p-5 border border-amber-500/30 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full -mr-16 -mt-16"></div>
+            <div class="relative">
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Votre code de parrainage</p>
+                <div class="flex items-center justify-between mt-2 gap-2">
+                    <div class="flex-1 bg-slate-950 rounded-2xl px-4 py-3 border border-amber-500/30 code-blink">
+                        <span id="ref-code" class="text-lg font-black text-amber-400 font-mono tracking-widest">------</span>
+                    </div>
+                    <button onclick="copyText(document.getElementById('ref-code').innerText, this)" class="w-12 h-12 rounded-2xl gold-gradient text-slate-950 flex items-center justify-center shadow-lg">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                </div>
+                <p class="text-[10px] text-slate-500 mt-2">Partagez ce code pour gagner <span class="text-amber-400 font-bold">10% de commission</span> sur chaque dépôt de vos filleuls.</p>
+            </div>
+        </div>
+
+        <!-- STATS RÉSEAU -->
+        <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="rg-glass p-3 rounded-2xl border border-slate-800">
+                <p class="text-[9px] uppercase text-slate-400 font-bold">Niveau 1</p>
+                <p class="text-lg font-black text-amber-400 mt-1" id="stat-l1">0</p>
+                <p class="text-[8px] text-slate-500 mt-0.5">10% comm.</p>
+            </div>
+            <div class="rg-glass p-3 rounded-2xl border border-slate-800">
+                <p class="text-[9px] uppercase text-slate-400 font-bold">Niveau 2</p>
+                <p class="text-lg font-black text-amber-400 mt-1" id="stat-l2">0</p>
+                <p class="text-[8px] text-slate-500 mt-0.5">5% comm.</p>
+            </div>
+            <div class="rg-glass p-3 rounded-2xl border border-slate-800">
+                <p class="text-[9px] uppercase text-slate-400 font-bold">Niveau 3</p>
+                <p class="text-lg font-black text-amber-400 mt-1" id="stat-l3">0</p>
+                <p class="text-[8px] text-slate-500 mt-0.5">2% comm.</p>
+            </div>
+        </div>
+
+        <!-- GAINS DE RÉSEAU -->
+        <div class="rg-glass p-5 rounded-3xl border border-emerald-500/30 shadow-xl">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Gains cumulés du réseau</p>
+                    <h2 class="text-2xl font-black text-emerald-400 mt-1 comm-pulse">FCFA <span id="team-earnings">0.00</span></h2>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+                    <i class="fa-solid fa-coins text-lg"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- LIEN D'INVITATION -->
+        <div class="rg-glass p-4 rounded-2xl border border-amber-500/20 space-y-3">
+            <label class="text-[10px] font-bold uppercase text-slate-400">Lien d'invitation</label>
+            <div class="flex items-center bg-slate-950 rounded-xl border border-slate-800 overflow-hidden">
+                <input type="text" id="invite-link" readonly class="flex-1 bg-transparent px-3 py-2.5 text-[11px] text-slate-300 truncate focus:outline-none" value="">
+                <button onclick="copyText(document.getElementById('invite-link').value, this)" class="px-3 py-2.5 bg-amber-500/20 text-amber-400 text-[11px] font-bold whitespace-nowrap">Copier</button>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="shareWhatsApp()" class="py-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold flex items-center justify-center space-x-1">
+                    <i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span>
+                </button>
+                <button onclick="shareNative()" class="py-2.5 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold flex items-center justify-center space-x-1 invite-pulse">
+                    <i class="fa-solid fa-share-nodes"></i><span>Partager</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- LISTE FILLEULS -->
+        <div class="space-y-3">
+            <div class="flex justify-between items-center px-1">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">// Mes filleuls</h3>
+                <span class="text-[10px] text-amber-500 font-bold level-blink"><i class="fa-solid fa-sync mr-1"></i>Live</span>
+            </div>
+            <div id="team-list" class="space-y-2"></div>
+        </div>
+    </main>
+
+    <!-- NAV -->
+    <nav class="fixed bottom-3 left-4 right-4 rg-glass rounded-3xl p-2 px-6 flex justify-between items-center z-40 border border-amber-500/20 shadow-2xl max-w-lg mx-auto">
+        <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-house text-base"></i><span class="text-[9px] mt-1 font-bold">Accueil</span></a>
+        <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-layer-group text-base"></i><span class="text-[9px] mt-1 font-bold">Invest</span></a>
+        <a href="equipe.html" class="flex flex-col items-center text-amber-500 transition"><i class="fa-solid fa-network-wired text-base"></i><span class="text-[9px] mt-1 font-bold">Équipe</span></a>
+        <a href="compte.html" class="flex flex-col items-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-user text-base"></i><span class="text-[9px] mt-1 font-bold">Compte</span></a>
+    </nav>
+
+    <!-- POPUP ALERTE -->
+    <div id="custom-alert" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
+        <div class="rg-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
+            <p id="alert-text" class="text-xs text-white font-medium leading-relaxed whitespace-pre-line">Message</p>
+            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // ==== SÉCURITÉ ====
+        if (localStorage.getItem('rg_logged_in') !== 'true') {
+            document.body.style.display = 'none';
+            location.replace('login.html');
+        }
+
+        // ==== INIT CODE PARRAIN ====
+        let refCode = localStorage.getItem('rg_ref_code');
+        if (!refCode) {
+            refCode = 'RG' + Math.floor(100000 + Math.random() * 900000);
+            localStorage.setItem('rg_ref_code', refCode);
+        }
+        document.getElementById('ref-code').innerText = refCode;
+
+        // ==== LIEN INVITATION ====
+        const inviteLink = `${location.origin}${location.pathname.replace('equipe.html', 'login.html')}?ref=${refCode}`;
+        document.getElementById('invite-link').value = inviteLink;
+
+        // ==== CHARGEMENT RÉSEAU ====
+        function loadTeam() {
+            const members = JSON.parse(localStorage.getItem('rg_team_members') || '[]');
+            const l1 = members.filter(m => m.level === 1).length;
+            const l2 = members.filter(m => m.level === 2).length;
+            const l3 = members.filter(m => m.level === 3).length;
+
+            document.getElementById('stat-l1').innerText = l1;
+            document.getElementById('stat-l2').innerText = l2;
+            document.getElementById('stat-l3').innerText = l3;
+
+            // Gains réseau
+            const earnings = parseFloat(localStorage.getItem('rg_team_earnings') || '0') || 0;
+            document.getElementById('team-earnings').innerText = earnings.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            // Liste
+            const list = document.getElementById('team-list');
+            if (members.length === 0) {
+                list.innerHTML = `
+                    <div class="rg-glass p-6 rounded-2xl text-center border border-slate-800">
+                        <i class="fa-solid fa-user-plus text-3xl text-amber-500/40 mb-2"></i>
+                        <p class="text-xs text-slate-400">Aucun filleul pour le moment.</p>
+                        <p class="text-[10px] text-slate-500 mt-1">Partagez votre lien pour construire votre réseau !</p>
+                    </div>`;
+                return;
+            }
+
+            list.innerHTML = '';
+            members.forEach(m => {
+                const levelColor = m.level === 1 ? 'amber' : m.level === 2 ? 'cyan' : 'purple';
+                const comm = m.level === 1 ? '10%' : m.level === 2 ? '5%' : '2%';
+                list.innerHTML += `
+                    <div class="rg-glass p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-9 h-9 rounded-xl bg-${levelColor}-500/10 text-${levelColor}-400 flex items-center justify-center">
+                                <i class="fa-solid fa-user text-xs"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-white">${m.name || 'Membre'}</p>
+                                <p class="text-[10px] text-slate-500">Niveau ${m.level} • ${comm} comm.</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[9px] text-slate-500">${m.date || ''}</p>
+                            <span class="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold">Actif</span>
+                        </div>
+                    </div>`;
+            });
+        }
+        loadTeam();
+
+        // ==== COPIE ====
+        function copyText(text, btn) {
+            const doFlash = () => {
+                if (!btn) return;
+                const original = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                btn.classList.add('copy-flash');
+                setTimeout(() => {
+                    btn.innerHTML = original;
+                    btn.classList.remove('copy-flash');
+                }, 1500);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(doFlash).catch(() => fallbackCopy(text, doFlash));
+            } else {
+                fallbackCopy(text, doFlash);
+            }
+        }
+        function fallbackCopy(text, cb) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); cb(); } catch (e) { showAlert('Copie impossible, copiez manuellement.'); }
+            document.body.removeChild(ta);
+        }
+
+        // ==== PARTAGE ====
+        function shareWhatsApp() {
+            const msg = encodeURIComponent(`🎯 Rejoins RANGERS (RG) et gagne chaque jour !\n\nUtilise mon code : ${refCode}\n\n${inviteLink}`);
+            window.open(`https://wa.me/?text=${msg}`, '_blank');
+        }
+        function shareNative() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'RANGERS (RG)',
+                    text: `Rejoins RANGERS avec mon code : ${refCode}`,
+                    url: inviteLink
+                }).catch(() => {});
+            } else {
+                copyText(inviteLink);
+                showAlert("Lien copié dans le presse-papiers !");
+            }
+        }
+
+        // ==== POPUP ====
+        function showAlert(msg) {
+            document.getElementById('alert-text').innerText = msg;
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+        function closeAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
+        }
+
+        // ==== EVENTS ====
+        document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('keydown', (e) => {
+                if ((e.key === 'Escape' || e.key === 'Enter') && !document.getElementById('custom-alert').classList.contains('hidden')) {
+                    e.preventDefault(); closeAlert();
+                }
+            });
+            document.getElementById('custom-alert').addEventListener('click', (e) => {
+                if (e.target.id === 'custom-alert') closeAlert();
+            });
+        });
+    </script>
+</body>
+</html>
