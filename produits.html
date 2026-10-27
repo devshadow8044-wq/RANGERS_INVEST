@@ -13,6 +13,8 @@
         
         @keyframes buyPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
         .buy-pulse { animation: buyPulse 1.5s infinite; }
+        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .pop-in { animation: popIn 0.3s ease-out; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col pb-20">
@@ -41,6 +43,21 @@
         <a href="compte.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-user text-xl"></i><span class="text-[10px] mt-1">Mon compte</span></a>
     </nav>
 
+    <!-- POPUP UNIVERSELLE (ALERTE & CONFIRMATION) -->
+    <div id="universal-popup" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden p-4">
+        <div class="bg-white max-w-sm w-full p-6 rounded-3xl text-center space-y-4 shadow-2xl pop-in relative overflow-hidden">
+            <div id="popup-top-bar" class="absolute top-0 left-0 w-full h-2 bg-brand"></div>
+            <div id="popup-icon-bg" class="w-16 h-16 rounded-full bg-green-50 text-brand mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2">
+                <i id="popup-icon" class="fa-solid fa-circle-info"></i>
+            </div>
+            <h3 id="popup-title" class="text-lg font-black text-gray-800">Titre</h3>
+            <p id="popup-message" class="text-sm text-gray-600 leading-relaxed"></p>
+            <div id="popup-buttons" class="flex gap-2 mt-4">
+                <!-- Les boutons seront injectés ici par le JS -->
+            </div>
+        </div>
+    </div>
+
     <script>
         const products = [
             { id: 1, name: 'VIP1 Lime Bike', price: 2000, duration: 200, daily: 400, total: 80000, img: 'https://files.catbox.moe/9kbqzl.jpg' },
@@ -54,7 +71,6 @@
             container.innerHTML += `
                 <div class="bg-gray-500 rounded-lg overflow-hidden shadow-md">
                     <div class="flex h-44">
-                        <!-- Texte -->
                         <div class="w-3/5 p-4 flex flex-col justify-center bg-gray-400/90 text-white">
                             <h3 class="text-xl font-black mb-2 text-white">${p.name}</h3>
                             <div class="bg-gray-700/50 p-2.5 rounded text-[11px] space-y-1.5 w-full">
@@ -64,7 +80,6 @@
                                 <div class="flex justify-between"><span>Revenu total :</span> <span class="font-bold text-white">FCFA ${p.total.toLocaleString()}</span></div>
                             </div>
                         </div>
-                        <!-- Image -->
                         <div class="w-2/5 h-full">
                             <img src="${p.img}" class="w-full h-full object-cover" alt="Bike">
                         </div>
@@ -84,20 +99,66 @@
         }
         updateHeader();
 
+        // 🌟 GESTION DES POPUPS
+        function showPopup(title, message, icon, type, onConfirm) {
+            document.getElementById('popup-title').innerText = title;
+            document.getElementById('popup-message').innerText = message;
+            document.getElementById('popup-icon').className = `fa-solid ${icon}`;
+            
+            const btnContainer = document.getElementById('popup-buttons');
+            btnContainer.innerHTML = '';
+
+            if (type === 'confirm') {
+                document.getElementById('popup-icon-bg').className = 'w-16 h-16 rounded-full bg-orange-50 text-orange-500 mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2';
+                document.getElementById('popup-top-bar').className = 'absolute top-0 left-0 w-full h-2 bg-orange-500';
+                
+                btnContainer.innerHTML = `
+                    <button onclick="closePopup()" class="w-1/2 py-3 rounded-xl bg-gray-100 text-gray-700 font-bold text-sm transition hover:bg-gray-200">Annuler</button>
+                    <button id="confirm-btn" class="w-1/2 py-3 rounded-xl bg-brand text-white font-bold text-sm shadow-md transition hover:bg-green-600">Confirmer</button>
+                `;
+                document.getElementById('confirm-btn').onclick = () => { closePopup(); onConfirm(); };
+            } else if (type === 'error') {
+                document.getElementById('popup-icon-bg').className = 'w-16 h-16 rounded-full bg-red-50 text-red-500 mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2';
+                document.getElementById('popup-top-bar').className = 'absolute top-0 left-0 w-full h-2 bg-red-500';
+                btnContainer.innerHTML = `<button onclick="closePopup()" class="w-full py-3 rounded-xl bg-red-500 text-white font-bold text-sm shadow-md mt-2">Fermer</button>`;
+            } else {
+                document.getElementById('popup-icon-bg').className = 'w-16 h-16 rounded-full bg-green-50 text-brand mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2';
+                document.getElementById('popup-top-bar').className = 'absolute top-0 left-0 w-full h-2 bg-brand';
+                btnContainer.innerHTML = `<button onclick="closePopup()" class="w-full py-3 rounded-xl bg-brand text-white font-bold text-sm shadow-md mt-2">Super !</button>`;
+            }
+
+            document.getElementById('universal-popup').classList.remove('hidden');
+        }
+
+        function closePopup() {
+            document.getElementById('universal-popup').classList.add('hidden');
+        }
+
+        // 🌟 FONCTION D'ACHAT
         function buyProduct(id, price, name) {
             let balance = parseFloat(localStorage.getItem('rg_recharge') || '0');
-            if (balance < price) { alert("⛔ Solde insuffisant."); return; }
-            if (!confirm(`Acheter ${name} pour ${price} FCFA ?`)) return;
+            
+            if (balance < price) {
+                showPopup('Solde insuffisant', `Vous avez ${balance.toLocaleString()} FCFA mais il faut ${price.toLocaleString()} FCFA pour acheter ce produit. Veuillez recharger.`, 'fa-triangle-exclamation', 'error');
+                return;
+            }
 
-            balance -= price;
-            localStorage.setItem('rg_recharge', balance.toFixed(2));
+            // Confirmation personnalisée
+            showPopup('Confirmer l\'achat', `Voulez-vous vraiment acheter ${name} pour ${price.toLocaleString()} FCFA ?`, 'fa-bicycle', 'confirm', () => {
+                
+                // Logique d'achat
+                balance -= price;
+                localStorage.setItem('rg_recharge', balance.toFixed(2));
 
-            let myProds = JSON.parse(localStorage.getItem('rg_my_products') || '[]');
-            myProds.push({ id, name, price, date: new Date().toISOString() });
-            localStorage.setItem('rg_my_products', JSON.stringify(myProds));
+                let myProds = JSON.parse(localStorage.getItem('rg_my_products') || '[]');
+                myProds.push({ id, name, price, date: new Date().toISOString() });
+                localStorage.setItem('rg_my_products', JSON.stringify(myProds));
 
-            alert(`✅ Achat réussi !`);
-            updateHeader();
+                updateHeader();
+
+                // Message de succès
+                showPopup('Achat réussi !', `Félicitations, vous avez acheté ${name}. Vos revenus quotidiens commencent dès demain.`, 'fa-check', 'success');
+            });
         }
     </script>
 </body>
