@@ -1,125 +1,120 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RANGERS (RG) - Accueil</title>
+    <title>RANGERS - Accueil</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { rgBg: '#030509', rgCard: '#0d111a', rgGold: '#f59e0b' } } } }
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
-        .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
-        .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        body { background-color: #f8f9fa; color: #111827; font-family: 'Inter', sans-serif; }
+        .text-brand { color: #0db14b; }
+        .bg-brand { background-color: #0db14b; }
+        .border-brand { border-color: #0db14b; }
+        
+        /* Clignotants */
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        @keyframes pulseGold { 0%, 100% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); } 50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.8); } }
-        .btn-pulse { animation: pulseGold 2s infinite; }
+        @keyframes pulseGreen { 0%, 100% { box-shadow: 0 0 0 rgba(13, 177, 75, 0); } 50% { box-shadow: 0 0 10px rgba(13, 177, 75, 0.5); } }
+        .btn-pulse { animation: pulseGreen 2s infinite; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased pb-24">
+<body class="min-h-screen flex flex-col pb-20">
 
-    <!-- HEADER -->
-    <header class="rg-glass sticky top-0 z-40 px-4 py-3 flex justify-between items-center border-b border-amber-500/10">
-        <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 rounded-xl gold-gradient flex items-center justify-center text-slate-950 font-black">
-                <i class="fa-solid fa-chart-line text-xs"></i>
-            </div>
-            <h1 class="font-black text-sm text-white tracking-wider">RANGERS</h1>
-        </div>
-        <div class="flex items-center space-x-3">
-            <i class="fa-regular fa-bell text-slate-400 text-lg"></i>
-            <a href="compte.html" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700">
-                <i class="fa-solid fa-user text-xs text-amber-500"></i>
-            </a>
-        </div>
-    </header>
-
-    <!-- BANNIÈRE (Bien ajustée) -->
+    <!-- BANNIÈRE IMAGE -->
     <div class="w-full h-44 relative">
         <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover" alt="Banner">
-        <div class="absolute inset-0 bg-gradient-to-t from-[#030509] via-transparent to-transparent"></div>
     </div>
 
-    <main class="max-w-lg mx-auto w-full px-4 -mt-10 space-y-4 relative z-10">
-        
-        <!-- 4 ACTIONS RAPIDES -->
-        <div class="rg-glass p-5 rounded-2xl border border-slate-800 flex justify-between text-center shadow-xl">
+    <!-- CARTE ACTIONS RAPIDES (Soulevée) -->
+    <div class="max-w-lg mx-auto w-full px-4 -mt-8 relative z-10">
+        <div class="bg-white rounded-xl shadow-md p-4 flex justify-between text-center">
             <a href="depot.html" class="flex flex-col items-center">
-                <div class="w-12 h-12 rounded-full bg-slate-950 flex items-center justify-center mb-1 btn-pulse border border-amber-500/30">
-                    <i class="fa-solid fa-dollar-sign text-amber-500 text-lg"></i>
+                <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2 btn-pulse">
+                    <i class="fa-solid fa-dollar-sign text-white text-lg"></i>
                 </div>
-                <span class="text-[11px] font-bold text-white">Recharge</span>
+                <span class="text-xs font-medium text-gray-700">Recharge</span>
             </a>
             <a href="retrait.html" class="flex flex-col items-center">
-                <div class="w-12 h-12 rounded-full bg-slate-950 flex items-center justify-center mb-1 border border-emerald-500/30">
-                    <i class="fa-solid fa-money-bill-transfer text-emerald-500 text-lg"></i>
+                <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2">
+                    <i class="fa-solid fa-money-bill-transfer text-white text-lg"></i>
                 </div>
-                <span class="text-[11px] font-bold text-white">Retrait</span>
+                <span class="text-xs font-medium text-gray-700">Retrait</span>
             </a>
-            <button onclick="alert('Service client disponible 24/7')" class="flex flex-col items-center">
-                <div class="w-12 h-12 rounded-full bg-slate-950 flex items-center justify-center mb-1 border border-cyan-500/30">
-                    <i class="fa-solid fa-comments text-cyan-500 text-lg"></i>
+            <button onclick="alert('Service client disponible')" class="flex flex-col items-center">
+                <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2">
+                    <i class="fa-solid fa-comments text-white text-lg"></i>
                 </div>
-                <span class="text-[11px] font-bold text-white">Aide</span>
+                <span class="text-xs font-medium text-gray-700">Aide</span>
             </button>
             <button onclick="alert('Pointage effectué !')" class="flex flex-col items-center">
-                <div class="w-12 h-12 rounded-full bg-slate-950 flex items-center justify-center mb-1 border border-purple-500/30">
-                    <i class="fa-solid fa-calendar-check text-purple-500 text-lg"></i>
+                <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2">
+                    <i class="fa-solid fa-calendar-check text-white text-lg"></i>
                 </div>
-                <span class="text-[11px] font-bold text-white">Pointage</span>
+                <span class="text-xs font-medium text-gray-700">Pointage</span>
             </button>
         </div>
+    </div>
 
-        <!-- TICKER SCROLLING -->
-        <div class="rg-glass p-3 rounded-2xl border border-slate-800 flex items-center overflow-hidden text-xs whitespace-nowrap shadow-lg">
-            <i class="fa-solid fa-bell text-amber-500 mr-2"></i>
-            <div class="inline-block animate-[marquee_15s_linear_infinite] text-slate-300">
-                <span>*****3175 a rechargé 2,000 FCFA • *****4371 a rechargé 5,000 FCFA • *****1234 a investi dans VIP 3</span>
+    <main class="max-w-lg mx-auto w-full px-4 mt-4 space-y-4">
+        
+        <!-- TICKER VERT -->
+        <div class="bg-brand text-white text-xs py-2 px-3 rounded-lg flex items-center overflow-hidden shadow-sm">
+            <i class="fa-solid fa-bell mr-2"></i>
+            <div class="inline-block animate-[marquee_15s_linear_infinite] whitespace-nowrap">
+                *****3175 a rechargé 2,000 • *****4371 a rechargé 2,000 • *****1234 a acheté VIP 1
             </div>
         </div>
 
-        <!-- SOLDES (2 colonnes parfaites) -->
+        <!-- SOLDES (2 images produits comme sur ta capture) -->
         <div class="grid grid-cols-2 gap-3">
-            <div class="rg-glass p-5 rounded-2xl border border-slate-800 text-center shadow-lg">
-                <p class="text-[11px] font-bold text-slate-400 mb-1">Solde du compte</p>
-                <p class="text-xl font-black text-amber-500">FCFA <span id="home-balance">0</span></p>
+            <div class="bg-gray-200 rounded-lg overflow-hidden flex flex-col items-center">
+                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-24 object-cover" alt="Scooter">
+                <div class="p-3 text-center bg-white w-full">
+                    <h3 class="text-lg font-black text-gray-900">FCFA <span id="home-balance">1,000</span></h3>
+                    <p class="text-xs text-brand font-bold mt-1">Solde du compte</p>
+                </div>
             </div>
-            <div class="rg-glass p-5 rounded-2xl border border-slate-800 text-center shadow-lg">
-                <p class="text-[11px] font-bold text-slate-400 mb-1">Revenus cumulés</p>
-                <p class="text-xl font-black text-emerald-400">FCFA <span id="home-revenue">0</span></p>
+            <div class="bg-gray-200 rounded-lg overflow-hidden flex flex-col items-center">
+                <img src="https://files.catbox.moe/499w19.jpg" class="w-full h-24 object-cover" alt="Scooter">
+                <div class="p-3 text-center bg-white w-full">
+                    <h3 class="text-lg font-black text-gray-900">FCFA <span id="home-revenue">0</span></h3>
+                    <p class="text-xs text-brand font-bold mt-1">Revenus cumulés</p>
+                </div>
             </div>
         </div>
 
-        <!-- IMPLANTATIONS (Photos bien alignées en grille) -->
-        <div class="text-center pt-6 pb-4">
-            <h2 class="text-lg font-black text-amber-500 mb-1">Implantations</h2>
-            <p class="text-xs text-slate-400 mb-3">Notre ville</p>
+        <!-- IMPLANTATIONS -->
+        <div class="text-center pt-4 pb-6">
+            <h2 class="text-lg font-bold text-brand mb-1">Implantations</h2>
+            <p class="text-sm text-gray-500 mb-3">Notre ville</p>
             <div class="grid grid-cols-4 gap-2">
-                <img src="https://files.catbox.moe/499w19.jpg" class="w-full h-16 object-cover rounded-lg border border-slate-700 shadow-md">
-                <img src="https://files.catbox.moe/78dszw.jpg" class="w-full h-16 object-cover rounded-lg border border-slate-700 shadow-md">
-                <img src="https://files.catbox.moe/tn5jfj.jpg" class="w-full h-16 object-cover rounded-lg border border-slate-700 shadow-md">
-                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-16 object-cover rounded-lg border border-slate-700 shadow-md">
+                <img src="https://files.catbox.moe/499w19.jpg" class="w-full h-16 object-cover rounded-md shadow-sm">
+                <img src="https://files.catbox.moe/78dszw.jpg" class="w-full h-16 object-cover rounded-md shadow-sm">
+                <img src="https://files.catbox.moe/tn5jfj.jpg" class="w-full h-16 object-cover rounded-md shadow-sm">
+                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-16 object-cover rounded-md shadow-sm">
+                <img src="https://files.catbox.moe/499w19.jpg" class="w-full h-16 object-cover rounded-md shadow-sm">
+                <img src="https://files.catbox.moe/78dszw.jpg" class="w-full h-16 object-cover rounded-md shadow-sm">
+                <img src="https://files.catbox.moe/tn5jfj.jpg" class="w-full h-16 object-cover rounded-md shadow-sm">
+                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-16 object-cover rounded-md shadow-sm">
             </div>
         </div>
     </main>
 
     <!-- NAV BAS -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-[#0d111a] border-t border-slate-800 flex justify-around py-3 z-40">
-        <a href="index.html" class="flex flex-col items-center text-amber-500"><i class="fa-solid fa-house text-lg"></i><span class="text-[10px] font-bold mt-1">Accueil</span></a>
-        <a href="produits.html" class="flex flex-col items-center text-slate-500 hover:text-white transition"><i class="fa-solid fa-bicycle text-lg"></i><span class="text-[10px] font-bold mt-1">Produit</span></a>
-        <a href="equipe.html" class="flex flex-col items-center text-slate-500 hover:text-white transition"><i class="fa-solid fa-users text-lg"></i><span class="text-[10px] font-bold mt-1">Équipe</span></a>
-        <a href="compte.html" class="flex flex-col items-center text-slate-500 hover:text-white transition"><i class="fa-solid fa-user text-lg"></i><span class="text-[10px] font-bold mt-1">Compte</span></a>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 z-40">
+        <a href="index.html" class="flex flex-col items-center text-brand"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1">Accueil</span></a>
+        <a href="produits.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-bicycle text-xl"></i><span class="text-[10px] mt-1">Produit</span></a>
+        <a href="equipe.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-users text-xl"></i><span class="text-[10px] mt-1">Équipe</span></a>
+        <a href="compte.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-user text-xl"></i><span class="text-[10px] mt-1">Mon compte</span></a>
     </nav>
 
     <script>
-        if(localStorage.getItem('rg_recharge') === null) {
-            localStorage.setItem('rg_recharge', '1000.00');
-            localStorage.setItem('rg_revenue', '1000.00');
+        if(!localStorage.getItem('rg_recharge')) {
+            localStorage.setItem('rg_recharge', '1000');
+            localStorage.setItem('rg_revenue', '0');
         }
-        document.getElementById('home-balance').innerText = parseFloat(localStorage.getItem('rg_recharge') || 0).toLocaleString();
-        document.getElementById('home-revenue').innerText = parseFloat(localStorage.getItem('rg_revenue') || 0).toLocaleString();
+        document.getElementById('home-balance').innerText = parseFloat(localStorage.getItem('rg_recharge')).toLocaleString();
+        document.getElementById('home-revenue').innerText = parseFloat(localStorage.getItem('rg_revenue')).toLocaleString();
     </script>
 </body>
 </html>
