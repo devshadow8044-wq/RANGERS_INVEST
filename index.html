@@ -6,20 +6,16 @@
     <title>RANGERS (RG) - Accueil</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { rgBg: '#030509', rgCard: '#0d111a', rgGold: '#f59e0b', rgBorder: '#1e2638' } } } }
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { rgBg: '#030509', rgCard: '#0d111a', rgGold: '#f59e0b' } } } }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
         .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
         .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        
-        /* --- CLIGNOTANTS --- */
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
         @keyframes pulseGold { 0%, 100% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); } 50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.8); } }
         .btn-pulse { animation: pulseGold 2s infinite; }
-        
-        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased pb-24">
@@ -40,94 +36,90 @@
         </div>
     </header>
 
-    <!-- BANNIÈRE -->
-    <div class="h-40 w-full relative">
-        <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-90" alt="Banner">
-        <div class="absolute inset-0 bg-gradient-to-t from-[#030509] to-transparent"></div>
+    <!-- BANNIÈRE (Bien ajustée) -->
+    <div class="w-full h-44 relative">
+        <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover" alt="Banner">
+        <div class="absolute inset-0 bg-gradient-to-t from-[#030509] via-transparent to-transparent"></div>
     </div>
 
-    <main class="max-w-lg mx-auto w-full px-3 -mt-8 space-y-4 relative z-10">
+    <main class="max-w-lg mx-auto w-full px-4 -mt-10 space-y-4 relative z-10">
         
         <!-- 4 ACTIONS RAPIDES -->
-        <div class="rg-glass p-4 rounded-2xl border border-slate-800 flex justify-between text-center shadow-xl">
+        <div class="rg-glass p-5 rounded-2xl border border-slate-800 flex justify-between text-center shadow-xl">
             <a href="depot.html" class="flex flex-col items-center">
-                <div class="w-10 h-10 rounded-full bg-slate-950 flex items-center justify-center mb-1 btn-pulse">
-                    <i class="fa-solid fa-dollar-sign text-amber-500"></i>
+                <div class="w-12 h-12 rounded-full bg-slate-950 flex items-center justify-center mb-1 btn-pulse border border-amber-500/30">
+                    <i class="fa-solid fa-dollar-sign text-amber-500 text-lg"></i>
                 </div>
-                <span class="text-[10px] font-bold text-white">Recharge</span>
+                <span class="text-[11px] font-bold text-white">Recharge</span>
             </a>
             <a href="retrait.html" class="flex flex-col items-center">
-                <div class="w-10 h-10 rounded-full bg-slate-950 flex items-center justify-center mb-1">
-                    <i class="fa-solid fa-money-bill-transfer text-emerald-500"></i>
+                <div class="w-12 h-12 rounded-full bg-slate-950 flex items-center justify-center mb-1 border border-emerald-500/30">
+                    <i class="fa-solid fa-money-bill-transfer text-emerald-500 text-lg"></i>
                 </div>
-                <span class="text-[10px] font-bold text-white">Retrait</span>
+                <span class="text-[11px] font-bold text-white">Retrait</span>
             </a>
-            <button onclick="showAlert('Service client disponible 24/7')" class="flex flex-col items-center">
-                <div class="w-10 h-10 rounded-full bg-slate-950 flex items-center justify-center mb-1">
-                    <i class="fa-solid fa-comments text-cyan-500"></i>
+            <button onclick="alert('Service client disponible 24/7')" class="flex flex-col items-center">
+                <div class="w-12 h-12 rounded-full bg-slate-950 flex items-center justify-center mb-1 border border-cyan-500/30">
+                    <i class="fa-solid fa-comments text-cyan-500 text-lg"></i>
                 </div>
-                <span class="text-[10px] font-bold text-white">Aide</span>
+                <span class="text-[11px] font-bold text-white">Aide</span>
             </button>
-            <button onclick="showAlert('Pointage effectué ! Revenus ajoutés.')" class="flex flex-col items-center">
-                <div class="w-10 h-10 rounded-full bg-slate-950 flex items-center justify-center mb-1">
-                    <i class="fa-solid fa-calendar-check text-purple-500"></i>
+            <button onclick="alert('Pointage effectué !')" class="flex flex-col items-center">
+                <div class="w-12 h-12 rounded-full bg-slate-950 flex items-center justify-center mb-1 border border-purple-500/30">
+                    <i class="fa-solid fa-calendar-check text-purple-500 text-lg"></i>
                 </div>
-                <span class="text-[10px] font-bold text-white">Pointage</span>
+                <span class="text-[11px] font-bold text-white">Pointage</span>
             </button>
         </div>
 
         <!-- TICKER SCROLLING -->
-        <div class="rg-glass p-3 rounded-2xl border border-slate-800 flex items-center overflow-hidden text-xs whitespace-nowrap">
-            <i class="fa-solid fa-bell text-emerald-500 mr-2"></i>
-            <div class="inline-block animate-[marquee_15s_linear_infinite] text-slate-400">
-                <span>*****3175 a rechargé 2,000 FCFA • *****4371 a rechargé 5,000 FCFA • *****1234 a investi dans VIP 3 •</span>
+        <div class="rg-glass p-3 rounded-2xl border border-slate-800 flex items-center overflow-hidden text-xs whitespace-nowrap shadow-lg">
+            <i class="fa-solid fa-bell text-amber-500 mr-2"></i>
+            <div class="inline-block animate-[marquee_15s_linear_infinite] text-slate-300">
+                <span>*****3175 a rechargé 2,000 FCFA • *****4371 a rechargé 5,000 FCFA • *****1234 a investi dans VIP 3</span>
             </div>
         </div>
 
-        <!-- SOLDES -->
+        <!-- SOLDES (2 colonnes parfaites) -->
         <div class="grid grid-cols-2 gap-3">
-            <div class="rg-glass p-4 rounded-2xl border border-slate-800 text-center">
-                <p class="text-xs font-bold text-slate-400 mb-1">Solde du compte</p>
-                <p class="text-lg font-black text-amber-500">FCFA <span id="home-balance">0</span></p>
+            <div class="rg-glass p-5 rounded-2xl border border-slate-800 text-center shadow-lg">
+                <p class="text-[11px] font-bold text-slate-400 mb-1">Solde du compte</p>
+                <p class="text-xl font-black text-amber-500">FCFA <span id="home-balance">0</span></p>
             </div>
-            <div class="rg-glass p-4 rounded-2xl border border-slate-800 text-center">
-                <p class="text-xs font-bold text-slate-400 mb-1">Revenus cumulés</p>
-                <p class="text-lg font-black text-emerald-400">FCFA <span id="home-revenue">0</span></p>
+            <div class="rg-glass p-5 rounded-2xl border border-slate-800 text-center shadow-lg">
+                <p class="text-[11px] font-bold text-slate-400 mb-1">Revenus cumulés</p>
+                <p class="text-xl font-black text-emerald-400">FCFA <span id="home-revenue">0</span></p>
             </div>
         </div>
 
-        <!-- IMPLANTATIONS -->
-        <div class="text-center pt-4">
-            <h2 class="text-base font-black text-amber-500 mb-1">Implantations</h2>
+        <!-- IMPLANTATIONS (Photos bien alignées en grille) -->
+        <div class="text-center pt-6 pb-4">
+            <h2 class="text-lg font-black text-amber-500 mb-1">Implantations</h2>
             <p class="text-xs text-slate-400 mb-3">Notre ville</p>
             <div class="grid grid-cols-4 gap-2">
-                <img src="https://files.catbox.moe/499w19.jpg" class="w-full h-16 object-cover rounded-lg">
-                <img src="https://files.catbox.moe/78dszw.jpg" class="w-full h-16 object-cover rounded-lg">
-                <img src="https://files.catbox.moe/tn5jfj.jpg" class="w-full h-16 object-cover rounded-lg">
-                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-16 object-cover rounded-lg">
+                <img src="https://files.catbox.moe/499w19.jpg" class="w-full h-16 object-cover rounded-lg border border-slate-700 shadow-md">
+                <img src="https://files.catbox.moe/78dszw.jpg" class="w-full h-16 object-cover rounded-lg border border-slate-700 shadow-md">
+                <img src="https://files.catbox.moe/tn5jfj.jpg" class="w-full h-16 object-cover rounded-lg border border-slate-700 shadow-md">
+                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-16 object-cover rounded-lg border border-slate-700 shadow-md">
             </div>
         </div>
     </main>
 
-    <!-- NAVIGATION BAS -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-slate-950 border-t border-slate-800 flex justify-around py-3 z-40">
+    <!-- NAV BAS -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-[#0d111a] border-t border-slate-800 flex justify-around py-3 z-40">
         <a href="index.html" class="flex flex-col items-center text-amber-500"><i class="fa-solid fa-house text-lg"></i><span class="text-[10px] font-bold mt-1">Accueil</span></a>
-        <a href="produits.html" class="flex flex-col items-center text-slate-500 hover:text-white"><i class="fa-solid fa-bicycle text-lg"></i><span class="text-[10px] font-bold mt-1">Produit</span></a>
-        <a href="equipe.html" class="flex flex-col items-center text-slate-500 hover:text-white"><i class="fa-solid fa-users text-lg"></i><span class="text-[10px] font-bold mt-1">Équipe</span></a>
-        <a href="compte.html" class="flex flex-col items-center text-slate-500 hover:text-white"><i class="fa-solid fa-user text-lg"></i><span class="text-[10px] font-bold mt-1">Mon compte</span></a>
+        <a href="produits.html" class="flex flex-col items-center text-slate-500 hover:text-white transition"><i class="fa-solid fa-bicycle text-lg"></i><span class="text-[10px] font-bold mt-1">Produit</span></a>
+        <a href="equipe.html" class="flex flex-col items-center text-slate-500 hover:text-white transition"><i class="fa-solid fa-users text-lg"></i><span class="text-[10px] font-bold mt-1">Équipe</span></a>
+        <a href="compte.html" class="flex flex-col items-center text-slate-500 hover:text-white transition"><i class="fa-solid fa-user text-lg"></i><span class="text-[10px] font-bold mt-1">Compte</span></a>
     </nav>
 
     <script>
-        // INITIALISATION
         if(localStorage.getItem('rg_recharge') === null) {
             localStorage.setItem('rg_recharge', '1000.00');
-            localStorage.setItem('rg_retirable', '0.00');
             localStorage.setItem('rg_revenue', '1000.00');
         }
-        document.getElementById('home-balance').innerText = parseFloat(localStorage.getItem('rg_recharge')).toLocaleString();
-        document.getElementById('home-revenue').innerText = parseFloat(localStorage.getItem('rg_revenue')).toLocaleString();
-
-        function showAlert(msg) { alert(msg); }
+        document.getElementById('home-balance').innerText = parseFloat(localStorage.getItem('rg_recharge') || 0).toLocaleString();
+        document.getElementById('home-revenue').innerText = parseFloat(localStorage.getItem('rg_revenue') || 0).toLocaleString();
     </script>
 </body>
 </html>
