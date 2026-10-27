@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RANGERS (RG) - Connexion Administrateur</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        rgBg: '#030509',
+                        rgCard: '#0d111a',
+                        rgGold: '#f59e0b',
+                        rgBorder: '#1e2638'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
+        .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.2); }
+        .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.8); }
+        }
+        .btn-pulse { animation: pulseGlow 2s infinite; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 antialiased">
+
+    <div class="max-w-md w-full space-y-6">
+        
+        <!-- BANNIÈRE & LOGO ADMIN -->
+        <div class="rg-glass rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl relative">
+            <div class="h-32 w-full relative">
+                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-slate-950/40 to-transparent"></div>
+                <div class="absolute top-3 right-3 px-3 py-1 rounded-full bg-red-500/20 border border-red-500/40 text-[10px] font-black text-red-400 flex items-center space-x-1 shadow-lg">
+                    <i class="fa-solid fa-lock"></i><span>Zone Restreinte</span>
+                </div>
+            </div>
+            <div class="p-6 pt-0 relative -mt-8 text-center space-y-2">
+                <div class="w-16 h-16 rounded-2xl gold-gradient mx-auto flex items-center justify-center text-slate-950 text-2xl font-black shadow-xl border-2 border-slate-950 btn-pulse">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h1 class="text-xl font-black text-white tracking-wider">PORTAIL ADMIN</h1>
+                <p class="text-xs text-slate-400">Supervision & Validation RANGERS (RG)</p>
+            </div>
+        </div>
+
+        <!-- FORMULAIRE DE CONNEXION ADMIN -->
+        <div class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/30 shadow-xl">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">// Authentification Superviseur</h3>
+            
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Numéro administrateur</label>
+                    <input type="text" id="admin-phone" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-amber-400 font-mono focus:outline-none focus:border-amber-500" placeholder="755545742">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de passe / Code Admin</label>
+                    <input type="password" id="admin-pass" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="admin221">
+                </div>
+            </div>
+
+            <button onclick="handleAdminLogin()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse flex items-center justify-center space-x-2">
+                <span>Accéder au Panneau d'Administration</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </button>
+
+            <div class="text-center pt-2">
+                <a href="index.html" class="text-[11px] text-slate-500 hover:text-white transition">← Retourner sur le site principal</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- POPUP ALERTE -->
+    <div id="custom-alert" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden p-4">
+        <div class="rg-glass max-w-xs w-full p-6 rounded-3xl text-center space-y-4 border border-amber-500/30 shadow-2xl">
+            <p id="alert-text" class="text-xs text-white font-medium leading-relaxed">Message</p>
+            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs">OK</button>
+        </div>
+    </div>
+
+    <script>
+        function showAlert(msg) {
+            document.getElementById('alert-text').innerText = msg;
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+        function closeAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
+        }
+
+        function handleAdminLogin() {
+            const phone = document.getElementById('admin-phone').value.trim();
+            const pass = document.getElementById('admin-pass').value.trim();
+
+            // Vérification des identifiants stricts de l'administrateur
+            if((phone === '755545742' || phone === 'admin') && pass === 'admin221') {
+                localStorage.setItem('rg_admin_logged', 'true');
+                showAlert("Accès accordé ! Redirection vers le panneau de validation...");
+                setTimeout(() => { location.href = 'admin.html'; }, 1500);
+            } else {
+                showAlert("Erreur : Numéro ou mot de passe administrateur incorrect.");
+            }
+        }
+    </script>
+</body>
+</html>
