@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RANGERS - Mon Compte</title>
+    <title>RANGERS - Accueil</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -11,63 +11,23 @@
         .text-brand { color: #0db14b; }
         .bg-brand { background-color: #0db14b; }
         
-        /* 🚀 OPTIMISATION MOBILE (Supprime la lenteur au clic) */
-        a, button {
-            -webkit-tap-highlight-color: transparent; /* Enlève le flash bleu au clic */
-            touch-action: manipulation; /* Supprime le délai de 300ms */
-            user-select: none; /* Empêche la sélection de texte par accident */
-        }
-
-        /* 🚀 ACCÉLÉRATION MATÉRIELLE POUR LA BARRE DU BAS */
-        nav {
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
-            will-change: transform;
-            backface-visibility: hidden;
-        }
-
-        @keyframes pulseGreen { 
-            0%, 100% { box-shadow: 0 0 0 rgba(13, 177, 75, 0); transform: scale(1); } 
-            50% { box-shadow: 0 0 10px rgba(13, 177, 75, 0.4); transform: scale(1.05); } 
-        }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        @keyframes pulseGreen { 0%, 100% { box-shadow: 0 0 0 rgba(13, 177, 75, 0); } 50% { box-shadow: 0 0 10px rgba(13, 177, 75, 0.5); } }
         .btn-pulse { animation: pulseGreen 2s infinite; }
-
-        @keyframes popIn {
-            0% { transform: scale(0.9); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .pop-in { animation: popIn 0.3s ease-out; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col pb-20">
 
-    <header class="bg-white sticky top-0 z-40 px-4 py-3 border-b border-gray-200 flex justify-between items-center shadow-sm">
-        <div class="flex items-center space-x-2">
-            <h1 class="font-bold text-base text-gray-800">Mon compte</h1>
-        </div>
-        <div class="flex items-center space-x-3">
-            <button onclick="location.reload()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:text-black">
-                <i class="fa-solid fa-rotate-right text-sm"></i>
-            </button>
-        </div>
-    </header>
+    <!-- BANNIÈRE -->
+    <div class="w-full h-44 relative">
+        <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover" alt="Banner">
+    </div>
 
-    <main class="max-w-lg mx-auto w-full p-4 space-y-4">
-        
-        <!-- SOLDES -->
-        <div class="bg-white rounded-xl shadow-sm p-4 flex divide-x divide-gray-200 text-center border border-gray-100">
-            <div class="w-1/2">
-                <p class="text-lg font-black text-brand mb-1">FCFA <span id="balance">0</span></p>
-                <p class="text-xs text-gray-500 font-medium">Solde du compte</p>
-            </div>
-            <div class="w-1/2">
-                <p class="text-lg font-black text-brand mb-1">FCFA <span id="revenue">0</span></p>
-                <p class="text-xs text-gray-500 font-medium">Revenus cumulés</p>
-            </div>
-        </div>
-
-        <!-- 4 ACTIONS -->
-        <div class="bg-white rounded-xl shadow-sm p-4 flex justify-between text-center border border-gray-100">
+    <!-- CARTE ACTIONS RAPIDES -->
+    <div class="max-w-lg mx-auto w-full px-4 -mt-8 relative z-10">
+        <div class="bg-white rounded-xl shadow-md p-4 flex justify-between text-center">
             <a href="depot.html" class="flex flex-col items-center">
                 <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2 btn-pulse">
                     <i class="fa-solid fa-dollar-sign text-white text-lg"></i>
@@ -80,12 +40,14 @@
                 </div>
                 <span class="text-xs font-medium text-gray-700">Retrait</span>
             </a>
-            <button onclick="showInfoPopup('Support', 'Le service client RANGERS est disponible 24h/24 et 7j/7.', 'fa-headset')" class="flex flex-col items-center">
+            <!-- Bouton Aide avec Popup -->
+            <button onclick="showPopup('Support Client', 'Notre service client est disponible 24h/24 et 7j/7 pour vous accompagner.', 'fa-headset')" class="flex flex-col items-center">
                 <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2">
                     <i class="fa-solid fa-comments text-white text-lg"></i>
                 </div>
                 <span class="text-xs font-medium text-gray-700">Aide</span>
             </button>
+            <!-- Bouton Pointage (Lien direct) -->
             <a href="pointage.html" class="flex flex-col items-center">
                 <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2">
                     <i class="fa-solid fa-calendar-check text-white text-lg"></i>
@@ -93,238 +55,91 @@
                 <span class="text-xs font-medium text-gray-700">Pointage</span>
             </a>
         </div>
+    </div>
 
-        <!-- CENTRE DE TÂCHES -->
-        <a href="centre-taches.html" class="block relative rounded-xl overflow-hidden h-36 shadow-sm">
-            <img src="https://files.catbox.moe/78dszw.jpg" class="w-full h-full object-cover" alt="Task">
-            <div class="absolute inset-0 bg-black/60 p-4 flex flex-col justify-center items-end">
-                <h3 class="text-white font-black text-xl text-right leading-tight">Centre de tâches</h3>
-                <p class="text-[11px] text-gray-200 text-right w-2/3 mt-1">Accomplissez des tâches et obtenez de généreux bonus</p>
-                <span class="mt-2 bg-brand text-white text-xs font-bold px-6 py-1.5 rounded-full shadow-md">Aller</span>
-            </div>
-        </a>
-
-        <!-- SECTION PLUS -->
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-            <h4 class="text-base font-bold text-gray-800 mb-5 ml-1">Plus</h4>
-            <div class="grid grid-cols-4 gap-y-6 text-center">
-                
-                <button onclick="showInfoPopup('À propos', 'RANGERS (RG) est une plateforme d\'investissement innovante.', 'fa-circle-info')" class="flex flex-col items-center">
-                    <i class="fa-solid fa-circle-info text-2xl text-black mb-1.5"></i>
-                    <span class="text-[10px] text-gray-700 font-medium leading-tight">À propos de<br>nous</span>
-                </button>
-                
-                <button onclick="showInfoPopup('Réglementation', 'Toutes nos transactions sont sécurisées.', 'fa-bookmark')" class="flex flex-col items-center">
-                    <i class="fa-solid fa-bookmark text-2xl text-black mb-1.5"></i>
-                    <span class="text-[10px] text-gray-700 font-medium">Réglementation</span>
-                </button>
-                
-                <a href="historique.html" class="flex flex-col items-center">
-                    <i class="fa-solid fa-file-lines text-2xl text-black mb-1.5"></i>
-                    <span class="text-[10px] text-gray-700 font-medium">Historique</span>
-                </a>
-                
-                <button onclick="showInfoPopup('Service Client', 'Notre support technique est joignable au +221 75 554 57 42.', 'fa-comments')" class="flex flex-col items-center">
-                    <i class="fa-solid fa-comments text-2xl text-black mb-1.5"></i>
-                    <span class="text-[10px] text-gray-700 font-medium">Service client</span>
-                </button>
-                
-                <button onclick="showInfoPopup('Application Mobile', 'Notre application mobile est en cours de développement.', 'fa-download')" class="flex flex-col items-center">
-                    <i class="fa-solid fa-download text-2xl text-black mb-1.5"></i>
-                    <span class="text-[10px] text-gray-700 font-medium leading-tight">Télécharger<br>l'appli</span>
-                </button>
-                
-                <button onclick="showInfoPopup('Lier une carte', 'La liaison de carte bancaire sera disponible prochainement.', 'fa-credit-card')" class="flex flex-col items-center">
-                    <i class="fa-regular fa-credit-card text-2xl text-black mb-1.5"></i>
-                    <span class="text-[10px] text-gray-700 font-medium">Lier une carte</span>
-                </button>
-                
-                <button onclick="showInfoPopup('Mot de passe', 'Pour modifier votre mot de passe, contactez le service client.', 'fa-pen-to-square')" class="flex flex-col items-center">
-                    <i class="fa-solid fa-pen-to-square text-2xl text-black mb-1.5"></i>
-                    <span class="text-[10px] text-gray-700 font-medium leading-tight">Modifier le<br>MDP</span>
-                </button>
-                
-                <!-- BOUTON CODE CADEAU -->
-                <button onclick="openGiftPopup()" class="flex flex-col items-center">
-                    <i class="fa-solid fa-gift text-2xl text-amber-500 mb-1.5"></i>
-                    <span class="text-[10px] text-gray-700 font-medium">Code cadeau</span>
-                </button>
+    <main class="max-w-lg mx-auto w-full px-4 mt-4 space-y-4">
+        
+        <!-- TICKER VERT -->
+        <div class="bg-brand text-white text-xs py-2 px-3 rounded-lg flex items-center overflow-hidden shadow-sm">
+            <i class="fa-solid fa-bell mr-2"></i>
+            <div class="inline-block animate-[marquee_15s_linear_infinite] whitespace-nowrap">
+                *****3175 a rechargé 2,000 • *****4371 a rechargé 2,000 • *****1234 a acheté VIP 1
             </div>
         </div>
 
-        <!-- DÉCONNEXION -->
-        <button onclick="showLogoutConfirm()" class="w-full mt-4 py-3.5 rounded-xl bg-red-50 text-red-500 font-bold text-sm border border-red-200 hover:bg-red-100 transition shadow-sm">
-            <i class="fa-solid fa-right-from-bracket mr-2"></i> Se déconnecter
-        </button>
+        <!-- SOLDES -->
+        <div class="grid grid-cols-2 gap-3">
+            <div class="bg-gray-200 rounded-lg overflow-hidden flex flex-col items-center">
+                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-24 object-cover" alt="Scooter">
+                <div class="p-3 text-center bg-white w-full">
+                    <h3 class="text-lg font-black text-gray-900">FCFA <span id="home-balance">0</span></h3>
+                    <p class="text-xs text-brand font-bold mt-1">Solde du compte</p>
+                </div>
+            </div>
+            <div class="bg-gray-200 rounded-lg overflow-hidden flex flex-col items-center">
+                <img src="https://files.catbox.moe/499w19.jpg" class="w-full h-24 object-cover" alt="Scooter">
+                <div class="p-3 text-center bg-white w-full">
+                    <h3 class="text-lg font-black text-gray-900">FCFA <span id="home-revenue">0</span></h3>
+                    <p class="text-xs text-brand font-bold mt-1">Revenus cumulés</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- IMPLANTATIONS -->
+        <div class="text-center pt-4 pb-6">
+            <h2 class="text-lg font-bold text-brand mb-1">Implantations</h2>
+            <!-- MODIFICATION ICI : "Notre voiture" au lieu de "Notre ville" -->
+            <p class="text-sm text-gray-500 mb-3">Notre voiture</p>
+            <div class="grid grid-cols-4 gap-2">
+                <img src="https://files.catbox.moe/499w19.jpg" class="w-full h-16 object-cover rounded-md shadow-sm" onerror="this.src='https://files.catbox.moe/9kbqzl.jpg'">
+                <img src="https://files.catbox.moe/78dszw.jpg" class="w-full h-16 object-cover rounded-md shadow-sm" onerror="this.src='https://files.catbox.moe/9kbqzl.jpg'">
+                <img src="https://files.catbox.moe/tn5jfj.jpg" class="w-full h-16 object-cover rounded-md shadow-sm" onerror="this.src='https://files.catbox.moe/9kbqzl.jpg'">
+                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-16 object-cover rounded-md shadow-sm">
+                <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=500&q=80" class="w-full h-16 object-cover rounded-md shadow-sm" onerror="this.src='https://files.catbox.moe/9kbqzl.jpg'">
+                <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=500&q=80" class="w-full h-16 object-cover rounded-md shadow-sm" onerror="this.src='https://files.catbox.moe/499w19.jpg'">
+                <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=500&q=80" class="w-full h-16 object-cover rounded-md shadow-sm" onerror="this.src='https://files.catbox.moe/78dszw.jpg'">
+                <img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=500&q=80" class="w-full h-16 object-cover rounded-md shadow-sm" onerror="this.src='https://files.catbox.moe/tn5jfj.jpg'">
+            </div>
+        </div>
     </main>
 
-    <!-- NAV BAS (Allégée pour être plus rapide) -->
+    <!-- NAV BAS -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 z-40">
-        <a href="index.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800 transition">
-            <i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1 font-medium">Accueil</span>
-        </a>
-        <a href="produits.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800 transition">
-            <i class="fa-solid fa-car text-xl"></i><span class="text-[10px] mt-1 font-medium">Produit</span>
-        </a>
-        <a href="equipe.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800 transition">
-            <i class="fa-solid fa-users text-xl"></i><span class="text-[10px] mt-1 font-medium">Équipe</span>
-        </a>
-        <a href="compte.html" class="flex flex-col items-center text-brand">
-            <i class="fa-solid fa-user text-xl"></i><span class="text-[10px] mt-1 font-bold">Compte</span>
-        </a>
+        <a href="index.html" class="flex flex-col items-center text-brand"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1">Accueil</span></a>
+        <a href="produits.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-bicycle text-xl"></i><span class="text-[10px] mt-1">Produit</span></a>
+        <a href="equipe.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-users text-xl"></i><span class="text-[10px] mt-1">Équipe</span></a>
+        <a href="compte.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-user text-xl"></i><span class="text-[10px] mt-1">Mon compte</span></a>
     </nav>
 
-    <!-- 🌟 POPUP CODE CADEAU -->
-    <div id="gift-popup" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden p-4">
+    <!-- POPUP UNIVERSELLE -->
+    <div id="universal-popup" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden p-4">
         <div class="bg-white max-w-sm w-full p-6 rounded-3xl text-center space-y-4 shadow-2xl pop-in relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-2 bg-amber-500"></div>
-            <div class="w-16 h-16 rounded-full bg-amber-50 text-amber-500 mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2">
-                <i class="fa-solid fa-gift"></i>
+            <div class="absolute top-0 left-0 w-full h-2 bg-brand"></div>
+            <div class="w-16 h-16 rounded-full bg-green-50 text-brand mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2">
+                <i id="popup-icon" class="fa-solid fa-circle-info"></i>
             </div>
-            <h3 class="text-lg font-black text-gray-800">Code Cadeau</h3>
-            <p class="text-xs text-gray-500">Entrez votre code promo pour recevoir un bonus.</p>
-            
-            <div class="pt-2">
-                <input type="text" id="gift-code-input" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-center text-lg font-bold text-gray-800 uppercase focus:outline-none focus:border-amber-500" placeholder="XXXXXX">
-            </div>
-
-            <div class="flex gap-2 mt-4">
-                <button onclick="closeGiftPopup()" class="w-1/2 py-3 rounded-xl bg-gray-100 text-gray-700 font-bold text-sm transition hover:bg-gray-200">Annuler</button>
-                <button onclick="verifyGiftCode()" class="w-1/2 py-3 rounded-xl bg-brand text-white font-bold text-sm shadow-md transition hover:bg-green-600">Vérifier</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- POPUP INFO GENERALE -->
-    <div id="info-popup" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden p-4">
-        <div class="bg-white max-w-sm w-full p-6 rounded-3xl text-center space-y-4 shadow-2xl pop-in relative overflow-hidden">
-            <div id="info-top-bar" class="absolute top-0 left-0 w-full h-2 bg-brand"></div>
-            <div id="info-icon-bg" class="w-16 h-16 rounded-full bg-green-50 text-brand mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2">
-                <i id="info-icon" class="fa-solid fa-circle-info"></i>
-            </div>
-            <h3 id="info-title" class="text-lg font-black text-gray-800">Titre</h3>
-            <p id="info-message" class="text-sm text-gray-600 leading-relaxed">Message</p>
-            <button onclick="closeInfoPopup()" class="w-full py-3 rounded-xl bg-brand text-white font-bold text-sm shadow-md mt-2">Compris</button>
-        </div>
-    </div>
-
-    <!-- POPUP CONFIRMATION DÉCONNEXION -->
-    <div id="confirm-popup" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden p-4">
-        <div class="bg-white max-w-sm w-full p-6 rounded-3xl text-center space-y-4 shadow-2xl pop-in">
-            <div class="w-16 h-16 rounded-full bg-red-50 text-red-500 mx-auto flex items-center justify-center text-3xl mb-2">
-                <i class="fa-solid fa-right-from-bracket"></i>
-            </div>
-            <h3 class="text-lg font-black text-gray-800">Déconnexion</h3>
-            <p class="text-sm text-gray-600">Voulez-vous vraiment quitter votre session ?</p>
-            <div class="flex gap-2 mt-4">
-                <button onclick="closeConfirmPopup()" class="w-1/2 py-3 rounded-xl bg-gray-100 text-gray-700 font-bold text-sm">Annuler</button>
-                <button onclick="executeLogout()" class="w-1/2 py-3 rounded-xl bg-red-500 text-white font-bold text-sm shadow-md">Quitter</button>
-            </div>
+            <h3 id="popup-title" class="text-lg font-black text-gray-800">Titre</h3>
+            <p id="popup-message" class="text-sm text-gray-600 leading-relaxed">Message</p>
+            <button onclick="closePopup()" class="w-full py-3 rounded-xl bg-brand text-white font-bold text-sm shadow-md mt-2">Compris</button>
         </div>
     </div>
 
     <script>
-        // ====== CHARGEMENT DES SOLDES ======
-        function updateBalances() {
-            if(localStorage.getItem('rg_recharge') === null) {
-                localStorage.setItem('rg_recharge', '1000');
-                localStorage.setItem('rg_revenue', '0');
-            }
-            const balance = parseFloat(localStorage.getItem('rg_recharge') || '0');
-            const revenue = parseFloat(localStorage.getItem('rg_revenue') || '0');
-            document.getElementById('balance').innerText = balance.toLocaleString('fr-FR');
-            document.getElementById('revenue').innerText = revenue.toLocaleString('fr-FR');
+        if(!localStorage.getItem('rg_recharge')) {
+            localStorage.setItem('rg_recharge', '1000');
+            localStorage.setItem('rg_revenue', '0');
         }
-        updateBalances();
+        document.getElementById('home-balance').innerText = parseFloat(localStorage.getItem('rg_recharge')).toLocaleString();
+        document.getElementById('home-revenue').innerText = parseFloat(localStorage.getItem('rg_revenue')).toLocaleString();
 
-        // ====== LOGIQUE DU CODE CADEAU ======
-        const VALID_CODES = {
-            'RANGERS2026': 500,
-            'BIENVENUE': 1000,
-            'CADEAU': 2000
-        };
-
-        function openGiftPopup() {
-            document.getElementById('gift-code-input').value = '';
-            document.getElementById('gift-popup').classList.remove('hidden');
-            setTimeout(() => document.getElementById('gift-code-input').focus(), 100);
+        function showPopup(title, message, iconClass) {
+            document.getElementById('popup-title').innerText = title;
+            document.getElementById('popup-message').innerText = message;
+            document.getElementById('popup-icon').className = `fa-solid ${iconClass}`;
+            document.getElementById('universal-popup').classList.remove('hidden');
         }
-
-        function closeGiftPopup() {
-            document.getElementById('gift-popup').classList.add('hidden');
-        }
-
-        function verifyGiftCode() {
-            const input = document.getElementById('gift-code-input').value.trim().toUpperCase();
-            let usedCodes = JSON.parse(localStorage.getItem('rg_used_gift_codes') || '[]');
-
-            if (!input) {
-                showInfoPopup('Erreur', 'Veuillez entrer un code.', 'fa-triangle-exclamation', 'error');
-                return;
-            }
-
-            if (usedCodes.includes(input)) {
-                showInfoPopup('Déjà utilisé', 'Vous avez déjà utilisé ce code cadeau.', 'fa-times-circle', 'error');
-                return;
-            }
-
-            if (VALID_CODES[input]) {
-                const reward = VALID_CODES[input];
-                
-                // 1. Ajouter au solde
-                let balance = parseFloat(localStorage.getItem('rg_recharge') || '0');
-                localStorage.setItem('rg_recharge', (balance + reward).toFixed(2));
-
-                // 2. Sauvegarder le code comme utilisé
-                usedCodes.push(input);
-                localStorage.setItem('rg_used_gift_codes', JSON.stringify(usedCodes));
-
-                // 3. Mettre à jour l'affichage
-                updateBalances();
-                closeGiftPopup();
-
-                // 4. Message de succès
-                showInfoPopup('Félicitations !', `Le code "${input}" est valide.\n\n+${reward} FCFA ont été ajoutés à votre solde !`, 'fa-gift', 'success');
-            } else {
-                showInfoPopup('Code Invalide', 'Ce code cadeau n\'existe pas ou a expiré.', 'fa-times-circle', 'error');
-            }
-        }
-
-        // ====== POPUPS ======
-        function showInfoPopup(title, message, icon, type = 'success') {
-            document.getElementById('info-title').innerText = title;
-            document.getElementById('info-message').innerText = message;
-            document.getElementById('info-icon').className = `fa-solid ${icon}`;
-
-            const topBar = document.getElementById('info-top-bar');
-            const iconBg = document.getElementById('info-icon-bg');
-
-            if (type === 'error') {
-                topBar.className = 'absolute top-0 left-0 w-full h-2 bg-red-500';
-                iconBg.className = 'w-16 h-16 rounded-full bg-red-50 text-red-500 mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2';
-            } else {
-                topBar.className = 'absolute top-0 left-0 w-full h-2 bg-brand';
-                iconBg.className = 'w-16 h-16 rounded-full bg-green-50 text-brand mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2';
-            }
-
-            document.getElementById('info-popup').classList.remove('hidden');
-        }
-
-        function closeInfoPopup() {
-            document.getElementById('info-popup').classList.add('hidden');
-        }
-
-        function showLogoutConfirm() {
-            document.getElementById('confirm-popup').classList.remove('hidden');
-        }
-
-        function closeConfirmPopup() {
-            document.getElementById('confirm-popup').classList.add('hidden');
-        }
-
-        function executeLogout() {
-            localStorage.removeItem('rg_logged_in');
-            window.location.href = 'login.html';
+        function closePopup() {
+            document.getElementById('universal-popup').classList.add('hidden');
         }
     </script>
 </body>
