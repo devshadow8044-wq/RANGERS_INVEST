@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RANGERS - Pointage Quotidien</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; color: #111827; font-family: 'Inter', sans-serif; }
+        .text-brand { color: #0db14b; }
+        .bg-brand { background-color: #0db14b; }
+        
+        /* Animation de pulsation */
+        @keyframes pulseGreen { 
+            0%, 100% { box-shadow: 0 0 0 rgba(13, 177, 75, 0); transform: scale(1); } 
+            50% { box-shadow: 0 0 15px rgba(13, 177, 75, 0.4); transform: scale(1.05); } 
+        }
+        .btn-pulse { animation: pulseGreen 2s infinite; }
+        
+        /* Animation de rotation à la validation */
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pop-in { animation: popIn 0.4s ease-out; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-20">
+
+    <!-- HEADER -->
+    <header class="bg-white sticky top-0 z-40 px-4 py-3 border-b border-gray-200 flex items-center justify-between shadow-sm">
+        <div class="flex items-center space-x-3">
+            <a href="compte.html" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 hover:bg-gray-200">
+                <i class="fa-solid fa-arrow-left text-sm"></i>
+            </a>
+            <span class="font-bold text-base text-gray-800">Pointage</span>
+        </div>
+        <div class="flex items-center space-x-1 text-brand text-xs font-bold">
+            <i class="fa-solid fa-fire"></i><span>Série de jours</span>
+        </div>
+    </header>
+
+    <main class="max-w-lg mx-auto w-full px-4 py-6 space-y-6">
+        
+        <!-- CARTE PRINCIPALE DE POINTAGE -->
+        <div class="bg-white rounded-3xl shadow-lg border border-gray-100 p-8 text-center relative overflow-hidden">
+            <!-- Cercles décoratifs -->
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-green-50 rounded-full opacity-50 pointer-events-none"></div>
+            <div class="absolute -bottom-10 -left-10 w-24 h-24 bg-green-50 rounded-full opacity-50 pointer-events-none"></div>
+
+            <div class="relative z-10">
+                <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-sm">
+                    <i class="fa-solid fa-calendar-check text-4xl text-brand"></i>
+                </div>
+                <h2 class="text-2xl font-black text-gray-900 mb-2">Pointage Quotidien</h2>
+                <p class="text-sm text-gray-500 mb-6">Pointez chaque jour et recevez<br><span class="text-brand font-bold text-lg">+ 50 FCFA</span> gratuitement !</p>
+
+                <!-- BOUTON DE POINTAGE -->
+                <button id="checkin-btn" onclick="doCheckin()" class="w-full py-4 rounded-2xl bg-brand text-white font-black text-lg shadow-lg btn-pulse transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-fingerprint text-xl"></i>
+                    <span>Pointer Maintenant</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- SOLDE ACTUEL -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center">
+                    <i class="fa-solid fa-wallet text-white"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 font-bold uppercase">Mon Solde</p>
+                    <p class="text-lg font-black text-gray-900">FCFA <span id="current-balance">0</span></p>
+                </div>
+            </div>
+            <a href="compte.html" class="text-xs text-brand font-bold underline">Voir compte</a>
+        </div>
+
+        <!-- COMMENT ÇA MARCHE -->
+        <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
+            <h4 class="text-sm font-bold text-blue-800 mb-2"><i class="fa-solid fa-circle-info mr-1"></i> Règles du pointage</h4>
+            <ul class="text-xs text-blue-700 space-y-1 list-disc list-inside">
+                <li>Cliquez une fois par jour pour gagner 50 FCFA.</li>
+                <li>Le bouton se réinitialise à minuit (00:00).</li>
+                <li>Les gains sont ajoutés à votre solde de recharge.</li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- POPUP ALERTE -->
+    <div id="custom-alert" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden p-4">
+        <div class="bg-white max-w-xs w-full p-6 rounded-2xl text-center space-y-4 shadow-2xl pop-in">
+            <div id="alert-icon" class="w-16 h-16 rounded-full bg-green-50 text-brand mx-auto flex items-center justify-center text-3xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <p id="alert-text" class="text-sm text-gray-700 font-medium leading-relaxed whitespace-pre-line">Message</p>
+            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl bg-brand text-white font-bold text-sm">Super !</button>
+        </div>
+    </div>
+
+    <script>
+        // ====== INITIALISATION ======
+        // Récupération de la date du jour (format lisible pour comparaison)
+        const today = new Date().toDateString(); 
+        const lastCheckin = localStorage.getItem('rg_last_checkin');
+        
+        let balance = parseFloat(localStorage.getItem('rg_recharge') || '0');
+        document.getElementById('current-balance').innerText = balance.toLocaleString('fr-FR');
+
+        // Vérifier si l'utilisateur a déjà pointé aujourd'hui
+        function checkIfAlreadyCheckedIn() {
+            const btn = document.getElementById('checkin-btn');
+            if (lastCheckin === today) {
+                btn.disabled = true;
+                btn.className = 'w-full py-4 rounded-2xl bg-gray-200 text-gray-500 font-black text-lg shadow-sm transition flex items-center justify-center space-x-2 cursor-not-allowed';
+                btn.innerHTML = '<i class="fa-solid fa-check-double text-xl"></i><span>Déjà pointé aujourd\'hui</span>';
+            }
+        }
+        checkIfAlreadyCheckedIn();
+
+        // ====== FONCTION DE POINTAGE ======
+        function doCheckin() {
+            const btn = document.getElementById('checkin-btn');
+            
+            // 1. Ajouter 50 FCFA au solde
+            balance += 50;
+            localStorage.setItem('rg_recharge', balance.toFixed(2));
+            
+            // 2. Enregistrer la date du jour pour bloquer le bouton
+            localStorage.setItem('rg_last_checkin', today);
+
+            // 3. Mettre à jour l'interface
+            document.getElementById('current-balance').innerText = balance.toLocaleString('fr-FR');
+            
+            btn.disabled = true;
+            btn.className = 'w-full py-4 rounded-2xl bg-gray-200 text-gray-500 font-black text-lg shadow-sm transition flex items-center justify-center space-x-2 cursor-not-allowed';
+            btn.innerHTML = '<i class="fa-solid fa-check-double text-xl"></i><span>Déjà pointé aujourd\'hui</span>';
+
+            // 4. Afficher le popup de succès
+            document.getElementById('alert-icon').className = 'w-16 h-16 rounded-full bg-green-50 text-brand mx-auto flex items-center justify-center text-3xl pop-in';
+            document.getElementById('alert-icon').innerHTML = '<i class="fa-solid fa-gift"></i>';
+            document.getElementById('alert-text').innerHTML = `🎉 Félicitations !<br><br>Vous avez gagné <b>50 FCFA</b>.<br>Votre nouveau solde est de <b>${balance.toLocaleString('fr-FR')} FCFA</b>.<br><br>Revenez demain pour 50 FCFA de plus !`;
+            
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+
+        // ====== POPUP ======
+        function closeAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
