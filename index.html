@@ -11,6 +11,21 @@
         .text-brand { color: #0db14b; }
         .bg-brand { background-color: #0db14b; }
         
+        /* 🚀 OPTIMISATION MOBILE (Supprime la lenteur au clic) */
+        a, button {
+            -webkit-tap-highlight-color: transparent; /* Enlève le flash bleu au clic */
+            touch-action: manipulation; /* Supprime le délai de 300ms */
+            user-select: none; /* Empêche la sélection de texte par accident */
+        }
+
+        /* 🚀 ACCÉLÉRATION MATÉRIELLE POUR LA BARRE DU BAS */
+        nav {
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+
         @keyframes pulseGreen { 
             0%, 100% { box-shadow: 0 0 0 rgba(13, 177, 75, 0); transform: scale(1); } 
             50% { box-shadow: 0 0 10px rgba(13, 177, 75, 0.4); transform: scale(1.05); } 
@@ -129,7 +144,7 @@
                     <span class="text-[10px] text-gray-700 font-medium leading-tight">Modifier le<br>MDP</span>
                 </button>
                 
-                <!-- BOUTON CODE CADEAU (Ouvre la nouvelle popup) -->
+                <!-- BOUTON CODE CADEAU -->
                 <button onclick="openGiftPopup()" class="flex flex-col items-center">
                     <i class="fa-solid fa-gift text-2xl text-amber-500 mb-1.5"></i>
                     <span class="text-[10px] text-gray-700 font-medium">Code cadeau</span>
@@ -143,8 +158,8 @@
         </button>
     </main>
 
-    <!-- NAV BAS -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 z-40 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+    <!-- NAV BAS (Allégée pour être plus rapide) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 z-40">
         <a href="index.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800 transition">
             <i class="fa-solid fa-house text-xl"></i><span class="text-[10px] mt-1 font-medium">Accueil</span>
         </a>
@@ -159,7 +174,7 @@
         </a>
     </nav>
 
-    <!-- 🌟 POPUP CODE CADEAU (Nouveau) -->
+    <!-- 🌟 POPUP CODE CADEAU -->
     <div id="gift-popup" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden p-4">
         <div class="bg-white max-w-sm w-full p-6 rounded-3xl text-center space-y-4 shadow-2xl pop-in relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-2 bg-amber-500"></div>
@@ -223,7 +238,6 @@
         updateBalances();
 
         // ====== LOGIQUE DU CODE CADEAU ======
-        // Liste des codes valides (Tu pourras en ajouter autant que tu veux ici)
         const VALID_CODES = {
             'RANGERS2026': 500,
             'BIENVENUE': 1000,
@@ -276,7 +290,7 @@
             }
         }
 
-        // ====== POPUPS D'INFORMATION ======
+        // ====== POPUPS ======
         function showInfoPopup(title, message, icon, type = 'success') {
             document.getElementById('info-title').innerText = title;
             document.getElementById('info-message').innerText = message;
@@ -300,7 +314,6 @@
             document.getElementById('info-popup').classList.add('hidden');
         }
 
-        // ====== DÉCONNEXION ======
         function showLogoutConfirm() {
             document.getElementById('confirm-popup').classList.remove('hidden');
         }
