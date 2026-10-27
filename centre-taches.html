@@ -57,15 +57,7 @@
 
         <!-- LISTE DES PALIERS -->
         <div class="space-y-3" id="milestones-container">
-            <!-- Les cartes seront générées par Javascript -->
-        </div>
-
-        <!-- BOUTON DE TEST (Pour que tu puisses voir comment ça marche) -->
-        <div class="pt-6 pb-4 border-t border-gray-200 text-center">
-            <p class="text-[10px] text-gray-400 mb-2">Outil de test (à supprimer plus tard)</p>
-            <button onclick="simulateInvite()" class="text-xs bg-gray-200 text-gray-600 px-4 py-2 rounded-lg font-bold">
-                <i class="fa-solid fa-plus mr-1"></i> Simuler 1 investisseur invité
-            </button>
+            <!-- Les cartes sont générées par Javascript -->
         </div>
     </main>
 
@@ -93,7 +85,7 @@
         ];
 
         // ====== ÉTAT DE L'UTILISATEUR ======
-        // On récupère le nombre d'invités et les récompenses déjà réclamées
+        // Récupération des vraies données (qui seront mises à jour par le backend ou l'admin)
         let invitedInvestors = parseInt(localStorage.getItem('rg_invited_investors') || '0');
         let claimedTiers = JSON.parse(localStorage.getItem('rg_claimed_tiers') || '[]');
         
@@ -178,14 +170,6 @@
 
             // 4. Afficher la popup
             showPopup(`Félicitations !`, `Vous avez débloqué le palier de ${req} invités.\n\n+${reward.toLocaleString('fr-FR')} FCFA ajoutés à votre solde !`, 'fa-gift');
-        }
-
-        // ====== OUTIL DE TEST (SIMULATION) ======
-        function simulateInvite() {
-            invitedInvestors++;
-            localStorage.setItem('rg_invited_investors', invitedInvestors);
-            updateBalanceDisplay();
-            renderMilestones();
         }
 
         // ====== POPUP ======
