@@ -3,14 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RANGERS (RG) - Connexion & Inscription Sécurisée</title>
+    <title>RANGERS (RG) - Connexion & Inscription</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
-            theme: { extend: { colors: {
-                rgBg: '#030509', rgCard: '#0d111a', rgGold: '#f59e0b', rgBorder: '#1e2638'
-            }}}
+            theme: {
+                extend: {
+                    colors: {
+                        rgBg: '#030509',
+                        rgCard: '#0d111a',
+                        rgGold: '#f59e0b',
+                        rgBorder: '#1e2638'
+                    }
+                }
+            }
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,228 +25,127 @@
         body { background-color: #030509; color: #f1f5f9; font-family: 'Inter', sans-serif; }
         .rg-glass { background: rgba(13, 17, 26, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.2); }
         .gold-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        
+        /* ===== CLIGNOTANTS ===== */
         @keyframes pulseGlow {
             0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
-            50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.8); }
+            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.8); }
         }
         .btn-pulse { animation: pulseGlow 2s infinite; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
 
-        /* ===== CLIGNOTANTS AJOUTÉS ===== */
-
-        /* 1. Bonus badge clignote */
-        @keyframes bonusBlink {
-            0%, 100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); opacity: 1; }
-            50% { box-shadow: 0 0 22px rgba(245, 158, 11, 0.9); opacity: 0.9; }
-        }
-        .bonus-blink { animation: bonusBlink 1.8s infinite; }
-
-        /* 2. Onglet actif pulse */
-        @keyframes tabActive {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-            50% { box-shadow: 0 0 10px 1px rgba(245, 158, 11, 0.6); }
-        }
-        .tab-active-blink { animation: tabActive 1.6s infinite; }
-
-        /* 3. Label Inscription clignote */
-        @keyframes softBlink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.55; }
-        }
-        .label-blink { animation: softBlink 2.2s infinite; }
-
-        /* 4. Point "Nouveau" rouge */
-        @keyframes ping {
-            0% { transform: scale(1); opacity: 1; }
-            75%, 100% { transform: scale(2.2); opacity: 0; }
-        }
-        .new-dot {
-            position: absolute;
-            top: -2px; right: -2px;
-            width: 8px; height: 8px;
-            background: #ef4444;
-            border-radius: 50%;
-            box-shadow: 0 0 6px rgba(239, 68, 68, 0.8);
-        }
-        .new-dot::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: #ef4444;
-            border-radius: 50%;
-            animation: ping 1.3s infinite;
-        }
-
-        /* 5. Code SMS clignote (info critique) */
-        @keyframes smsGlow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-            50% { box-shadow: 0 0 10px 1px rgba(245, 158, 11, 0.4); }
-        }
-        .sms-label-blink { animation: smsGlow 1.8s infinite; }
-
-        /* 6. Compteur SMS urgent (<5s) */
-        @keyframes urgentBlink {
-            0%, 100% { opacity: 1; color: #f59e0b; }
-            50% { opacity: 0.4; color: #ef4444; }
-        }
-        .urgent-blink { animation: urgentBlink 0.8s infinite; }
-
-        /* 7. Code SMS validé halo vert */
-        @keyframes smsValid {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); border-color: rgba(245, 158, 11, 0.5); }
-            50% { box-shadow: 0 0 10px 1px rgba(16, 185, 129, 0.5); border-color: rgba(16, 185, 129, 0.8); }
-        }
-        .sms-valid-blink { animation: smsValid 1.4s infinite; }
-
-        /* 8. Input focus pulse */
-        @keyframes borderFocus {
+        @keyframes inputGlow {
             0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
             50% { box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2); }
         }
-        input:focus, select:focus { animation: borderFocus 1.6s infinite; }
+        .input-focus:focus { animation: inputGlow 1.5s infinite; }
 
-        /* 9. Erreur shake */
-        @keyframes shake {
+        @keyframes inviteBlink {
+            0%, 100% { border-color: rgba(245, 158, 11, 0.3); }
+            50% { border-color: rgba(245, 158, 11, 0.8); }
+        }
+        .invite-blink { animation: inviteBlink 1.8s infinite; }
+
+        @keyframes errorShake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
             75% { transform: translateX(5px); }
         }
-        .error-shake {
-            animation: shake 0.4s ease-in-out 2;
-            border-color: #ef4444 !important;
-        }
-
-        /* 10. Force mot de passe */
-        .strength-bar { height: 3px; border-radius: 2px; transition: all 0.3s; }
-        .strength-weak { background: #ef4444; width: 33%; }
-        .strength-medium { background: #f59e0b; width: 66%; }
-        .strength-strong { background: #10b981; width: 100%; }
+        .error-shake { animation: errorShake 0.4s ease-in-out 2; border-color: #ef4444 !important; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 antialiased py-10">
 
-    <div class="max-w-md w-full space-y-5">
-
-        <!-- BANNIÈRE -->
-        <div class="rg-glass rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl relative">
-            <div class="h-32 w-full relative">
-                <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80" alt="banner">
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0d111a] via-slate-950/40 to-transparent"></div>
-                <div class="absolute top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-[10px] font-black text-amber-400 flex items-center space-x-1 shadow-lg bonus-blink">
-                    <i class="fa-solid fa-gift"></i><span>Bonus de bienvenue : 1,000 FCFA</span>
-                </div>
-            </div>
-            <div class="p-5 pt-0 relative -mt-6 text-center space-y-1">
-                <h1 class="text-xl font-black text-white tracking-wider">Rejoignez le réseau</h1>
-                <p class="text-xs text-slate-400">Créez un compte pour commencer à gagner chaque jour.</p>
-            </div>
+    <div class="max-w-md w-full space-y-4">
+        
+        <!-- IMAGE DE COUVERTURE (Comme sur ton image) -->
+        <div class="rounded-3xl overflow-hidden shadow-2xl border border-amber-500/30 relative h-40">
+            <img src="https://files.catbox.moe/9kbqzl.jpg" class="w-full h-full object-cover opacity-80" alt="Bannière">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#030509] to-transparent"></div>
         </div>
 
-        <!-- ONGLETS -->
-        <div class="rg-glass p-1.5 rounded-2xl grid grid-cols-2 gap-1 border border-slate-800 relative">
-            <button onclick="switchTab('login')" id="tab-login" class="py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow btn-pulse tab-active-blink">Connexion</button>
-            <button onclick="switchTab('register')" id="tab-register" class="py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition relative">
-                Inscription
-                <span class="new-dot" id="new-dot-register"></span>
-            </button>
-        </div>
+        <!-- CONTENEUR PRINCIPAL (Le "Register" de ton image) -->
+        <div class="rg-glass p-6 rounded-3xl border border-amber-500/30 shadow-2xl space-y-4">
+            
+            <!-- TITRE DYNAMIQUE -->
+            <h1 id="form-title" class="text-2xl font-black text-center text-white tracking-widest uppercase">INSCRIPTION</h1>
 
-        <!-- FORM LOGIN -->
-        <div id="form-login" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/20 shadow-xl">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">// Connexion au compte</h3>
-
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Numéro de téléphone</label>
-                    <input type="tel" id="login-phone" inputmode="numeric" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="77 123 45 67">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de passe</label>
-                    <div class="relative">
-                        <input type="password" id="login-pass" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 pr-10 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="••••••••">
-                        <button type="button" onclick="togglePass('login-pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-amber-500 transition">
-                            <i class="fa-solid fa-eye text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <button id="btn-login" onclick="handleLogin()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse disabled:opacity-60 disabled:cursor-not-allowed">
-                <span id="btn-login-text">Se connecter →</span>
-            </button>
-
-            <div class="text-center pt-2">
-                <button onclick="switchTab('register')" class="text-[11px] text-slate-400 hover:text-amber-400 transition">Pas encore de compte ? <span class="text-amber-500 font-bold underline">S'inscrire</span></button>
-            </div>
-        </div>
-
-        <!-- FORM REGISTER -->
-        <div id="form-register" class="rg-glass p-6 rounded-3xl space-y-4 border border-amber-500/30 shadow-xl hidden">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider label-blink">// Inscription officielle</h3>
-
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Sélectionner le pays</label>
-                    <select id="reg-country" onchange="updateCountryPrefix()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-amber-500 font-bold focus:outline-none focus:border-amber-500">
-                        <option value="+221">🇸🇳 Sénégal (+221)</option>
-                        <option value="+225">🇨🇮 Côte d'Ivoire (+225)</option>
-                        <option value="+223">🇲🇱 Mali (+223)</option>
-                        <option value="+226">🇧🇫 Burkina Faso (+226)</option>
+            <!-- ================= FORMULAIRE INSCRIPTION ================= -->
+            <div id="register-form" class="space-y-3">
+                
+                <!-- Numéro de téléphone avec sélecteur de pays -->
+                <div class="flex bg-white rounded-xl overflow-hidden shadow-sm">
+                    <select id="reg-country" class="bg-white text-slate-900 text-sm font-bold px-2 border-r border-gray-200 focus:outline-none">
+                        <option value="+221">🇸🇳 +221</option>
+                        <option value="+225">🇨🇮 +225</option>
+                        <option value="+223">🇲🇱 +223</option>
+                        <option value="+226">🇧🇫 +226</option>
+                        <option value="+229">🇧🇯 +229</option>
                     </select>
+                    <input type="tel" id="reg-phone" placeholder="Numéro de téléphone" class="w-full bg-white text-slate-900 px-4 py-3.5 text-sm focus:outline-none input-focus">
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Numéro de téléphone</label>
-                    <div class="flex bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
-                        <span id="reg-prefix" class="px-3 flex items-center text-amber-500 text-xs font-bold border-r border-slate-800">+221</span>
-                        <input type="tel" id="reg-phone" inputmode="numeric" class="w-full bg-transparent px-4 py-3 text-sm text-white focus:outline-none" placeholder="77 123 45 67">
-                    </div>
+                <!-- Mot de passe -->
+                <div class="flex bg-white rounded-xl overflow-hidden shadow-sm">
+                    <div class="flex items-center pl-4 pr-2 text-emerald-500"><i class="fa-solid fa-lock"></i></div>
+                    <input type="password" id="reg-pass" placeholder="Mot de passe" class="w-full bg-white text-slate-900 px-2 py-3.5 text-sm focus:outline-none input-focus">
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Nom / Pseudo</label>
-                    <input type="text" id="reg-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Votre nom complet">
+                <!-- Confirmez le mot de passe -->
+                <div class="flex bg-white rounded-xl overflow-hidden shadow-sm">
+                    <div class="flex items-center pl-4 pr-2 text-emerald-500"><i class="fa-solid fa-lock"></i></div>
+                    <input type="password" id="reg-pass-confirm" placeholder="Confirmez le mot de passe" class="w-full bg-white text-slate-900 px-2 py-3.5 text-sm focus:outline-none input-focus">
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de passe (Min 6 caractères)</label>
-                    <div class="relative">
-                        <input type="password" id="reg-pass" oninput="checkPasswordStrength(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 pr-10 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="••••••••">
-                        <button type="button" onclick="togglePass('reg-pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-amber-500 transition">
-                            <i class="fa-solid fa-eye text-xs"></i>
-                        </button>
-                    </div>
-                    <div class="mt-1.5 h-1 w-full bg-slate-800 rounded-full overflow-hidden">
-                        <div id="pass-strength-bar" class="strength-bar" style="width: 0;"></div>
-                    </div>
+                <!-- Code d'invitation -->
+                <div class="flex bg-white rounded-xl overflow-hidden shadow-sm invite-blink border border-transparent">
+                    <div class="flex items-center pl-4 pr-2 text-slate-500"><i class="fa-solid fa-code"></i></div>
+                    <input type="text" id="reg-invite" placeholder="Code d'invitation (optionnel)" class="w-full bg-white text-slate-900 px-2 py-3.5 text-sm focus:outline-none">
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Code d'invitation (Optionnel)</label>
-                    <input type="text" id="reg-ref" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500" placeholder="Code d'invitation">
+                <!-- Lien Connexion -->
+                <div class="text-right pt-1">
+                    <button onclick="toggleForm('login')" class="text-xs text-slate-400 hover:text-amber-400 underline">Se connecter ></button>
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-amber-400 mb-1 sms-label-blink">
-                        <i class="fa-solid fa-comment-sms mr-1"></i>Code SMS de vérification
-                    </label>
-                    <div class="flex space-x-2">
-                        <input type="text" id="reg-sms" inputmode="numeric" maxlength="4" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-amber-400 font-bold focus:outline-none focus:border-amber-500 font-mono text-center tracking-widest" placeholder="••••">
-                        <button id="btn-send-sms" onclick="sendSmsCode()" class="px-4 py-3 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold whitespace-nowrap hover:bg-amber-500/30 transition disabled:opacity-50">Envoyer</button>
-                    </div>
-                </div>
+                <!-- Bouton S'inscrire -->
+                <button id="btn-register" onclick="handleRegister()" class="w-full py-4 rounded-2xl bg-white text-slate-900 font-black text-sm shadow-lg btn-pulse transition hover:bg-gray-100">
+                    S'inscrire
+                </button>
             </div>
 
-            <button id="btn-register" onclick="handleRegister()" class="w-full py-3.5 rounded-2xl gold-gradient text-slate-950 font-black text-xs shadow-lg btn-pulse flex items-center justify-center space-x-2 disabled:opacity-60 disabled:cursor-not-allowed">
-                <span id="btn-register-text">Créer un compte</span>
-                <i id="btn-register-icon" class="fa-solid fa-chevron-right text-[10px]"></i>
-            </button>
+            <!-- ================= FORMULAIRE CONNEXION ================= -->
+            <div id="login-form" class="space-y-3 hidden">
+                
+                <!-- Numéro de téléphone -->
+                <div class="flex bg-white rounded-xl overflow-hidden shadow-sm">
+                    <select id="login-country" class="bg-white text-slate-900 text-sm font-bold px-2 border-r border-gray-200 focus:outline-none">
+                        <option value="+221">🇸🇳 +221</option>
+                        <option value="+225">🇨🇮 +225</option>
+                        <option value="+223">🇲🇱 +223</option>
+                        <option value="+226">🇧🇫 +226</option>
+                        <option value="+229">🇧🇯 +229</option>
+                    </select>
+                    <input type="tel" id="login-phone" placeholder="Numéro de téléphone" class="w-full bg-white text-slate-900 px-4 py-3.5 text-sm focus:outline-none input-focus">
+                </div>
 
-            <div class="text-center pt-2">
-                <button onclick="switchTab('login')" class="text-[11px] text-slate-400 hover:text-amber-400 transition">Déjà membre ? <span class="text-amber-500 font-bold underline">Se connecter</span></button>
+                <!-- Mot de passe -->
+                <div class="flex bg-white rounded-xl overflow-hidden shadow-sm">
+                    <div class="flex items-center pl-4 pr-2 text-emerald-500"><i class="fa-solid fa-lock"></i></div>
+                    <input type="password" id="login-pass" placeholder="Mot de passe" class="w-full bg-white text-slate-900 px-2 py-3.5 text-sm focus:outline-none input-focus">
+                </div>
+
+                <!-- Lien Inscription -->
+                <div class="text-right pt-1">
+                    <button onclick="toggleForm('register')" class="text-xs text-slate-400 hover:text-amber-400 underline">Pas de compte ? S'inscrire ></button>
+                </div>
+
+                <!-- Bouton Se connecter -->
+                <button id="btn-login" onclick="handleLogin()" class="w-full py-4 rounded-2xl bg-white text-slate-900 font-black text-sm shadow-lg btn-pulse transition hover:bg-gray-100">
+                    Se connecter
+                </button>
             </div>
+
         </div>
-
     </div>
 
     <!-- POPUP ALERTE -->
@@ -251,24 +157,40 @@
     </div>
 
     <script>
-        // ==== ÉTAT ====
-        let generatedRandomSms = '';
-        let smsTimer = null;
-        let lastPhoneForSms = '';
-        let isLoggingIn = false;
-        let isRegistering = false;
-
-        // ==== HELPERS ====
-        function togglePass(id, btn) {
-            const el = document.getElementById(id);
-            const icon = btn.querySelector('i');
-            if (el.type === 'password') {
-                el.type = 'text';
-                icon.className = 'fa-solid fa-eye-slash text-xs';
-            } else {
-                el.type = 'password';
-                icon.className = 'fa-solid fa-eye text-xs';
+        // ====== INITIALISATION ======
+        window.onload = () => {
+            // Récupération du code parrain depuis l'URL (ex: ?ref=RG123456)
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref') || urlParams.get('code');
+            if(refCode) {
+                document.getElementById('reg-invite').value = refCode;
             }
+        };
+
+        // ====== BASCULER ENTRE LES FORMULAIRES ======
+        function toggleForm(type) {
+            const title = document.getElementById('form-title');
+            const regForm = document.getElementById('register-form');
+            const logForm = document.getElementById('login-form');
+
+            if(type === 'login') {
+                title.innerText = 'CONNEXION';
+                regForm.classList.add('hidden');
+                logForm.classList.remove('hidden');
+            } else {
+                title.innerText = 'INSCRIPTION';
+                logForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+            }
+        }
+
+        // ====== ALERTE ======
+        function showAlert(msg) {
+            document.getElementById('alert-text').innerText = msg;
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+        function closeAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
         }
 
         function shakeField(el) {
@@ -276,246 +198,136 @@
             setTimeout(() => el.classList.remove('error-shake'), 900);
         }
 
-        function switchTab(tab) {
-            const btnLogin = document.getElementById('tab-login');
-            const btnRegister = document.getElementById('tab-register');
-            const formLogin = document.getElementById('form-login');
-            const formRegister = document.getElementById('form-register');
-            const newDot = document.getElementById('new-dot-register');
-
-            if (tab === 'login') {
-                btnLogin.className = 'py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow btn-pulse tab-active-blink';
-                btnRegister.className = 'py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition relative';
-                formLogin.classList.remove('hidden');
-                formRegister.classList.add('hidden');
-                setTimeout(() => document.getElementById('login-phone')?.focus(), 100);
-            } else {
-                btnRegister.className = 'py-2.5 rounded-xl text-xs font-bold gold-gradient text-slate-950 transition shadow btn-pulse tab-active-blink relative';
-                btnLogin.className = 'py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition';
-                formRegister.classList.remove('hidden');
-                formLogin.classList.add('hidden');
-                if (newDot) newDot.style.display = 'none';
-                setTimeout(() => document.getElementById('reg-phone')?.focus(), 100);
-            }
-        }
-
-        function updateCountryPrefix() {
-            const sel = document.getElementById('reg-country').value;
-            document.getElementById('reg-prefix').innerText = sel;
-        }
-
-        // ==== FORCE MOT DE PASSE ====
-        function checkPasswordStrength(val) {
-            const bar = document.getElementById('pass-strength-bar');
-            if (!val) {
-                bar.style.width = '0';
-                bar.className = 'strength-bar';
-                return;
-            }
-            let score = 0;
-            if (val.length >= 6) score++;
-            if (val.length >= 10) score++;
-            if (/[A-Z]/.test(val)) score++;
-            if (/[0-9]/.test(val)) score++;
-            if (/[^A-Za-z0-9]/.test(val)) score++;
-
-            if (score <= 2) bar.className = 'strength-bar strength-weak';
-            else if (score <= 3) bar.className = 'strength-bar strength-medium';
-            else bar.className = 'strength-bar strength-strong';
-        }
-
-        // ==== SMS ====
-        function sendSmsCode() {
-            const phone = document.getElementById('reg-phone').value.trim().replace(/\s+/g, '');
-            if (!phone || phone.length < 8 || !/^\d+$/.test(phone)) {
-                showAlert("⚠️ Entrez un numéro de téléphone valide (8 à 10 chiffres).");
-                shakeField(document.getElementById('reg-phone'));
-                return;
-            }
-
-            lastPhoneForSms = phone;
-            const btn = document.getElementById('btn-send-sms');
-            btn.disabled = true;
-            let countdown = 30;
-
-            const updateBtn = () => {
-                btn.innerText = `Renvoyer (${countdown}s)`;
-                if (countdown <= 5) btn.classList.add('urgent-blink');
-                else btn.classList.remove('urgent-blink');
-            };
-            updateBtn();
-
-            smsTimer = setInterval(() => {
-                countdown--;
-                if (countdown > 0) {
-                    updateBtn();
-                } else {
-                    clearInterval(smsTimer);
-                    btn.disabled = false;
-                    btn.innerText = 'Renvoyer';
-                    btn.classList.remove('urgent-blink');
-                }
-            }, 1000);
-
-            // Génération code
-            generatedRandomSms = Math.floor(1000 + Math.random() * 9000).toString();
-            const smsInput = document.getElementById('reg-sms');
-            smsInput.value = generatedRandomSms;
-            smsInput.classList.add('sms-valid-blink');
-            setTimeout(() => smsInput.classList.remove('sms-valid-blink'), 3000);
-
-            showAlert(`✅ Code SMS envoyé !\n\nVotre code : ${generatedRandomSms}\n\n(Saisi automatiquement pour test)`);
-        }
-
-        // ==== POPUPS ====
-        function showAlert(msg) {
-            document.getElementById('alert-text').innerText = msg;
-            document.getElementById('custom-alert').classList.remove('hidden');
-            setTimeout(() => document.querySelector('#custom-alert button')?.focus(), 100);
-        }
-        function closeAlert() {
-            document.getElementById('custom-alert').classList.add('hidden');
-        }
-
-        // ==== INSCRIPTION ====
+        // ====== INSCRIPTION ======
         function handleRegister() {
-            if (isRegistering) return;
-
             const country = document.getElementById('reg-country').value;
             const phoneEl = document.getElementById('reg-phone');
-            const nameEl = document.getElementById('reg-name');
             const passEl = document.getElementById('reg-pass');
-            const smsEl = document.getElementById('reg-sms');
+            const confirmEl = document.getElementById('reg-pass-confirm');
+            const invite = document.getElementById('reg-invite').value.trim();
 
             const phone = phoneEl.value.trim().replace(/\s+/g, '');
-            const name = nameEl.value.trim();
             const pass = passEl.value;
-            const sms = smsEl.value.trim();
+            const confirm = confirmEl.value;
 
             // Validations
-            if (!phone || phone.length < 8 || phone.length > 10 || !/^\d+$/.test(phone)) {
-                showAlert("⚠️ Numéro de téléphone invalide (8 à 10 chiffres).");
-                shakeField(phoneEl); phoneEl.focus(); return;
+            if(!phone || phone.length < 8 || !/^\d+$/.test(phone)) {
+                showAlert("⚠️ Numéro invalide (8 à 10 chiffres).");
+                shakeField(phoneEl);
+                return;
             }
-            if (!name || name.length < 2) {
-                showAlert("⚠️ Entrez votre nom (min 2 caractères).");
-                shakeField(nameEl); nameEl.focus(); return;
-            }
-            if (!pass || pass.length < 6) {
+            if(!pass || pass.length < 6) {
                 showAlert("⚠️ Mot de passe trop court (min 6 caractères).");
-                shakeField(passEl); passEl.focus(); return;
+                shakeField(passEl);
+                return;
             }
-            if (!sms) {
-                showAlert("⚠️ Entrez le code SMS reçu.");
-                shakeField(smsEl); smsEl.focus(); return;
-            }
-            if (!generatedRandomSms || sms !== generatedRandomSms) {
-                showAlert("❌ Code SMS invalide.\n\nCliquez sur 'Envoyer' pour recevoir un nouveau code.");
-                shakeField(smsEl); return;
-            }
-            if (lastPhoneForSms && lastPhoneForSms !== phone) {
-                showAlert("⚠️ Le numéro a changé. Renvoyez un nouveau code SMS.");
+            if(pass !== confirm) {
+                showAlert("⚠️ Les mots de passe ne correspondent pas.");
+                shakeField(confirmEl);
                 return;
             }
 
-            isRegistering = true;
-            const btn = document.getElementById('btn-register');
-            const txt = document.getElementById('btn-register-text');
-            const icon = document.getElementById('btn-register-icon');
-            btn.disabled = true;
-            txt.innerText = 'Création...';
-            icon.className = 'fa-solid fa-spinner fa-spin text-[10px]';
+            // Vérification si le numéro existe déjà
+            const existingPhone = localStorage.getItem('rg_user_phone');
+            if(existingPhone && existingPhone === country + ' ' + phone) {
+                showAlert("⚠️ Ce numéro est déjà enregistré. Connectez-vous.");
+                return;
+            }
 
-            setTimeout(() => {
-                localStorage.setItem('rg_user_name', name);
-                localStorage.setItem('rg_user_phone', country + ' ' + phone);
-                localStorage.setItem('rg_user_pass', pass);
+            // Sauvegarde
+            localStorage.setItem('rg_user_name', 'Membre RANGERS');
+            localStorage.setItem('rg_user_phone', country + ' ' + phone);
+            localStorage.setItem('rg_user_pass', pass);
+            
+            if(invite) localStorage.setItem('rg_referrer', invite);
 
-                if (localStorage.getItem('rg_retirable') === null) {
-                    localStorage.setItem('rg_recharge', '0.00');
-                    localStorage.setItem('rg_retirable', '1000.00');
-                    localStorage.setItem('rg_has_invested', 'false');
-                }
+            // Initialisation des soldes pour un nouveau compte
+            if(localStorage.getItem('rg_retirable') === null) {
+                localStorage.setItem('rg_recharge', '0.00');
+                localStorage.setItem('rg_retirable', '1000.00'); // Bonus bienvenue
+                localStorage.setItem('rg_has_invested', 'false');
+            }
 
-                localStorage.setItem('rg_logged_in', 'true');
-                showAlert("🎉 Inscription réussie !\n\nBonus de 1,000 FCFA crédité.\n\nRedirection...");
-                setTimeout(() => { location.href = 'index.html'; }, 2000);
-            }, 700);
+            localStorage.setItem('rg_logged_in', 'true');
+            
+            showAlert("🎉 Inscription réussie !\nVotre bonus de 1,000 FCFA a été crédité.\nRedirection...");
+            setTimeout(() => { location.href = 'index.html'; }, 2000);
         }
 
-        // ==== CONNEXION ====
+        // ====== CONNEXION ======
         function handleLogin() {
-            if (isLoggingIn) return;
-
+            const country = document.getElementById('login-country').value;
             const phoneEl = document.getElementById('login-phone');
             const passEl = document.getElementById('login-pass');
-            const phoneInput = phoneEl.value.trim().replace(/\s+/g, '');
-            const passInput = passEl.value;
 
-            if (!phoneInput || phoneInput.length < 8 || !/^\d+$/.test(phoneInput)) {
-                showAlert("⚠️ Numéro de téléphone invalide (8 à 10 chiffres).");
-                shakeField(phoneEl); phoneEl.focus(); return;
+            const phone = phoneEl.value.trim().replace(/\s+/g, '');
+            const pass = passEl.value;
+
+            if(!phone || phone.length < 8 || !/^\d+$/.test(phone)) {
+                showAlert("⚠️ Numéro invalide.");
+                shakeField(phoneEl);
+                return;
             }
-            if (!passInput || passInput.length < 6) {
-                showAlert("⚠️ Mot de passe requis (min 6 caractères).");
-                shakeField(passEl); passEl.focus(); return;
+            if(!pass) {
+                showAlert("⚠️ Entrez votre mot de passe.");
+                shakeField(passEl);
+                return;
             }
 
-            isLoggingIn = true;
-            const btn = document.getElementById('btn-login');
-            const txt = document.getElementById('btn-login-text');
-            btn.disabled = true;
-            txt.innerText = 'Connexion...';
+            // Vérification (Optionnel : on vérifie si le mot de passe correspond)
+            const savedPhone = localStorage.getItem('rg_user_phone');
+            const savedPass = localStorage.getItem('rg_user_pass');
 
-            setTimeout(() => {
-                localStorage.setItem('rg_user_phone', phoneInput);
-                localStorage.setItem('rg_user_pass', passInput);
+            // Si un compte existe avec ce numéro, on vérifie le mot de passe
+            if(savedPhone === country + ' ' + phone) {
+                if(savedPass && savedPass !== pass) {
+                    showAlert("❌ Mot de passe incorrect.");
+                    shakeField(passEl);
+                    return;
+                }
+            } else {
+                // Si c'est un nouveau numéro, on le connecte et on initialise
+                localStorage.setItem('rg_user_phone', country + ' ' + phone);
+                localStorage.setItem('rg_user_pass', pass);
                 localStorage.setItem('rg_user_name', 'Membre RANGERS');
-
-                if (localStorage.getItem('rg_retirable') === null) {
+                
+                if(localStorage.getItem('rg_retirable') === null) {
                     localStorage.setItem('rg_recharge', '0.00');
                     localStorage.setItem('rg_retirable', '1000.00');
                     localStorage.setItem('rg_has_invested', 'false');
                 }
+            }
 
-                localStorage.setItem('rg_logged_in', 'true');
-                showAlert("✅ Connexion réussie !\n\nRedirection...");
-                setTimeout(() => { location.href = 'index.html'; }, 1500);
-            }, 600);
+            localStorage.setItem('rg_logged_in', 'true');
+            showAlert("✅ Connexion réussie !\nRedirection...");
+            setTimeout(() => { location.href = 'index.html'; }, 1500);
         }
 
-        // ==== EVENTS ====
+        // ====== RACCOURCIS CLAVIER (ENTRÉE) ======
         document.addEventListener('DOMContentLoaded', () => {
-            // Enter sur login
-            ['login-phone', 'login-pass'].forEach(id => {
-                const el = document.getElementById(id);
-                if (!el) return;
-                el.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') { e.preventDefault(); handleLogin(); }
+            const fieldsReg = ['reg-phone', 'reg-pass', 'reg-pass-confirm', 'reg-invite'];
+            const fieldsLog = ['login-phone', 'login-pass'];
+
+            fieldsReg.forEach(id => {
+                document.getElementById(id).addEventListener('keydown', (e) => {
+                    if(e.key === 'Enter') { e.preventDefault(); handleRegister(); }
                 });
             });
 
-            // Enter sur register
-            ['reg-phone', 'reg-name', 'reg-pass', 'reg-ref', 'reg-sms'].forEach(id => {
-                const el = document.getElementById(id);
-                if (!el) return;
-                el.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') { e.preventDefault(); handleRegister(); }
+            fieldsLog.forEach(id => {
+                document.getElementById(id).addEventListener('keydown', (e) => {
+                    if(e.key === 'Enter') { e.preventDefault(); handleLogin(); }
                 });
             });
 
-            // Escape pour fermer popup
+            // Fermeture alerte avec Entrée / Echap
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeAlert();
+                if(e.key === 'Enter' || e.key === 'Escape') {
+                    if(!document.getElementById('custom-alert').classList.contains('hidden')) {
+                        closeAlert();
+                    }
+                }
             });
-
-            // Clic extérieur pour fermer popup
-            document.getElementById('custom-alert').addEventListener('click', (e) => {
-                if (e.target.id === 'custom-alert') closeAlert();
-            });
-
-            // Auto-focus
-            document.getElementById('login-phone').focus();
         });
     </script>
 </body>
