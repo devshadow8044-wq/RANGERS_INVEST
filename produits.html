@@ -20,16 +20,12 @@
 </head>
 <body class="min-h-screen flex flex-col pb-20">
 
-    <!-- HEADER NOIR (Cliquable) -->
+    <!-- HEADER NOIR -->
     <header class="bg-black text-white py-4 px-6 flex justify-between items-center sticky top-0 z-40 shadow-md">
-        
-        <!-- Bouton Mes Produits -->
         <div onclick="showMyProducts()" class="text-center w-1/2 border-r border-gray-700 cursor-pointer active:scale-95 transition-transform">
             <h2 class="text-3xl font-black" id="my-products-count">0</h2>
             <p class="text-xs text-brand font-bold mt-1 hover:underline">Mes produits ></p>
         </div>
-        
-        <!-- Bouton Mes Revenus -->
         <div onclick="showMyRevenues()" class="text-center w-1/2 cursor-pointer active:scale-95 transition-transform">
             <h2 class="text-3xl font-black" id="my-revenue-amount">FCFA 0</h2>
             <p class="text-xs text-brand font-bold mt-1 hover:underline">Mes revenus ></p>
@@ -48,7 +44,7 @@
         <a href="compte.html" class="flex flex-col items-center text-gray-400 hover:text-gray-800"><i class="fa-solid fa-user text-xl"></i><span class="text-[10px] mt-1">Mon compte</span></a>
     </nav>
 
-    <!-- POPUP UNIVERSELLE -->
+    <!-- POPUP -->
     <div id="universal-popup" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden p-4">
         <div class="bg-white max-w-sm w-full p-6 rounded-3xl text-center space-y-4 shadow-2xl pop-in relative overflow-hidden">
             <div id="popup-top-bar" class="absolute top-0 left-0 w-full h-2 bg-brand"></div>
@@ -62,28 +58,27 @@
     </div>
 
     <script>
-        // ====== LES 10 PRODUITS (Range Rover) ======
+        // ====== LES 10 PRODUITS (Images 100% fiables) ======
+        // J'utilise tes liens Catbox et des liens Unsplash très stables pour être sûr que ça marche
         const products = [
-            { id: 1, name: 'VIP1 Range Rover', price: 2000, duration: 200, daily: 400, total: 80000, img: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=500&q=80' },
-            { id: 2, name: 'VIP2 Range Rover', price: 8000, duration: 200, daily: 1680, total: 336000, img: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=500&q=80' },
-            { id: 3, name: 'VIP3 Range Rover', price: 20000, duration: 200, daily: 4400, total: 880000, img: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=500&q=80' },
-            { id: 4, name: 'VIP4 Range Rover', price: 40000, duration: 200, daily: 8800, total: 1760000, img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=500&q=80' },
-            { id: 5, name: 'VIP5 Range Rover', price: 80000, duration: 200, daily: 17600, total: 3520000, img: 'https://images.unsplash.com/photo-1503376712346-3e3b1e6a5f2a?auto=format&fit=crop&w=500&q=80' },
-            { id: 6, name: 'VIP6 Range Rover', price: 150000, duration: 200, daily: 33000, total: 6600000, img: 'https://images.unsplash.com/photo-1542282088-fe8426682b8f?auto=format&fit=crop&w=500&q=80' },
-            { id: 7, name: 'VIP7 Range Rover', price: 300000, duration: 200, daily: 66000, total: 13200000, img: 'https://images.unsplash.com/photo-1555626906-fcf10d6851b4?auto=format&fit=crop&w=500&q=80' },
-            { id: 8, name: 'VIP8 Range Rover', price: 500000, duration: 200, daily: 110000, total: 22000000, img: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=500&q=80' },
-            { id: 9, name: 'VIP9 Range Rover', price: 1000000, duration: 200, daily: 220000, total: 44000000, img: 'https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&w=500&q=80' },
+            { id: 1, name: 'VIP1 Range Rover', price: 2000, duration: 200, daily: 400, total: 80000, img: 'https://files.catbox.moe/9kbqzl.jpg' },
+            { id: 2, name: 'VIP2 Range Rover', price: 8000, duration: 200, daily: 1680, total: 336000, img: 'https://files.catbox.moe/499w19.jpg' },
+            { id: 3, name: 'VIP3 Range Rover', price: 20000, duration: 200, daily: 4400, total: 880000, img: 'https://files.catbox.moe/78dszw.jpg' },
+            { id: 4, name: 'VIP4 Range Rover', price: 40000, duration: 200, daily: 8800, total: 1760000, img: 'https://files.catbox.moe/tn5jfj.jpg' },
+            { id: 5, name: 'VIP5 Range Rover', price: 80000, duration: 200, daily: 17600, total: 3520000, img: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=500&q=80' }, // Remplacée par une image stable
+            { id: 6, name: 'VIP6 Range Rover', price: 150000, duration: 200, daily: 33000, total: 6600000, img: 'https://files.catbox.moe/9kbqzl.jpg' },
+            { id: 7, name: 'VIP7 Range Rover', price: 300000, duration: 200, daily: 66000, total: 13200000, img: 'https://files.catbox.moe/499w19.jpg' },
+            { id: 8, name: 'VIP8 Range Rover', price: 500000, duration: 200, daily: 110000, total: 22000000, img: 'https://files.catbox.moe/78dszw.jpg' },
+            { id: 9, name: 'VIP9 Range Rover', price: 1000000, duration: 200, daily: 220000, total: 44000000, img: 'https://files.catbox.moe/tn5jfj.jpg' },
             { id: 10, name: 'VIP10 Range Rover', price: 2000000, duration: 200, daily: 440000, total: 88000000, img: 'https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=500&q=80' }
         ];
 
         const container = document.getElementById('products-container');
         
-        // Affichage des produits
         products.forEach(p => {
             container.innerHTML += `
                 <div class="bg-[#8b929c] rounded-lg overflow-hidden shadow-md flex flex-col">
                     <div class="flex h-44">
-                        <!-- Texte (Gauche) -->
                         <div class="w-3/5 p-4 flex flex-col justify-center bg-[#8b929c] text-white">
                             <h3 class="text-xl font-black mb-2 text-white">${p.name}</h3>
                             <div class="bg-gray-700/40 p-2.5 rounded text-[11px] space-y-1.5 w-full">
@@ -93,12 +88,10 @@
                                 <div class="flex justify-between"><span>Revenu total :</span> <span class="font-bold text-white">FCFA ${p.total.toLocaleString('fr-FR')}</span></div>
                             </div>
                         </div>
-                        <!-- Image (Droite) -->
                         <div class="w-2/5 h-full">
-                            <img src="${p.img}" class="w-full h-full object-cover" alt="Range Rover">
+                            <img src="${p.img}" class="w-full h-full object-cover" alt="Range Rover" onerror="this.src='https://files.catbox.moe/9kbqzl.jpg'">
                         </div>
                     </div>
-                    <!-- Bouton Acheter -->
                     <button onclick="buyProduct(${p.id}, ${p.price}, '${p.name}', ${p.total})" class="w-full bg-[#00ff00] hover:bg-green-500 text-black font-black text-sm py-3 buy-pulse transition-colors">
                         ACHETER
                     </button>
@@ -106,17 +99,14 @@
             `;
         });
 
-        // ====== MISE À JOUR DES COMPTEURS DU HAUT ======
         function updateHeader() {
             const myProds = JSON.parse(localStorage.getItem('rg_my_products') || '[]');
             let rev = parseFloat(localStorage.getItem('rg_revenue') || '0');
-            
             document.getElementById('my-products-count').innerText = myProds.length;
             document.getElementById('my-revenue-amount').innerText = `FCFA ${rev.toLocaleString('fr-FR')}`;
         }
         updateHeader();
 
-        // ====== FONCTION D'ACHAT ======
         function buyProduct(id, price, name, totalRevenue) {
             let balance = parseFloat(localStorage.getItem('rg_recharge') || '0');
             
@@ -126,31 +116,23 @@
             }
 
             showPopup('Confirmer l\'achat', `Voulez-vous vraiment acheter ${name} pour ${price.toLocaleString('fr-FR')} FCFA ?`, 'fa-car', 'confirm', () => {
-                
-                // Déduire le prix
                 balance -= price;
                 localStorage.setItem('rg_recharge', balance.toFixed(2));
 
-                // Ajouter aux produits achetés
                 let myProds = JSON.parse(localStorage.getItem('rg_my_products') || '[]');
                 myProds.push({ id, name, price, totalRevenue, date: new Date().toISOString() });
                 localStorage.setItem('rg_my_products', JSON.stringify(myProds));
 
-                // Ajouter les revenus
                 let currentRevenue = parseFloat(localStorage.getItem('rg_revenue') || '0');
                 localStorage.setItem('rg_revenue', (currentRevenue + totalRevenue).toFixed(2));
 
-                // Mettre à jour l'affichage
                 updateHeader();
-
                 showPopup('Achat réussi !', `Félicitations, vous avez acheté ${name}.\nVos revenus quotidiens de ${(totalRevenue/200).toLocaleString('fr-FR')} FCFA commencent dès demain.`, 'fa-check', 'success');
             });
         }
 
-        // ====== AFFICHER MES PRODUITS ======
         function showMyProducts() {
             const myProds = JSON.parse(localStorage.getItem('rg_my_products') || '[]');
-            
             if (myProds.length === 0) {
                 showPopup('Mes Produits', 'Vous n\'avez acheté aucun produit pour le moment.', 'fa-box-open', 'info');
                 return;
@@ -164,18 +146,15 @@
                 </div>`;
             });
 
-            // On utilise la popup avec du HTML
             document.getElementById('popup-title').innerText = "Mes Produits";
             document.getElementById('popup-message').innerHTML = html;
             document.getElementById('popup-icon').className = 'fa-solid fa-car';
             document.getElementById('popup-icon-bg').className = 'w-16 h-16 rounded-full bg-green-50 text-brand mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2';
             document.getElementById('popup-top-bar').className = 'absolute top-0 left-0 w-full h-2 bg-brand';
             document.getElementById('popup-buttons').innerHTML = `<button onclick="closePopup()" class="w-full py-3 rounded-xl bg-brand text-white font-bold text-sm shadow-md mt-2">Fermer</button>`;
-            
             document.getElementById('universal-popup').classList.remove('hidden');
         }
 
-        // ====== AFFICHER MES REVENUS ======
         function showMyRevenues() {
             const myProds = JSON.parse(localStorage.getItem('rg_my_products') || '[]');
             const revTotal = parseFloat(localStorage.getItem('rg_revenue') || '0');
@@ -201,23 +180,17 @@
             document.getElementById('popup-icon-bg').className = 'w-16 h-16 rounded-full bg-green-50 text-brand mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2';
             document.getElementById('popup-top-bar').className = 'absolute top-0 left-0 w-full h-2 bg-brand';
             document.getElementById('popup-buttons').innerHTML = `<button onclick="closePopup()" class="w-full py-3 rounded-xl bg-brand text-white font-bold text-sm shadow-md mt-2">Fermer</button>`;
-            
             document.getElementById('universal-popup').classList.remove('hidden');
         }
 
-        // ====== GESTION DES POPUPS ======
         function showPopup(title, message, icon, type, onConfirm) {
             document.getElementById('popup-title').innerText = title;
-            
-            // Si c'est un message normal, on l'affiche en texte, sinon on garde le HTML (pour les listes)
             if (typeof message === 'string') {
                 document.getElementById('popup-message').innerText = message;
             } else {
                 document.getElementById('popup-message').innerHTML = message;
             }
-            
             document.getElementById('popup-icon').className = `fa-solid ${icon}`;
-            
             const btnContainer = document.getElementById('popup-buttons');
             btnContainer.innerHTML = '';
 
@@ -242,7 +215,6 @@
                 document.getElementById('popup-top-bar').className = 'absolute top-0 left-0 w-full h-2 bg-brand';
                 btnContainer.innerHTML = `<button onclick="closePopup()" class="w-full py-3 rounded-xl bg-brand text-white font-bold text-sm shadow-md mt-2">Super !</button>`;
             }
-
             document.getElementById('universal-popup').classList.remove('hidden');
         }
 
