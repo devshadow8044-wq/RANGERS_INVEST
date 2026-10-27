@@ -12,12 +12,18 @@
         .bg-brand { background-color: #0db14b; }
         .border-brand { border-color: #0db14b; }
         
-        /* Clignotant pour le bouton de validation */
+        /* Clignotants et animations */
         @keyframes pulseGreen { 
             0%, 100% { box-shadow: 0 0 0 rgba(13, 177, 75, 0); transform: scale(1); } 
             50% { box-shadow: 0 0 12px rgba(13, 177, 75, 0.4); transform: scale(1.02); } 
         }
         .btn-pulse { animation: pulseGreen 2s infinite; }
+
+        @keyframes popIn { 
+            0% { transform: scale(0.9); opacity: 0; } 
+            100% { transform: scale(1); opacity: 1; } 
+        }
+        .pop-in { animation: popIn 0.3s ease-out; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col pb-24">
@@ -72,11 +78,11 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-full bg-green-50 text-brand flex items-center justify-center border border-green-100">
-                    <i class="fa-solid fa-wallet text-lg"></i>
+                    <i id="acc-icon" class="fa-solid fa-wallet text-lg"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-bold text-gray-800" id="acc-name">Compte Mobile Money</p>
-                    <p class="text-xs text-gray-500" id="acc-phone">Non configuré</p>
+                    <p class="text-sm font-bold text-gray-800" id="acc-name">Compte non configuré</p>
+                    <p class="text-xs text-gray-500" id="acc-phone">Cliquez pour lier</p>
                 </div>
             </div>
             <button onclick="openAccountModal()" class="text-xs text-brand font-bold bg-green-50 px-3 py-1.5 rounded-lg border border-green-100 hover:bg-green-100 transition">Modifier</button>
@@ -94,61 +100,98 @@
         </button>
     </div>
 
-    <!-- MODAL LIAISON DE COMPTE -->
+    <!-- 🌟 MODAL LIAISON DE COMPTE (Pays, Opérateur, Numéro) -->
     <div id="account-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden p-4 backdrop-blur-sm">
         <div class="bg-white max-w-sm w-full rounded-2xl p-6 shadow-2xl relative">
             <button onclick="closeAccountModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
-            <h3 class="text-base font-bold text-gray-800 mb-4">Lier un compte Mobile Money</h3>
+            <h3 class="text-base font-bold text-gray-800 mb-4 text-center">Compte de réception</h3>
             
-            <div class="space-y-3">
+            <div class="space-y-4">
+                <!-- Choix du Pays -->
                 <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">Opérateur</label>
-                    <select id="operator-select" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-brand">
-                        <option value="Wave">Wave</option>
-                        <option value="Orange Money">Orange Money</option>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Pays</label>
+                    <select id="country-select" onchange="updatePrefix()" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-brand appearance-none">
+                        <option value="+221" data-flag="🇸🇳">🇸🇳 Sénégal (+221)</option>
+                        <option value="+225" data-flag="🇨🇮">🇨🇮 Côte d'Ivoire (+225)</option>
+                        <option value="+223" data-flag="🇲🇱">🇲🇱 Mali (+223)</option>
+                        <option value="+226" data-flag="🇧🇫">🇧🇫 Burkina Faso (+226)</option>
+                        <option value="+229" data-flag="🇧🇯">🇧🇯 Bénin (+229)</option>
+                        <option value="+228" data-flag="🇹🇬">🇹🇬 Togo (+228)</option>
                     </select>
                 </div>
+
+                <!-- Choix de l'Opérateur -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Opérateur Mobile Money</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="selectOperator('Wave')" id="op-Wave" class="py-2.5 rounded-xl border-2 border-brand bg-green-50 text-brand font-bold text-sm flex justify-center items-center space-x-2">
+                            <i class="fa-solid fa-water"></i><span>Wave</span>
+                        </button>
+                        <button onclick="selectOperator('Orange Money')" id="op-Orange Money" class="py-2.5 rounded-xl border-2 border-gray-200 bg-white text-gray-600 font-bold text-sm flex justify-center items-center space-x-2">
+                            <i class="fa-solid fa-mobile-screen"></i><span>Orange</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Numéro de téléphone -->
                 <div>
                     <label class="block text-xs font-bold text-gray-600 mb-1">Numéro de téléphone</label>
-                    <input type="tel" id="account-phone" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-brand" placeholder="Ex: 770000000">
+                    <div class="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3 py-3 focus-within:border-brand">
+                        <span id="phone-prefix" class="text-gray-500 font-bold text-sm mr-2">+221</span>
+                        <input type="tel" id="account-phone" class="w-full bg-transparent text-sm text-gray-800 focus:outline-none" placeholder="Ex: 770000000">
+                    </div>
                 </div>
-                <button onclick="saveAccount()" class="w-full py-3 rounded-xl bg-brand text-white font-bold text-sm shadow-md mt-2">Enregistrer</button>
+
+                <button onclick="saveAccount()" class="w-full py-3 rounded-xl bg-brand text-white font-bold text-sm shadow-md mt-2 transition hover:bg-green-600">Enregistrer le compte</button>
             </div>
         </div>
     </div>
 
-    <!-- POPUP ALERTE -->
-    <div id="custom-alert" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden p-4">
-        <div class="bg-white max-w-xs w-full p-6 rounded-2xl text-center space-y-4 shadow-2xl">
-            <p id="alert-text" class="text-sm text-gray-700 font-medium leading-relaxed whitespace-pre-line">Message</p>
-            <button onclick="closeAlert()" class="w-full py-2.5 rounded-xl bg-brand text-white font-bold text-sm">OK</button>
+    <!-- 🌟 POPUP PERSONNALISÉE UNIVERSELLE -->
+    <div id="universal-popup" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden p-4">
+        <div class="bg-white max-w-sm w-full p-6 rounded-3xl text-center space-y-4 shadow-2xl pop-in relative overflow-hidden">
+            <div id="popup-top-bar" class="absolute top-0 left-0 w-full h-2 bg-brand"></div>
+            <div id="popup-icon-bg" class="w-16 h-16 rounded-full bg-green-50 text-brand mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2">
+                <i id="popup-icon" class="fa-solid fa-circle-info"></i>
+            </div>
+            <h3 id="popup-title" class="text-lg font-black text-gray-800">Titre</h3>
+            <p id="popup-message" class="text-sm text-gray-600 leading-relaxed whitespace-pre-line"></p>
+            <div id="popup-buttons" class="flex gap-2 mt-4"></div>
         </div>
     </div>
 
     <script>
         // ====== INITIALISATION ======
         let balance = parseFloat(localStorage.getItem('rg_retirable') || '0');
-        // Si c'est un nouveau compte, on met 1000 par défaut pour tester
         if(!localStorage.getItem('rg_retirable')) {
             balance = 1000;
             localStorage.setItem('rg_retirable', '1000');
         }
         document.getElementById('current-balance').innerText = balance.toLocaleString('fr-FR');
 
+        let currentOperator = 'Wave';
+        
         // Chargement du compte lié
         let savedOp = localStorage.getItem('rg_withdraw_operator');
         let savedPhone = localStorage.getItem('rg_withdraw_phone');
+        let savedCountry = localStorage.getItem('rg_withdraw_country');
         updateAccountUI();
 
         function updateAccountUI() {
             if (savedPhone) {
-                document.getElementById('acc-name').innerText = savedOp;
-                document.getElementById('acc-phone').innerText = savedPhone;
+                document.getElementById('acc-name').innerText = `${savedOp}`;
+                document.getElementById('acc-phone').innerText = `${savedCountry} ${savedPhone}`;
+                
+                // Changer l'icône selon l'opérateur
+                const icon = document.getElementById('acc-icon');
+                if (savedOp === 'Wave') icon.className = 'fa-solid fa-water text-lg text-blue-500';
+                else icon.className = 'fa-solid fa-mobile-screen text-lg text-orange-500';
             } else {
-                document.getElementById('acc-name').innerText = 'Compte Mobile Money';
-                document.getElementById('acc-phone').innerText = 'Non configuré';
+                document.getElementById('acc-name').innerText = 'Compte non configuré';
+                document.getElementById('acc-phone').innerText = 'Cliquez pour lier';
+                document.getElementById('acc-icon').className = 'fa-solid fa-wallet text-lg';
             }
         }
 
@@ -165,7 +208,7 @@
 
         function setMax() {
             if (balance <= 0) {
-                showAlert("Vous n'avez pas de solde disponible.");
+                showPopup('Erreur', 'Vous n\'avez pas de solde disponible.', 'fa-triangle-exclamation', 'error');
                 return;
             }
             document.getElementById('withdraw-amt').value = balance;
@@ -175,96 +218,142 @@
         // ====== GESTION DU COMPTE ======
         function openAccountModal() {
             if (savedPhone) {
-                document.getElementById('operator-select').value = savedOp;
+                // Pré-remplir si existant
                 document.getElementById('account-phone').value = savedPhone;
+                selectOperator(savedOp);
+                
+                // Sélectionner le bon pays
+                const countrySelect = document.getElementById('country-select');
+                for(let i=0; i<countrySelect.options.length; i++) {
+                    if(countrySelect.options[i].value === savedCountry) {
+                        countrySelect.selectedIndex = i;
+                        break;
+                    }
+                }
+                updatePrefix();
             }
             document.getElementById('account-modal').classList.remove('hidden');
         }
+        
         function closeAccountModal() {
             document.getElementById('account-modal').classList.add('hidden');
         }
 
+        function updatePrefix() {
+            const sel = document.getElementById('country-select');
+            document.getElementById('phone-prefix').innerText = sel.value;
+        }
+
+        function selectOperator(op) {
+            currentOperator = op;
+            if (op === 'Wave') {
+                document.getElementById('op-Wave').className = 'py-2.5 rounded-xl border-2 border-brand bg-green-50 text-brand font-bold text-sm flex justify-center items-center space-x-2';
+                document.getElementById('op-Orange Money').className = 'py-2.5 rounded-xl border-2 border-gray-200 bg-white text-gray-600 font-bold text-sm flex justify-center items-center space-x-2';
+            } else {
+                document.getElementById('op-Orange Money').className = 'py-2.5 rounded-xl border-2 border-brand bg-green-50 text-brand font-bold text-sm flex justify-center items-center space-x-2';
+                document.getElementById('op-Wave').className = 'py-2.5 rounded-xl border-2 border-gray-200 bg-white text-gray-600 font-bold text-sm flex justify-center items-center space-x-2';
+            }
+        }
+
         function saveAccount() {
-            let op = document.getElementById('operator-select').value;
+            let country = document.getElementById('country-select').value;
             let phone = document.getElementById('account-phone').value.trim().replace(/\s+/g, '');
 
             if (phone.length < 8 || isNaN(phone)) {
-                alert("Veuillez entrer un numéro de téléphone valide.");
+                showPopup('Numéro invalide', 'Veuillez entrer un numéro de téléphone valide (ex: 770000000).', 'fa-triangle-exclamation', 'error');
                 return;
             }
 
-            localStorage.setItem('rg_withdraw_operator', op);
+            localStorage.setItem('rg_withdraw_country', country);
+            localStorage.setItem('rg_withdraw_operator', currentOperator);
             localStorage.setItem('rg_withdraw_phone', phone);
             
-            savedOp = op;
+            savedOp = currentOperator;
             savedPhone = phone;
+            savedCountry = country;
             
             updateAccountUI();
             closeAccountModal();
-            showAlert("✅ Compte de retrait enregistré avec succès !");
+            showPopup('Compte enregistré', `Votre compte ${currentOperator} (${country} ${phone}) a été enregistré avec succès.`, 'fa-check', 'success');
         }
 
         // ====== SOUMISSION DU RETRAIT ======
         function submitWithdraw() {
             let amt = parseFloat(document.getElementById('withdraw-amt').value) || 0;
 
-            // Vérifications
             if (!savedPhone) {
-                showAlert("⚠️ Veuillez lier un compte Mobile Money avant de faire un retrait.");
+                showPopup('Compte requis', 'Veuillez lier un compte Mobile Money avant de faire un retrait.', 'fa-triangle-exclamation', 'error');
                 openAccountModal();
                 return;
             }
             if (amt < 1000) {
-                showAlert("⚠️ Le montant minimum de retrait est de 1,000 FCFA.");
+                showPopup('Montant invalide', 'Le montant minimum de retrait est de 1,000 FCFA.', 'fa-triangle-exclamation', 'error');
                 return;
             }
             if (amt > balance) {
-                showAlert(`⚠️ Solde insuffisant.\nSolde disponible : ${balance} FCFA`);
+                showPopup('Solde insuffisant', `Votre solde est de ${balance.toLocaleString()} FCFA.`, 'fa-triangle-exclamation', 'error');
                 return;
             }
 
-            // Calcul des frais
             let fee = amt * 0.15;
             let receive = amt - fee;
 
-            if (!confirm(`Confirmer le retrait de ${amt.toLocaleString()} FCFA ?\n\nFrais : ${fee.toLocaleString()} FCFA\nNet reçu : ${receive.toLocaleString()} FCFA`)) return;
+            showPopup('Confirmer le retrait', `Montant : ${amt.toLocaleString()} FCFA\nFrais : ${fee.toLocaleString()} FCFA\nNet reçu : ${receive.toLocaleString()} FCFA\n\nSur le compte ${savedOp} ${savedPhone}`, 'fa-money-bill-transfer', 'confirm', () => {
+                
+                // Déduction
+                balance -= amt;
+                localStorage.setItem('rg_retirable', balance.toFixed(2));
+                document.getElementById('current-balance').innerText = balance.toLocaleString('fr-FR');
 
-            // Déduction du solde
-            balance -= amt;
-            localStorage.setItem('rg_retirable', balance.toFixed(2));
-            document.getElementById('current-balance').innerText = balance.toLocaleString('fr-FR');
+                // Historique
+                let history = JSON.parse(localStorage.getItem('rg_withdraw_history') || '[]');
+                history.push({
+                    amount: amt, fee: fee, receive: receive,
+                    operator: savedOp, phone: savedPhone, country: savedCountry,
+                    date: new Date().toLocaleString('fr-FR'), status: 'En attente'
+                });
+                localStorage.setItem('rg_withdraw_history', JSON.stringify(history));
 
-            // Sauvegarde dans l'historique pour l'admin
-            let history = JSON.parse(localStorage.getItem('rg_withdraw_history') || '[]');
-            history.push({
-                amount: amt,
-                fee: fee,
-                receive: receive,
-                operator: savedOp,
-                phone: savedPhone,
-                date: new Date().toLocaleString('fr-FR'),
-                status: 'En attente'
+                document.getElementById('withdraw-amt').value = '';
+                calcFees();
+
+                showPopup('Retrait effectué', `Votre demande de retrait de ${receive.toLocaleString()} FCFA a été envoyée avec succès.`, 'fa-check-circle', 'success');
+                setTimeout(() => { location.href = 'compte.html'; }, 2500);
             });
-            localStorage.setItem('rg_withdraw_history', JSON.stringify(history));
+        }
 
-            // Reset du formulaire
-            document.getElementById('withdraw-amt').value = '';
-            calcFees();
-
-            showAlert(`✅ Demande de retrait envoyée !\n\nNet à recevoir : ${receive.toLocaleString()} FCFA\n\nTraitement en cours par l'administration.`);
+        // ====== POPUPS UNIVERSELLES ======
+        function showPopup(title, message, icon, type, onConfirm) {
+            document.getElementById('popup-title').innerText = title;
+            document.getElementById('popup-message').innerText = message;
+            document.getElementById('popup-icon').className = `fa-solid ${icon}`;
             
-            setTimeout(() => {
-                location.href = 'compte.html';
-            }, 2500);
+            const btnContainer = document.getElementById('popup-buttons');
+            btnContainer.innerHTML = '';
+
+            if (type === 'confirm') {
+                document.getElementById('popup-icon-bg').className = 'w-16 h-16 rounded-full bg-orange-50 text-orange-500 mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2';
+                document.getElementById('popup-top-bar').className = 'absolute top-0 left-0 w-full h-2 bg-orange-500';
+                btnContainer.innerHTML = `
+                    <button onclick="closePopup()" class="w-1/2 py-3 rounded-xl bg-gray-100 text-gray-700 font-bold text-sm transition hover:bg-gray-200">Annuler</button>
+                    <button id="confirm-btn" class="w-1/2 py-3 rounded-xl bg-brand text-white font-bold text-sm shadow-md transition hover:bg-green-600">Confirmer</button>
+                `;
+                document.getElementById('confirm-btn').onclick = () => { closePopup(); onConfirm(); };
+            } else if (type === 'error') {
+                document.getElementById('popup-icon-bg').className = 'w-16 h-16 rounded-full bg-red-50 text-red-500 mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2';
+                document.getElementById('popup-top-bar').className = 'absolute top-0 left-0 w-full h-2 bg-red-500';
+                btnContainer.innerHTML = `<button onclick="closePopup()" class="w-full py-3 rounded-xl bg-red-500 text-white font-bold text-sm shadow-md mt-2">Fermer</button>`;
+            } else {
+                document.getElementById('popup-icon-bg').className = 'w-16 h-16 rounded-full bg-green-50 text-brand mx-auto flex items-center justify-center text-3xl border-4 border-white shadow-sm -mt-10 mb-2';
+                document.getElementById('popup-top-bar').className = 'absolute top-0 left-0 w-full h-2 bg-brand';
+                btnContainer.innerHTML = `<button onclick="closePopup()" class="w-full py-3 rounded-xl bg-brand text-white font-bold text-sm shadow-md mt-2">Super !</button>`;
+            }
+
+            document.getElementById('universal-popup').classList.remove('hidden');
         }
 
-        // ====== POPUP ALERTE ======
-        function showAlert(msg) {
-            document.getElementById('alert-text').innerText = msg;
-            document.getElementById('custom-alert').classList.remove('hidden');
-        }
-        function closeAlert() {
-            document.getElementById('custom-alert').classList.add('hidden');
+        function closePopup() {
+            document.getElementById('universal-popup').classList.add('hidden');
         }
     </script>
 </body>
