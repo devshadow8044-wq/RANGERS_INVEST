@@ -1,73 +1,76 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F7F8FA">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<title>Accueil – RANGERS</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f2f3f5">
+  <title>Accueil · RANGERS INVEST</title>
+  <link rel="icon" href="/images/brand-mark.png">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/js/app.js" defer></script>
 </head>
 <body data-page="home">
-<div class="bg" aria-hidden="true">
-  <video autoplay muted loop playsinline preload="metadata"><source src="videos/interieur.mp4" type="video/mp4"></video>
-</div>
-<main class="wrap">
-  <div class="topbar">
-    <span class="brand">RANGERS</span>
-    <button id="logout" class="link-btn" type="button">Se déconnecter</button>
-  </div>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/index.html"><img src="/images/brand-mark.png" alt=""><span>RANGERS INVEST</span></a>
+      <a class="top-action" href="/moi.html">Moi</a>
+    </header>
+    <div data-global-message hidden></div>
 
-  <p style="color:var(--mute)">Compte <strong id="phone" style="color:var(--text)">…</strong></p>
+    <section class="hero home-hero">
+      <h1>Votre espace RANGERS INVEST</h1>
+      <p>Consultez votre compte, les offres publiées et le suivi de vos demandes.</p>
+    </section>
 
-  <section class="balance skeleton" style="margin-top:12px" aria-label="Solde">
-    <div class="label">Solde disponible</div>
-    <div class="amount" id="amount">– FCFA</div>
-    <div class="actions">
-      <a class="btn btn-ghost" href="depot.html">Déposer</a>
-      <a class="btn btn-ghost" href="retrait.html">Retirer</a>
-    </div>
-  </section>
+    <section data-signed-out class="card">
+      <h2 class="section-heading">Accéder à mon espace</h2>
+      <p class="subtle">Le compte et les demandes financières sont accessibles après connexion et activation.</p>
+      <div class="actions">
+        <a class="button" href="/login.html">Se connecter</a>
+        <a class="button secondary" href="/register.html">Créer un compte</a>
+      </div>
+    </section>
 
-  <nav class="quick" aria-label="Accès rapides">
-    <a class="q" href="roue.html">
-      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3v7M12 14v7M3 12h7M14 12h7M5.6 5.6l4.4 4.4M14 14l4.4 4.4M18.4 5.6L14 10M10 14l-4.4 4.4"/></svg></span>Roue</a>
-    <a class="q" href="pointage.html">
-      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M9 15l2 2 4-4"/></svg></span>Pointage</a>
-    <a class="q" href="missions.html">
-      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg></span>Missions</a>
-    <a class="q" href="equipe.html">
-      <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0"/><path d="M16 4.6a3.5 3.5 0 010 6.8"/><path d="M18 14.2A6.5 6.5 0 0121.5 20"/></svg></span>Équipe</a>
+    <section data-signed-in hidden>
+      <div class="account-summary">
+        <article class="balance-card">
+          <div class="balance-label">Solde du compte</div>
+          <div class="balance-amount price" data-balance>Non disponible</div>
+          <div class="row-meta">Montant issu du registre du compte</div>
+        </article>
+        <article class="balance-card">
+          <div class="balance-label">Revenus cumulés</div>
+          <div class="balance-amount" data-revenue>Non disponible</div>
+          <div class="row-meta">Affichés uniquement s’ils sont comptabilisés</div>
+        </article>
+      </div>
+      <article class="card">
+        <div class="stats">
+          <div class="stat"><span>Réservé</span><strong data-reserved>Non disponible</strong></div>
+          <div class="stat"><span>Disponible</span><strong data-available>Non disponible</strong></div>
+          <div class="stat"><span>État du compte</span><strong data-user-status>Non disponible</strong></div>
+          <div class="stat"><span>Pays</span><strong data-user-country>Non disponible</strong></div>
+        </div>
+      </article>
+      <div class="actions">
+        <a class="button" href="/depot.html">Recharger</a>
+        <a class="button secondary" href="/retrait.html">Retirer</a>
+      </div>
+      <a class="row card-link" href="/historique.html"><span>Historique des opérations</span><span aria-hidden="true">›</span></a>
+    </section>
+
+    <section class="card">
+      <h2 class="section-heading">Catalogue</h2>
+      <p class="subtle">Les offres apparaissent uniquement lorsque leurs conditions sont publiées.</p>
+      <a class="muted-link" href="/produits.html">Consulter les produits</a>
+    </section>
+    <p class="form-note"><a href="/admin-login.html">Connexion administrateur</a> · <a href="/conditions.html">Conditions</a></p>
+  </main>
+  <nav class="bottom-nav" aria-label="Navigation principale">
+    <a class="nav-item active" href="/index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"/></svg><span>Accueil</span></a>
+    <a class="nav-item" href="/produits.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v15H4zM8 5V3h8v2M8 10h8M8 14h8"/></svg><span>Produit</span></a>
+    <a class="nav-item" href="/equipe.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M15 15a4.5 4.5 0 0 1 6 4v1"/></svg><span>Équipe</span></a>
+    <a class="nav-item" href="/moi.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Moi</span></a>
   </nav>
-
-
-  <h2 class="section">Dernières opérations</h2>
-  <div class="card empty">
-    <strong>Aucune opération pour l'instant</strong>
-    Tes dépôts, récompenses et retraits apparaîtront ici.
-  </div>
-
-  <section id="welcome-modal" class="welcome-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="welcome-title"><div class="welcome-card"><p class="eyebrow">RANGERS INVEST</p><h2 id="welcome-title">Notification de la plateforme</h2><p>Bienvenue sur RANGERS INVEST. Lis les conditions avant toute opération.</p><ul><li>Bonus d’inscription : 1 000 FCFA crédités une seule fois après la création réussie du compte. Vérifie le solde dans Mon compte.</li><li>Dépôt minimum : 2 000 FCFA.</li><li>Retrait minimum : 1 000 FCFA. Des frais de retrait de 15 % s’appliquent; le montant net sera affiché avant confirmation.</li><li>Pointage : 50 FCFA toutes les 24 heures pour les comptes inscrits.</li><li>Les revenus VIP affichés ne sont pas garantis. Tout investissement comporte des risques.</li></ul><div class="welcome-links"><a class="btn" href="https://t.me/+nVlSnjK2GVljNjhk" target="_blank" rel="noopener">Chaîne Telegram</a><a class="btn btn-ghost" href="https://t.me/+O8Z8hMCMDkRlZDZk" target="_blank" rel="noopener">Groupe Telegram</a></div><button id="welcome-close" class="btn btn-ghost" type="button">J’ai compris, continuer</button></div></section>
-  <p class="note">Les récompenses dépendent des activités disponibles et de leurs conditions. Aucun gain n'est garanti.</p>
-</main>
-
-<nav class="tabbar" aria-label="Navigation principale">
-  <ul>
-    <li><a href="index.html" aria-current="page">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>Accueil</a></li>
-    <li><a href="activites.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M3 13h18"/></svg>Activités</a></li>
-    <li><a href="equipe.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0"/><path d="M16 4.6a3.5 3.5 0 010 6.8"/><path d="M18 14.2A6.5 6.5 0 0121.5 20"/></svg>Équipe</a></li>
-    <li><a href="compte.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>Compte</a></li>
-  </ul>
-</nav>
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="config.js"></script>
-<script src="app.js"></script>
 </body>
 </html>
-
