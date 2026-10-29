@@ -29,3 +29,8 @@
 .app-status-mark svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 @media(min-width:520px){.shortcut-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.product-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:380px){.account-summary .balance-amount{font-size:18px}.quick-action{font-size:11px}.shortcut-grid a{min-height:73px}}
+
+/* Contraste des messages sur le panneau d’authentification sombre */
+.auth-panel .notice.error{color:#9a3430}
+.auth-panel .notice.warning{color:#775b24}
+.auth-panel .notice.success{color:#28623a}
