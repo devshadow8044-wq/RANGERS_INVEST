@@ -27,9 +27,14 @@
     const headers = { ...(options.body !== undefined ? { "Content-Type": "application/json" } : {}), ...(options.headers || {}) };
     if (method !== "GET" && method !== "HEAD") headers["X-CSRF-Token"] = state.csrf;
     const response = await fetch(url, { ...options, method, headers, credentials: "same-origin" });
-    const data = (response.headers.get("content-type") || "").includes("application/json") ? await response.json() : null;
+    const contentType = response.headers.get("content-type") || "";
+    const isJson = contentType.includes("application/json");
+    const data = isJson ? await response.json() : null;
     if (!response.ok) {
-      const error = new Error(data?.message || "Une erreur est survenue.");
+      const message = data?.message || (response.status === 404 && !isJson
+        ? "API introuvable (404). Le déploiement Vercel doit inclure la racine avec index.js, package.json, vercel.json et le dossier server/ — pas seulement public/."
+        : !isJson ? `Réponse serveur inattendue (HTTP ${response.status}).` : "Une erreur est survenue.");
+      const error = new Error(message);
       error.status = response.status;
       throw error;
     }
