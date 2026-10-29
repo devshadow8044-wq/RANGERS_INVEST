@@ -1,3 +1,48 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#F7F8FA"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><title>Administration – RANGERS</title></head>
-<body data-page="admin"><main class="wrap"><div class="topbar"><a class="link-btn" href="compte.html" style="text-decoration:none">← Compte</a><span class="brand">RANGERS</span></div><h1 class="page">Administration</h1><p class="notice">Vérifie les paiements dans ton compte Wave / Orange Money avant de confirmer un dépôt. Pour un retrait, effectue le transfert réel avant de le marquer comme payé.</p><div id="admin-queues" class="stack"><p class="hint">Chargement des demandes…</p></div></main><div id="toast" class="toast" role="status" aria-live="polite"></div><script src="config.js"></script><script src="app.js"></script></body></html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f2f3f5">
+  <title>Administration · RANGERS INVEST</title>
+  <link rel="icon" href="/images/brand-mark.png">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/js/app.js" defer></script>
+</head>
+<body data-page="admin">
+  <main class="shell admin-shell">
+    <header class="topbar">
+      <a class="brand" href="/index.html"><img src="/images/brand-mark.png" alt=""><span>RANGERS INVEST</span></a>
+      <button class="top-action logout-link" data-logout type="button">Déconnexion</button>
+    </header>
+    <h1 class="page-title">Administration</h1>
+    <p class="subtle">Espace privé de gestion des comptes, offres et demandes.</p>
+    <div data-global-message hidden></div>
+
+    <section class="card product-admin" data-admin-products hidden>
+      <h2 class="section-heading">Catalogue produits</h2>
+      <p class="notice warning">Une offre reste en brouillon tant que ses conditions ne sont pas renseignées. Sa publication rendra les textes visibles publiquement; la référence de validation saisie doit être réelle et vérifiée par l’administrateur.</p>
+      <form class="form" data-form="product" hidden>
+        <input type="hidden" name="id">
+        <div class="field"><label for="product-name">Nom du produit</label><input id="product-name" name="name" maxlength="100" required></div>
+        <div class="field"><label for="product-description">Description</label><textarea id="product-description" name="description" rows="3" maxlength="2000"></textarea></div>
+        <div class="field-inline">
+          <div class="field"><label for="product-min">Montant minimum (XOF)</label><input id="product-min" name="minXof" type="number" min="1" step="1"></div>
+          <div class="field"><label for="product-max">Montant maximum (XOF)</label><input id="product-max" name="maxXof" type="number" min="1" step="1"></div>
+        </div>
+        <div class="field"><label for="product-duration">Durée (jours)</label><input id="product-duration" name="durationDays" type="number" min="1" step="1"></div>
+        <div class="field"><label for="product-return">Modalités de rendement ou de résultat</label><textarea id="product-return" name="returnMethod" rows="2" maxlength="500"></textarea></div>
+        <div class="field"><label for="product-fees">Frais et commissions</label><textarea id="product-fees" name="feesDescription" rows="2" maxlength="500"></textarea></div>
+        <div class="field"><label for="product-withdrawal">Conditions de retrait</label><textarea id="product-withdrawal" name="withdrawalTerms" rows="2" maxlength="1000"></textarea></div>
+        <div class="field"><label for="product-risk">Risques à communiquer</label><textarea id="product-risk" name="riskDisclosure" rows="3" maxlength="1500"></textarea></div>
+        <div class="field"><label for="product-approval">Référence réelle de validation</label><input id="product-approval" name="legalApprovalReference" maxlength="160"></div>
+        <div class="field"><label for="product-image">Visuel fourni</label><select id="product-image" name="imageUrl"><option value="">Aucun visuel</option><option value="/images/products/vip1.jpg">VIP 1</option><option value="/images/products/vip2.jpg">VIP 2</option><option value="/images/products/vip3.jpg">VIP 3</option><option value="/images/products/vip4.jpg">VIP 4</option><option value="/images/products/vip5.jpg">VIP 5</option><option value="/images/products/vip6.jpg">VIP 6</option><option value="/images/products/vip7.jpg">VIP 7</option><option value="/images/products/vip8.jpg">VIP 8</option></select></div>
+        <div class="field"><label for="product-status">État du catalogue</label><select id="product-status" name="status"><option value="draft">Brouillon</option><option value="paused">Suspendu</option><option value="published">Publié</option></select></div>
+        <div class="admin-actions"><button class="button" type="submit">Enregistrer le produit</button><button class="button light" type="button" data-reset-product>Nouveau brouillon</button></div>
+      </form>
+    </section>
+
+    <section data-admin-content><div class="empty">Vérification de l’accès…</div></section>
+  </main>
+</body>
+</html>
