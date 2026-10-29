@@ -34,3 +34,67 @@
 .auth-panel .notice.error{color:#9a3430}
 .auth-panel .notice.warning{color:#775b24}
 .auth-panel .notice.success{color:#28623a}
+
+/* Identité visuelle RANGERS INVEST — cyan, violet et rose */
+:root{
+  color-scheme:light;
+  --blue:#00bfe8;
+  --muted:#737b8d;
+  --line:#e8e8f2;
+  --black:#171329;
+  --surface:#fff;
+  --neon-cyan:#00d9ff;
+  --neon-purple:#7547ff;
+  --neon-pink:#ed3cae;
+  --brand-gradient:linear-gradient(112deg,var(--neon-cyan) 0%,var(--neon-purple) 54%,var(--neon-pink) 100%);
+}
+body{background:#f2f1f8;color:#201b35}
+.shell{background:linear-gradient(180deg,#f8f7fc 0%,#f1f0f8 100%)}
+.brand{color:#21183d}
+.brand img{filter:drop-shadow(0 3px 8px #7547ff35)}
+.top-action,.muted-link{color:#7044ec}
+.page-title{color:#21183d;letter-spacing:-.025em}
+.card,.balance-card,.profile-card,.shortcut-grid a,.quick-action,.metric-card,.product-card,.product-reference,.card-link{
+  border:1px solid #e9e5f5;
+  box-shadow:0 8px 26px #34205c0d,0 2px 7px #34205c08;
+}
+.hero{background-color:#171329;box-shadow:0 12px 28px #21143d25}
+.home-hero{background-image:linear-gradient(115deg,#101326c9 0%,#381b68a8 52%,#8b246e65 100%),url('/images/home-car-bg.jpg')}
+.team-hero{background-image:linear-gradient(115deg,#11152bc2,#552c8b70),url('/images/team-car-bg.jpg')}
+.button{background:var(--brand-gradient);color:#fff;box-shadow:0 6px 16px #7547ff30;transition:transform .18s ease,filter .18s ease,box-shadow .18s ease}
+.button:hover{filter:saturate(1.12);box-shadow:0 8px 22px #7547ff40}
+.button:active{transform:translateY(1px)}
+.button.secondary{background:linear-gradient(110deg,#dffaff,#eee6ff);color:#4930a5;box-shadow:none}
+.button.light{background:#f0edfa;color:#514276;box-shadow:none}
+.button.danger{background:#c93c70}
+.field input:focus,.field select:focus{border-color:var(--neon-purple);box-shadow:0 0 0 3px #7547ff20}
+.checkrow input{accent-color:var(--neon-purple)}
+.notice{background:#e8faff;color:#17617a}
+.notice.warning{background:#fff5e7;color:#81531e}
+.notice.error{background:#fff0f5;color:#963252}
+.notice.success{background:#eaf9f2;color:#246747}
+.price,.balance-amount .price{color:#7044ec}
+.badge{background:#f0edfa;color:#59458d}
+.badge.pending{background:#fff1e5;color:#94531c}
+.badge.active{background:#e7f8f1;color:#246747}
+.bottom-nav{background:#fff;border-top:1px solid #e8e3f3;box-shadow:0 -7px 24px #25143d0a}
+.nav-item{color:#9690a8}
+.nav-item.active{color:#7044ec}
+.nav-item.active svg{stroke:var(--neon-purple)}
+.auth-page{background-color:#111326;background-image:linear-gradient(135deg,#101326b8,#35165cb0 58%,#7a205c80),url('/images/auth-register-bg.jpg')}
+.auth-panel{background:linear-gradient(145deg,#17172beF,#25163beF);border:1px solid #ffffff25;box-shadow:0 22px 70px #08071380}
+.auth-panel .brand{color:#fff}
+.auth-panel .button{background:var(--brand-gradient);color:#fff}
+.auth-panel a{color:#71eaff}
+.auth-panel .field input:focus,.auth-panel .field select:focus{border-color:#a78bff;box-shadow:0 0 0 3px #a78bff30}
+.team-card{background:linear-gradient(130deg,#e9e1ff,#c5b4ff);color:#34205c}
+.team-card.lv2{background:linear-gradient(130deg,#dcfaff,#9be8f7);color:#16485b}
+.team-card.lv3{background:linear-gradient(130deg,#ffe0f2,#f2a9d4);color:#6d2451}
+.profile-avatar,.app-status-mark{background:linear-gradient(135deg,#e0faff,#eee5ff);color:#6540c7}
+.level-badge{background:#eee7ff;color:#6038bd}
+.mission-banner{background-color:#21163c;background-image:linear-gradient(115deg,#101326d9,#54268fc2),url('/images/team-car-bg.jpg')}
+.quick-action svg,.shortcut-icon svg{stroke:#7044ec}
+.product-reference img,.product-image{background:linear-gradient(135deg,#e7faff,#eee7ff);object-fit:cover}
+.product-reference-body .badge{background:#f0eaff;color:#6440b8}
+.row,.stat{border-color:#ece9f4}
+@media(prefers-reduced-motion:reduce){.button{transition:none}}
