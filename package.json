@@ -1,8 +1,8 @@
 {
-  "name": "rangers-rg-vercel",
+  "name": "rangers-invest-vercel-sans-photos",
   "version": "1.0.0",
   "private": true,
-  "description": "RANGERS INVEST — site mobile avec API Express et PostgreSQL Neon pour Vercel",
+  "description": "RANGERS INVEST mobile-first pour Vercel et Neon, sans photos en attente des liens du propriétaire",
   "type": "module",
   "main": "index.js",
   "engines": {
