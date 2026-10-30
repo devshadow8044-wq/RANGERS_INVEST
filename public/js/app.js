@@ -26,13 +26,15 @@
     const method = (options.method || "GET").toUpperCase();
     const headers = { ...(options.body !== undefined ? { "Content-Type": "application/json" } : {}), ...(options.headers || {}) };
     if (method !== "GET" && method !== "HEAD") headers["X-CSRF-Token"] = state.csrf;
-    const response = await fetch(url, { ...options, method, headers, credentials: "same-origin" });
+    let response;
+    try { response = await fetch(url, { ...options, method, headers, credentials: "same-origin" }); }
+    catch { throw new Error("Le serveur du site est injoignable. Vérifiez que le projet complet a été déployé sur Vercel."); }
     const contentType = response.headers.get("content-type") || "";
     const isJson = contentType.includes("application/json");
     const data = isJson ? await response.json() : null;
     if (!response.ok) {
       const message = data?.message || (response.status === 404 && !isJson
-        ? "API introuvable (404). Le déploiement Vercel doit inclure la racine avec index.js, package.json, vercel.json et le dossier server/ — pas seulement public/."
+        ? "Le serveur API est introuvable (404). Dans Vercel, la racine du projet doit contenir index.js, package.json, vercel.json et server/ — ne choisissez pas public/ comme racine."
         : !isJson ? `Réponse serveur inattendue (HTTP ${response.status}).` : "Une erreur est survenue.");
       const error = new Error(message);
       error.status = response.status;
@@ -109,12 +111,10 @@
       const result = await request("/api/products");
       const products = result?.products || [];
       if (!products.length) {
-        const images = Array.from({ length: 8 }, (_, index) => index + 1);
-        container.innerHTML = `<div class="notice warning">Aucune offre publiée. Ces visuels ne correspondent pas à des produits ouverts; les conditions doivent être validées avant toute souscription.</div><div class="product-grid">${images.map(index => `<article class="product-reference"><img src="/images/products/vip${index}.jpg" alt="Visuel de niveau VIP ${index}" loading="lazy"><div class="product-reference-body"><h3>Niveau VIP ${index}</h3><span class="badge pending">Conditions à valider</span></div></article>`).join("")}</div>`;
+        container.innerHTML = '<div class="empty"><strong>Aucune offre publiée</strong>Les offres paraîtront ici après validation de leurs conditions.</div>';
         return;
       }
       container.innerHTML = products.map(product => {
-        const image = product.imageUrl || product.image || "";
         const terms = [
           product.minXof != null && product.maxXof != null ? `${formatMoney(product.minXof)} à ${formatMoney(product.maxXof)}` : "",
           product.durationDays ? `Durée : ${product.durationDays} jours` : "",
@@ -122,7 +122,7 @@
           product.feesDescription ? `Frais : ${product.feesDescription}` : "",
           product.withdrawalTerms ? `Retrait : ${product.withdrawalTerms}` : ""
         ].filter(Boolean);
-        return `<article class="product-card">${image ? `<img class="product-image" src="${escapeHtml(image)}" alt="${escapeHtml(product.name || "Produit RANGERS INVEST")}">` : ""}<div class="product-body"><h2>${escapeHtml(product.name || "Produit")}</h2><p class="subtle">${escapeHtml(product.description || "")}</p>${terms.map(term => `<p class="row-meta">${escapeHtml(term)}</p>`).join("")}<p class="notice warning">${escapeHtml(product.riskDisclosure || "Consultez les risques et conditions avant toute décision.")}</p></div></article>`;
+        return `<article class="product-card"><div class="product-body"><h2>${escapeHtml(product.name || "Produit")}</h2><p class="subtle">${escapeHtml(product.description || "")}</p>${terms.map(term => `<p class="row-meta">${escapeHtml(term)}</p>`).join("")}<p class="notice warning">${escapeHtml(product.riskDisclosure || "Consultez les risques et conditions avant toute décision.")}</p></div></article>`;
       }).join("");
     } catch (error) { showMessage("[data-global-message]", error.message, "error"); }
   }
